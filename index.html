@@ -1,99 +1,1402 @@
 
 <!doctype html>
-<html>
-  <head>
-    <title>Student Resume Website Template | WIX</title>
-    <script type='text/javascript' >window.NREUM||(NREUM={});NREUM.info = {"agent":"","beacon":"bam.nr-data.net","errorBeacon":"bam.nr-data.net","licenseKey":"c99d7f1ab0","applicationID":"31527391,90185088","applicationTime":2.204051,"transactionName":"ZFAHNkNYXUBQVEUKXF0aIBpBS1ZAQl1CTHR2YUpNXFhBWFRDWA1UHkEAD0FVUkdUGkcKVkRQF01FXF5DXVZFBkAcDxEHXElfUkVSeAc=","queueTime":0,"ttGuid":"3d9acb1153b69e","agentToken":null}; window.NREUM||(NREUM={}),__nr_require=function(e,t,n){function r(n){if(!t[n]){var o=t[n]={exports:{}};e[n][0].call(o.exports,function(t){var o=e[n][1][t];return r(o||t)},o,o.exports)}return t[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<n.length;o++)r(n[o]);return r}({1:[function(e,t,n){function r(){}function o(e,t,n){return function(){return i(e,[f.now()].concat(u(arguments)),t?null:this,n),t?void 0:this}}var i=e("handle"),a=e(2),u=e(3),c=e("ee").get("tracer"),f=e("loader"),s=NREUM;"undefined"==typeof window.newrelic&&(newrelic=s);var p=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],d="api-",l=d+"ixn-";a(p,function(e,t){s[t]=o(d+t,!0,"api")}),s.addPageAction=o(d+"addPageAction",!0),s.setCurrentRouteName=o(d+"routeName",!0),t.exports=newrelic,s.interaction=function(){return(new r).get()};var m=r.prototype={createTracer:function(e,t){var n={},r=this,o="function"==typeof t;return i(l+"tracer",[f.now(),e,n],r),function(){if(c.emit((o?"":"no-")+"fn-start",[f.now(),r,o],n),o)try{return t.apply(this,arguments)}catch(e){throw c.emit("fn-err",[arguments,this,e],n),e}finally{c.emit("fn-end",[f.now()],n)}}}};a("setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(e,t){m[t]=o(l+t)}),newrelic.noticeError=function(e){"string"==typeof e&&(e=new Error(e)),i("err",[e,f.now()])}},{}],2:[function(e,t,n){function r(e,t){var n=[],r="",i=0;for(r in e)o.call(e,r)&&(n[i]=t(r,e[r]),i+=1);return n}var o=Object.prototype.hasOwnProperty;t.exports=r},{}],3:[function(e,t,n){function r(e,t,n){t||(t=0),"undefined"==typeof n&&(n=e?e.length:0);for(var r=-1,o=n-t||0,i=Array(o<0?0:o);++r<o;)i[r]=e[t+r];return i}t.exports=r},{}],4:[function(e,t,n){t.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],ee:[function(e,t,n){function r(){}function o(e){function t(e){return e&&e instanceof r?e:e?c(e,u,i):i()}function n(n,r,o,i){if(!d.aborted||i){e&&e(n,r,o);for(var a=t(o),u=m(n),c=u.length,f=0;f<c;f++)u[f].apply(a,r);var p=s[y[n]];return p&&p.push([b,n,r,a]),a}}function l(e,t){v[e]=m(e).concat(t)}function m(e){return v[e]||[]}function w(e){return p[e]=p[e]||o(n)}function g(e,t){f(e,function(e,n){t=t||"feature",y[n]=t,t in s||(s[t]=[])})}var v={},y={},b={on:l,emit:n,get:w,listeners:m,context:t,buffer:g,abort:a,aborted:!1};return b}function i(){return new r}function a(){(s.api||s.feature)&&(d.aborted=!0,s=d.backlog={})}var u="nr@context",c=e("gos"),f=e(2),s={},p={},d=t.exports=o();d.backlog=s},{}],gos:[function(e,t,n){function r(e,t,n){if(o.call(e,t))return e[t];var r=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(e,t,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return e[t]=r,r}var o=Object.prototype.hasOwnProperty;t.exports=r},{}],handle:[function(e,t,n){function r(e,t,n,r){o.buffer([e],r),o.emit(e,t,n)}var o=e("ee").get("handle");t.exports=r,r.ee=o},{}],id:[function(e,t,n){function r(e){var t=typeof e;return!e||"object"!==t&&"function"!==t?-1:e===window?0:a(e,i,function(){return o++})}var o=1,i="nr@id",a=e("gos");t.exports=r},{}],loader:[function(e,t,n){function r(){if(!x++){var e=h.info=NREUM.info,t=d.getElementsByTagName("script")[0];if(setTimeout(s.abort,3e4),!(e&&e.licenseKey&&e.applicationID&&t))return s.abort();f(y,function(t,n){e[t]||(e[t]=n)}),c("mark",["onload",a()+h.offset],null,"api");var n=d.createElement("script");n.src="https://"+e.agent,t.parentNode.insertBefore(n,t)}}function o(){"complete"===d.readyState&&i()}function i(){c("mark",["domContent",a()+h.offset],null,"api")}function a(){return E.exists&&performance.now?Math.round(performance.now()):(u=Math.max((new Date).getTime(),u))-h.offset}var u=(new Date).getTime(),c=e("handle"),f=e(2),s=e("ee"),p=window,d=p.document,l="addEventListener",m="attachEvent",w=p.XMLHttpRequest,g=w&&w.prototype;NREUM.o={ST:setTimeout,SI:p.setImmediate,CT:clearTimeout,XHR:w,REQ:p.Request,EV:p.Event,PR:p.Promise,MO:p.MutationObserver};var v=""+location,y={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1071.min.js"},b=w&&g&&g[l]&&!/CriOS/.test(navigator.userAgent),h=t.exports={offset:u,now:a,origin:v,features:{},xhrWrappable:b};e(1),d[l]?(d[l]("DOMContentLoaded",i,!1),p[l]("load",r,!1)):(d[m]("onreadystatechange",o),p[m]("onload",r)),c("mark",["firstbyte",u],null,"api");var x=0,E=e(4)},{}]},{},["loader"]);</script>
-    <script type="text/javascript">
-        var initialTime = new Date().getTime();
-      (function () {
-        var appName = 'marketing-template-viewer';
-        window.appStartLoadTime = window.performance && window.performance.now();
-        window.fedops = window.fedops || {};
-        window.fedops.apps = window.fedops.apps || {};
-        window.fedops.apps[appName] = { startLoadTime: window.appStartLoadTime };
-        try { window.fedops.sessionId = window.localStorage.getItem('fedops.logger.sessionId'); } catch(e) {};
-        window.fedops.sessionId = window.fedops.sessionId || 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8); return v.toString(16); });
-        (new Image()).src = '//frog.wix.com/fed?appName=' + appName + '&src=72&evid=14&session_id=' + window.fedops.sessionId;
-      })();
-    </script>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<html lang="en">
 
-    <link type="image/png" href="//www.wix.com/favicon.ico" rel="shortcut icon">
-    <link rel="stylesheet" href="https://static.parastorage.com/services/third-party/fonts/Helvetica/fontFace.css">
-    <link rel="stylesheet" href="//static.parastorage.com/services/marketing-template-viewer/1.149.0/app.min.css">
+    <head>
 
-    <meta name="description" content="With a simple and sleek layout, this template puts the focus on your resume's main message: the value you provide. Display your education and experience with ease, and show off your skills and qualifications with a clean visual representation. With a r like this, who wouldn't want to hire you? Make this template your own by clicking "Edit" now.">
-    <meta name="author" content="Wixpress">
-    <meta http-equiv="content-language" content="en"/>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+        <title>Desmond Resume Template</title>
 
-    <meta property="og:title" content="Student Resume Website Template | WIX"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:url" content="https://www.wix.com/website-template/view/html/2250"/>
-    <meta property="og:image" content="//static.wixstatic.com/media/11a924f068414167b4e2a738cba746c3.png"/>
-    <meta content="Wix" property="og:site_name">
-    <meta property="og:description" content="With a simple and sleek layout, this template puts the focus on your resume's main message: the value you provide. Display your education and experience with ease, and show off your skills and qualifications with a clean visual representation. With a r like this, who wouldn't want to hire you? Make this template your own by clicking "Edit" now."/>
-    <meta property="fb:admins" content="731184828"/>
-    <meta name="fb:app_id" content="236335823061286"/>
-    <meta name="google-site-verification" content="QXhlrY-V2PWOmnGUb8no0L-fKzG48uJ5ozW0ukU7Rpo"/>
+        <meta name="description" content="">
 
-    <link rel="canonical" href="https://www.wix.com/website-template/view/html/2250"/>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <link rel="alternate" hreflang="fr" href="https://fr.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="pt" href="https://pt.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="cs" href="https://cs.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="it" href="https://it.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="nl" href="https://nl.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="ko" href="https://ko.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="de" href="https://de.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="ru" href="https://ru.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="sv" href="https://sv.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="tr" href="https://tr.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="da" href="https://da.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="en" href="https://www.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="es" href="https://es.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="hi" href="https://hi.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="ja" href="https://ja.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="no" href="https://no.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="pl" href="https://pl.wix.com/website-template/view/html/2250"/>
-    <link rel="alternate" hreflang="x-default" href="https://www.wix.com/website-template/view/html/2250" />
+        <!-- Google Font: Lato -->
+        <link href='https://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 
-  </head>
-  <body>
-     <!-- Google Tag Manager -->
-  <noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MDD5C4" height="0" width="0"
-            style="display:none;visibility:hidden"></iframe>
-  </noscript>
-  <script type="text/javascript">
-    (function (w, d, s, l, i) {
-      w[l] = w[l] || [];
-      w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
-      var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-      j.async = true;
-      j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-      f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-MDD5C4');
-  </script>
-  <!-- End Google Tag Manager -->
-    <div id="root"><div data-hooks="app-component" data-reactroot="" data-reactid="1" data-react-checksum="-374568621"><div data-hooks="ToolBar-component" class="YzLUo" data-reactid="2"><div class="_2wQvC" data-reactid="3"><a data-hooks="logo" href="https://www.wix.com" class="is0YN _2qG4D" data-reactid="4"><span class="WPkeM" data-reactid="5">wix.com</span></a><div class="_2wQvC" data-reactid="6"><button data-hooks="desktop-view" class="_29tT_ _3hd5Y" data-reactid="7"><span class="_1ww10" data-reactid="8">show desktop view</span></button><hr class="_1gH_I" data-reactid="9"/><button data-hooks="mobile-view" class="_1WLf0 " data-reactid="10"><span class="_1ww10" data-reactid="11">show mobile view</span></button></div></div><div class="_2wQvC _1JQ0T" data-reactid="12"><p data-hooks="tool-bar-title" class="_2wHDV" data-reactid="13">Click Edit and create your own amazing website</p><a data-hooks="info-view" class="_2_uq4 " tabindex="0" role="dialog" href="#" data-reactid="14">Read More</a><a class="GeeHZ" data-hooks="editor-link" href="//editor.wix.com/html/editor/web/renderer/new?metaSiteId=3c9cac17-b1cd-4ad9-a023-84c961db326c&amp;siteId=3044e9e1-7c19-4f7b-ae79-20a2fac23be5&amp;editorSessionId=DAA80D45-4352-4790-3EC8-2A5EA1FD37BF" target="_blank" tabindex="0" data-reactid="15">Edit this site</a><label data-hooks="price" class="WkLpx" data-reactid="16"><!-- react-text: 17 -->Price:<!-- /react-text --><!-- react-text: 18 --> <!-- /react-text --><!-- react-text: 19 -->Free<!-- /react-text --></label></div></div><div data-hooks="template-demo-component" class="_2le64 " data-reactid="20"><div data-hooks="desktop-view-component" class="_3A-ul" data-reactid="21"><iframe data-hooks="desktop-iframe" src="https://www.wix.com/demone2/student-resume" width="100%" height="100%" class="hZ2pN" data-reactid="22"></iframe></div></div><div data-hooks="info-pop-up-component" class="j84Nw " data-reactid="23"><div class="_1ntUf" data-reactid="24"><button data-hooks="card-close" class="_2qr7h" data-reactid="25"><span class="_2Reo5" data-reactid="26">close info popup</span></button><div class="_1arsv" data-reactid="27"><h1 data-hooks="card-title" class="_2jJKk" data-reactid="28">Student Resume - Website Template</h1><div class="g3jbD" data-reactid="29"><h3 data-hooks="card-good-for-title" class="_1wsts" data-reactid="30">Good For:</h3><p data-hooks="card-good-for" class="_3XRMt" data-reactid="31">Students, interns, and business professionals</p></div><div class="g3jbD" data-reactid="32"><h3 class="_1wsts" data-reactid="33">Description:</h3><p data-hooks="card-description" class="_3XRMt" data-reactid="34">With a simple and sleek layout, this template puts the focus on your resume&#x27;s main message: the value you provide. Display your education and experience with ease, and show off your skills and qualifications with a clean visual representation. With a r like this, who wouldn&#x27;t want to hire you? Make this template your own by clicking &quot;Edit&quot; now.</p></div><p class="_3XRMt g3jbD gu6US" data-reactid="35"><span class="_1wsts" data-reactid="36">Price:</span><!-- react-text: 37 --> <!-- /react-text --><!-- react-text: 38 -->Free<!-- /react-text --></p></div><div class="_1FQWX" data-reactid="39"><a data-hooks="card-editor-url" class="_39ZU4 uWFzK" target="_blank" href="//editor.wix.com/html/editor/web/renderer/new?metaSiteId=3c9cac17-b1cd-4ad9-a023-84c961db326c&amp;siteId=3044e9e1-7c19-4f7b-ae79-20a2fac23be5&amp;editorSessionId=DAA80D45-4352-4790-3EC8-2A5EA1FD37BF" data-reactid="40">Edit Now</a></div></div></div></div></div>
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome.min.css">
 
-    <script>
-      window.__BASEURL__ = '/website-template/view/html/';
-      window.__INITIAL_I18N__ = {"locale":"en","resources":{"Price":"Price","Edit Template":"","About This Template":"","Description":"","Good For":"","template.viewer.page.title":"{{- title}} Website Template | WIX","template_button_label":"Edit Website","template_seeFeatures_label":"See All Features","template_expand_examples_text":"Great for","template_expand_header":"Template Features","template.viewer.title":"Click Edit and create your own amazing website","template.viewer.edit.button":"Edit this site","template.viewer.read.more":"Read More","template.viewer.back":"Back","template.viewer.info.edit.button":"Edit Now","template.viewer.price":"Price:","template.viewer.info.title":"{{- title}} - Website Template","template.viewer.info.goodFor":"Good For:","template.viewer.info.description":"Description:","template.viewer.info.desktop.only.notice":"Edit this template by going to Wix.com from your desktop, where you can customise any of our beautiful templates.","template.viewer.see.all.templates":"See All Templates","a11y.desktop.button":"show desktop view","a11y.mobile.button":"show mobile view","a11y.close.popup.button":"close info popup","messages_test":"test"}}
-      window.__INITIAL_STATE__ = {"view":{"selected":"desktop"},"loading":{"active":false},"template":{"title":"Student Resume","description":"With a simple and sleek layout, this template puts the focus on your resume's main message: the value you provide. Display your education and experience with ease, and show off your skills and qualifications with a clean visual representation. With a r like this, who wouldn't want to hire you? Make this template your own by clicking \"Edit\" now.","image":"11a924f068414167b4e2a738cba746c3.png","id":"2250","lng":"en","price":"Free","docUrl":"demone2\u002Fstudent-resume","editorUrl":"\u002F\u002Feditor.wix.com\u002Fhtml\u002Feditor\u002Fweb\u002Frenderer\u002Fnew?metaSiteId=3c9cac17-b1cd-4ad9-a023-84c961db326c&siteId=3044e9e1-7c19-4f7b-ae79-20a2fac23be5&editorSessionId=DAA80D45-4352-4790-3EC8-2A5EA1FD37BF","goodFor":"Students, interns, and business professionals","siteId":"3044e9e1-7c19-4f7b-ae79-20a2fac23be5","metasiteId":"3c9cac17-b1cd-4ad9-a023-84c961db326c","randomUUID":"DAA80D45-4352-4790-3EC8-2A5EA1FD37BF","url":"https:\u002F\u002Fwww.wix.com\u002Fdemone2\u002Fstudent-resume"},"info":{"show":false},"experiments":{"active":["NewTemplateApi","ReleaseNotesDesignUpdate","EnableAnonMainFunnelIntro","enableDealerAtTemplateViewer","ReleaseNotesDesignNavigation","TemplatesGalleryMobile"]},"originUrl":"https:\u002F\u002Fwww.wix.com\u002Fwebsite\u002Ftemplates?criteria=CV&page=2"};
-      window.__BI__ = {"siteId":"3044e9e1-7c19-4f7b-ae79-20a2fac23be5","metaSiteId":"3c9cac17-b1cd-4ad9-a023-84c961db326c","originUrl":"https:\u002F\u002Fwww.wix.com\u002Fwebsite\u002Ftemplates?criteria=CV&page=2"};
-      window.__BI__.initialTime = initialTime;
-      window.__DEVICE__ = 'desktop';
-    </script>
+        <!-- Nivo Lightbox-->
+        <link rel="stylesheet" href="assets/plugins/nivo-lightbox/nivo-lightbox.css" />
+        <link rel="stylesheet" href="assets/plugins/nivo-lightbox/themes/default/default.css" />
 
-    <script src="https://apps.wix.com/wix-dealer-webapp/api/loadScript?location=location"></script>
+        <!-- Main CSS -->
+        <link rel="stylesheet" href="assets/css/main.css">
 
-    <script src="//static.parastorage.com/services/marketing-template-viewer/1.149.0/app.bundle.min.js"></script>
-    <script src="https://static.parastorage.com/unpkg/marketing-cookie-notification@1.0.429/dist/statics/app.bundle.min.js"></script>
+        <!-- Themes -->
+        <link rel="stylesheet" href="assets/css/themes.light.css">
+        <!--<link rel="stylesheet" href="assets/css/themes.dark.css">-->
 
-  </body>
+        <!-- Custom CSS -->
+        <!--<link rel="stylesheet" href="assets/css/custom.css">-->
+
+        <!-- jQuery -->
+        <script src="assets/js/jquery.min.js"></script>
+
+        <!-- dense.js (Retina plugin) -->
+        <script src="assets/js/dense.js"></script>
+
+        <!-- Nivo Lightbox -->
+        <script src="assets/plugins/nivo-lightbox/nivo-lightbox.min.js"></script>
+
+        <!-- ScrollReveal -->
+        <script src="assets/js/scrollreveal.min.js"></script>
+
+        <!-- Main JS -->
+        <script src="assets/js/main.js"></script>
+
+    </head>
+
+    <body>
+
+        <div class="c-preloader  js-preloader">
+            <div class="c-preloader__spinner  t-preloader__spinner"></div>
+        </div>
+
+        <div class="c-main-container  js-main-container">
+
+
+
+            <!-- ################################ -->
+            <!-- ############ HEADER ############ -->
+            <!-- ################################ -->
+
+            <section class="o-section o-section--header  t-section  t-section--header">
+                <div class="c-header">
+
+                    <div class="o-section__header-bg  t-section__header"></div>
+                    <div class="o-section__content-bg  t-section__content"></div>
+
+                    <div class="o-container">
+                        <div class="o-section__container">
+
+                            <header class="o-section__header  c-header__header  t-section__header">
+                                <div class="c-header__inner-header">
+
+                                    <div class="c-header__avatar">
+                                        <div class="a-header  c-avatar">
+                                            <img class="c-avatar__img" src="assets/images/header/avatar.jpg" alt="">
+                                        </div><!-- /c-avatar -->
+                                    </div><!-- /c-header-avatar -->
+
+                                </div><!-- /c-header__inner-header -->
+                            </header><!-- /o-section__header -->
+
+                            <div class="o-section__content  c-header__content  t-section__content">
+                                <div class="c-header__inner-content">
+
+                                    <div class="c-header__top">
+
+                                        <div class="c-header__brand">
+
+                                            <div class="c-brand">
+                                                <h1 class="c-brand__title  t-title">
+                                                    <span class="c-brand__sizer">
+                                                        <span class="a-header  c-brand__first-word  t-title__first-word">
+                                                            David
+                                                        </span>
+                                                        <span class="a-header  c-brand__second-word  t-title__second-word">
+                                                            Joy
+                                                        </span>
+                                                    </span>
+                                                </h1>
+                                                <h2 class="a-header  c-brand__sub-title  t-sub-title">
+                                                    <span class="c-brand__sizer">
+                                                        Web Developer &amp; Front-end Expert
+                                                    </span>
+                                                </h2>
+                                            </div><!-- /c-brand -->
+
+                                        </div><!-- /c-header__brand -->
+
+                                        <ul class="c-header__social-buttons  c-social-buttons">
+                                            <li class="a-header">
+                                                <a href="https://www.facebook.com/RuvenThemes/" target="_blank" class="c-social-button  t-social-button">
+                                                    <i class="fa  fa-lg  fa-facebook"></i>
+                                                </a>
+                                            </li>
+                                            <li class="a-header">
+                                                <a href="https://dribbble.com/" target="_blank" class="c-social-button  t-social-button">
+                                                    <i class="fa  fa-lg  fa-dribbble"></i>
+                                                </a>
+                                            </li>
+                                            <li class="a-header">
+                                                <a href="https://twitter.com/_Ruven" target="_blank" class="c-social-button  t-social-button">
+                                                    <i class="fa  fa-lg  fa-twitter"></i>
+                                                </a>
+                                            </li>
+                                        </ul><!-- /c-header__social-buttons -->
+
+                                    </div><!-- /c-header__top -->
+
+                                    <div class="c-header__contact">
+
+                                        <hr class="a-header  c-header__contact-divider" />
+
+                                        <div class="o-grid">
+
+                                            <div class="o-grid__col-md-3  o-grid__col-sm-6">
+                                                <div class="a-header  o-content">
+                                                    <div class="o-content__body">
+                                                        <h4>Location</h4>
+                                                        <address>
+                                                            Portland, OR
+                                                        </address>
+                                                    </div>
+                                                </div><!-- /o-content -->
+                                            </div><!-- /o-grid__col -->
+
+                                            <div class="o-grid__col-md-3  o-grid__col-sm-6">
+                                                <div class="a-header  o-content">
+                                                    <div class="o-content__body">
+                                                        <h4>Phone</h4>
+                                                        <p>
+                                                            534.456.886
+                                                        </p>
+                                                    </div>
+                                                </div><!-- /o-content -->
+                                            </div><!-- /o-grid__col -->
+
+                                            <div class="o-grid__col-md-3  o-grid__col-sm-6">
+                                                <div class="a-header  o-content">
+                                                    <div class="o-content__body">
+                                                        <a href="#" target="_blank" class="t-link-container">
+                                                            <h4>Web</h4>
+                                                            <p>
+                                                                <span class="t-link-container__item--blended">
+                                                                    ruventhemes.com
+                                                                </span>
+                                                            </p>
+                                                        </a><!-- /o-link-container -->
+                                                    </div>
+                                                </div><!-- /o-content -->
+                                            </div><!-- /o-grid__col -->
+
+                                            <div class="o-grid__col-md-3  o-grid__col-sm-6">
+                                                <div class="a-header  o-content">
+                                                    <div class="o-content__body">
+                                                        <a href="#" target="_blank" class="t-link-container">
+                                                            <h4>Email</h4>
+                                                            <p>
+                                                                <span class="t-link-container__item--blended">
+                                                                    hello@example.com
+                                                                </span>
+                                                            </p>
+                                                        </a><!-- /o-link-container -->
+                                                    </div>
+                                                </div><!-- /o-content -->
+                                            </div><!-- /o-grid__col -->
+
+                                        </div><!-- /o-grid -->
+                                    </div><!-- /c-header__contact -->
+
+                                </div><!-- /c-header__inner-content -->
+                            </div><!-- /o-section__content -->
+
+                        </div><!-- /o-section__container -->
+
+                    </div><!-- /o-container -->
+
+                </div><!-- /c-header -->
+            </section><!-- /o-section -->
+
+
+
+            <!-- ################################ -->
+            <!-- ############ INTRO ############# -->
+            <!-- ################################ -->
+
+            <section class="o-section  t-section  ">
+
+                <div class="o-section__header-bg  t-section__header"></div>
+                <div class="o-section__content-bg  t-section__content"></div>
+
+                <div class="o-container">
+                    <div class="o-section__container">
+
+                        <header class="o-section__header  t-section__header">
+                            <div class="o-content">
+                                <h2 class="o-section__heading">
+                                    Intro
+                                </h2>
+                                <div class="o-content__body  o-section__description">
+                                    What I am all about.
+                                </div>
+                            </div>
+                        </header><!-- /o-section__header -->
+
+                        <div class="o-section__content  t-section__content  ">
+
+                            <div class="o-content">
+                                <div class="c-intro">
+                                    <div class="o-content__body">
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus hendrerit. Pellentesque aaliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id, mattis vel, nisi. Sed
+                                            <a href="#" target="_blank">pretium</a>, ligula sollicitudin laoreet viverra, tortor libero sodales leo, eget blandit nunc tortor eu nibh. Nullam mollis. Ut justo. Suspendisse potenti. Nulla vitae mauris non felis mollis faucibus.
+                                        </p>
+                                        <p>
+                                            Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis. Vestibulum volutpat, lacus a ultrices sagittis, mi neque euismod dui, eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna. Fusce lacinia arcu et nulla. Nulla vitae mauris non felis mollis.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div><!-- /o-section__content -->
+
+                    </div><!-- /o-section__container -->
+                </div><!-- /o-container -->
+
+            </section><!-- /o-section -->
+
+
+
+            <!-- ################################ -->
+            <!-- ########## EXPERTISE ########### -->
+            <!-- ################################ -->
+
+            <section class="o-section  t-section  ">
+
+                <div class="o-section__header-bg  t-section__header"></div>
+                <div class="o-section__content-bg  t-section__content"></div>
+
+                <div class="o-container">
+                    <div class="o-section__container">
+
+                        <header class="o-section__header  t-section__header">
+                            <div class="o-content">
+                                <h2 class="o-section__heading">
+                                    Expertise
+                                </h2>
+                                <div class="o-content__body  o-section__description">
+                                    Batman would be jealous.
+                                </div>
+                            </div>
+                        </header><!-- /o-section__header -->
+
+                        <div class="o-section__content  t-section__content  ">
+
+                            <div class="o-grid">
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-media  o-media--block  o-content">
+                                        <div class="o-media__figure">
+                                            <div class="c-number  t-primary-color">
+                                                01
+                                            </div>
+                                        </div>
+                                        <div class="o-media__body  o-content__body">
+                                            <h3>Advanced CSS</h3>
+                                            <p>
+                                                Cras ornare tristique elit lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus hendrerit. Pellentesque aliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id.
+                                            </p>
+                                        </div>
+                                    </div><!-- /o-media o-content -->
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-media  o-media--block  o-content">
+                                        <div class="o-media__figure">
+                                            <div class="c-number  t-primary-color">
+                                                02
+                                            </div>
+                                        </div>
+                                        <div class="o-media__body  o-content__body">
+                                            <h3>Front-end Design</h3>
+                                            <p>
+                                                Sed adipiscing ornare risus. Morbi est est, blandit sit amet, sagittis vel, euismod vel, velit. Pellentesque egestas sem. Suspendisse commodo ullamcorper magna. Ut aliquam sollicitudin leo.
+                                            </p>
+                                        </div>
+                                    </div><!-- /o-media o-content -->
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-media  o-media--block  o-content">
+                                        <div class="o-media__figure">
+                                            <div class="c-number  t-primary-color">
+                                                03
+                                            </div>
+                                        </div>
+                                        <div class="o-media__body  o-content__body">
+                                            <h3>Ruby on Rails</h3>
+                                            <p>
+                                                Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Vivamus vestibulum nulla cras ornare tristique elit nec ante.
+                                            </p>
+                                        </div>
+                                    </div><!-- /o-media o-content -->
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-media  o-media--block  o-content">
+                                        <div class="o-media__figure">
+                                            <div class="c-number  t-primary-color">
+                                                04
+                                            </div>
+                                        </div>
+                                        <div class="o-media__body  o-content__body">
+                                            <h3>Object-oriented PHP</h3>
+                                            <p>
+                                                Morbi in sem quis dui placerat ornare. Ut aliquam sollicitudin leo. Pellentesque odio nisi, euismod in, pharetra a, ultricies in, diam. Sed arcu. Cras ante. Vivamus vestibulum nulla nec ante.
+                                            </p>
+                                        </div>
+                                    </div><!-- /o-media o-content -->
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-media  o-media--block  o-content">
+                                        <div class="o-media__figure">
+                                            <div class="c-number  t-primary-color">
+                                                05
+                                            </div>
+                                        </div>
+                                        <div class="o-media__body  o-content__body">
+                                            <h3>WordPress</h3>
+                                            <p>
+                                                Phasellus ultrices nulla quis nibh. Fusce lobortis lorem. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus. Nam nulla quam, gravida non, sodales sit amet, nisi.
+                                            </p>
+                                        </div>
+                                    </div><!-- /o-media o-content -->
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-media  o-media--block  o-content">
+                                        <div class="o-media__figure">
+                                            <div class="c-number  t-primary-color">
+                                                06
+                                            </div>
+                                        </div>
+                                        <div class="o-media__body  o-content__body">
+                                            <h3>JavaScript / jQuery</h3>
+                                            <p>
+                                                Cras ornare tristique elit lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus hendrerit. Pellentesque aliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id.
+                                            </p>
+                                        </div>
+                                    </div><!-- /o-media o-content -->
+                                </div><!-- /o-grid__col -->
+
+                            </div><!-- /o-grid -->
+
+                        </div><!-- /o-section__content -->
+
+                    </div><!-- /o-section__container -->
+                </div><!-- /o-container -->
+
+            </section><!-- /o-section -->
+
+
+
+            <!-- ################################ -->
+            <!-- ############ SKILLS ############ -->
+            <!-- ################################ -->
+
+            <section class="o-section  t-section  ">
+
+                <div class="o-section__header-bg  t-section__header"></div>
+                <div class="o-section__content-bg  t-section__content"></div>
+
+                <div class="o-container">
+                    <div class="o-section__container">
+
+                        <header class="o-section__header  t-section__header">
+                            <div class="o-content">
+                                <h2 class="o-section__heading">
+                                    Skills
+                                </h2>
+                                <div class="o-content__body  o-section__description">
+                                    Progress bars, anyone?
+                                </div>
+                            </div>
+                        </header><!-- /o-section__header -->
+
+                        <div class="o-section__content  t-section__content  ">
+
+                            <div class="o-grid">
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <div class="o-media  o-media--block">
+                                            <div class="o-media__figure">
+                                                <div class="c-number  t-primary-color">
+                                                    80<small>%</small>
+                                                </div>
+                                            </div>
+                                            <div class="o-media__body">
+                                                <h3>Photoshop</h3>
+                                            </div>
+                                        </div>
+                                        <div class="c-progress-bar  o-content__body  t-border-color-bg  u-mt-text">
+                                            <div class="a-progress-bar  c-progress-bar__filler  t-primary-bg" data-percent="80"></div>
+                                        </div>
+                                    </div>
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <div class="o-media  o-media--block">
+                                            <div class="o-media__figure">
+                                                <div class="c-number  t-primary-color">
+                                                    75<small>%</small>
+                                                </div>
+                                            </div>
+                                            <div class="o-media__body">
+                                                <h3>Illustrator</h3>
+                                            </div>
+                                        </div>
+                                        <div class="c-progress-bar  o-content__body  t-border-color-bg  u-mt-text">
+                                            <div class="a-progress-bar  c-progress-bar__filler  t-primary-bg" data-percent="75"></div>
+                                        </div>
+                                    </div>
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <div class="o-media  o-media--block">
+                                            <div class="o-media__figure">
+                                                <div class="c-number  t-primary-color">
+                                                    70<small>%</small>
+                                                </div>
+                                            </div>
+                                            <div class="o-media__body">
+                                                <h3>Git</h3>
+                                            </div>
+                                        </div>
+                                        <div class="c-progress-bar  o-content__body  t-border-color-bg  u-mt-text">
+                                            <div class="a-progress-bar  c-progress-bar__filler  t-primary-bg" data-percent="70"></div>
+                                        </div>
+                                    </div>
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <div class="o-media  o-media--block">
+                                            <div class="o-media__figure">
+                                                <div class="c-number  t-primary-color">
+                                                    65<small>%</small>
+                                                </div>
+                                            </div>
+                                            <div class="o-media__body">
+                                                <h3>After Effects</h3>
+                                            </div>
+                                        </div>
+                                        <div class="c-progress-bar  o-content__body  t-border-color-bg  u-mt-text">
+                                            <div class="a-progress-bar  c-progress-bar__filler  t-primary-bg" data-percent="65"></div>
+                                        </div>
+                                    </div>
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <div class="o-media  o-media--block">
+                                            <div class="o-media__figure">
+                                                <div class="c-number  t-primary-color">
+                                                    90<small>%</small>
+                                                </div>
+                                            </div>
+                                            <div class="o-media__body">
+                                                <h3>Sketch</h3>
+                                            </div>
+                                        </div>
+                                        <div class="c-progress-bar  o-content__body  t-border-color-bg  u-mt-text">
+                                            <div class="a-progress-bar  c-progress-bar__filler  t-primary-bg" data-percent="90"></div>
+                                        </div>
+                                    </div>
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <div class="o-media  o-media--block">
+                                            <div class="o-media__figure">
+                                                <div class="c-number  t-primary-color">
+                                                    50<small>%</small>
+                                                </div>
+                                            </div>
+                                            <div class="o-media__body">
+                                                <h3>CSS3 Animation</h3>
+                                            </div>
+                                        </div>
+                                        <div class="c-progress-bar  o-content__body  t-border-color-bg  u-mt-text">
+                                            <div class="a-progress-bar  c-progress-bar__filler  t-primary-bg" data-percent="50"></div>
+                                        </div>
+                                    </div>
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <div class="o-media  o-media--block">
+                                            <div class="o-media__figure">
+                                                <div class="c-number  t-primary-color">
+                                                    85<small>%</small>
+                                                </div>
+                                            </div>
+                                            <div class="o-media__body">
+                                                <h3>PageSpeed Insights</h3>
+                                            </div>
+                                        </div>
+                                        <div class="c-progress-bar  o-content__body  t-border-color-bg  u-mt-text">
+                                            <div class="a-progress-bar  c-progress-bar__filler  t-primary-bg" data-percent="85"></div>
+                                        </div>
+                                    </div>
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <div class="o-media  o-media--block">
+                                            <div class="o-media__figure">
+                                                <div class="c-number  t-primary-color">
+                                                    95<small>%</small>
+                                                </div>
+                                            </div>
+                                            <div class="o-media__body">
+                                                <h3>SEO</h3>
+                                            </div>
+                                        </div>
+                                        <div class="c-progress-bar  o-content__body  t-border-color-bg  u-mt-text">
+                                            <div class="a-progress-bar  c-progress-bar__filler  t-primary-bg" data-percent="95"></div>
+                                        </div>
+                                    </div>
+                                </div><!-- /o-grid__col -->
+
+                            </div><!-- /o-grid -->
+
+                        </div><!-- /o-section__content -->
+
+                    </div><!-- /o-section__container -->
+                </div><!-- /o-container -->
+
+            </section><!-- /o-section -->
+
+
+
+            <!-- ################################ -->
+            <!-- ########## EXPERIENCE ########## -->
+            <!-- ################################ -->
+
+            <section class="o-section  t-section  ">
+
+                <div class="o-section__header-bg  t-section__header"></div>
+                <div class="o-section__content-bg  t-section__content"></div>
+
+                <div class="o-container">
+                    <div class="o-section__container">
+
+                        <header class="o-section__header  t-section__header">
+                            <div class="o-content">
+                                <h2 class="o-section__heading">
+                                    Experience
+                                </h2>
+                                <div class="o-content__body  o-section__description">
+                                    Yes. I&#39;ve been around.
+                                </div>
+                            </div>
+                        </header><!-- /o-section__header -->
+
+                        <div class="o-section__content  t-section__content  u-pb-0">
+
+                            <div class="a-experience-timeline  c-timeline  t-border-color">
+
+                                <div class="c-timeline__item">
+                                    <div class="c-timeline__point  t-timeline__point  t-primary-bg"></div>
+                                    <div class="o-content">
+                                        <div class="o-grid">
+                                            <div class="o-grid__col-md-5">
+                                                <div class="c-work__timeframe">
+                                                    2015 &ndash; Present
+                                                </div>
+                                                <h3 class="c-work__heading">
+                                                    Unicorn Incubator Inc.
+                                                </h3>
+                                                <h4 class="c-work__title">
+                                                    Senior Interface Designer
+                                                </h4>
+                                                <div class="c-work__location">
+                                                    Portland, OR
+                                                </div>
+                                            </div>
+                                            <div class="o-grid__col-md-7">
+                                                <p>
+                                                    Consectetuer adipiscing elit. Phasellus hendrerit. Pellentesque aaliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id, mattis vel, nisi. Sed pretium, ligula sollicitudin laoreet viverra, tortor libero sodales leo, eget blandit nunc tortor eu nibh. Nullam mollis. Ut justo. Suspendisse potenti.
+                                                </p>
+                                            </div>
+                                        </div><!-- /o-grid -->
+                                    </div><!-- /o-content -->
+                                </div><!-- /c-timeline__item -->
+
+                                <div class="c-timeline__item">
+                                    <div class="c-timeline__point  t-timeline__point  t-primary-bg"></div>
+                                    <div class="o-content">
+                                        <div class="o-grid">
+                                            <div class="o-grid__col-md-5">
+                                                <div class="c-work__timeframe">
+                                                    2013 &ndash; 2015
+                                                </div>
+                                                <h3 class="c-work__heading">
+                                                    California Design Bureau
+                                                </h3>
+                                                <h4 class="c-work__title">
+                                                    Creative Director
+                                                </h4>
+                                                <div class="c-work__location">
+                                                    Cupertino, CA
+                                                </div>
+                                            </div>
+                                            <div class="o-grid__col-md-7">
+                                                <p>
+                                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus hendrerit. Pellentesque aaliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id, mattis vel, nisi. Sed pretium, ligula sollicitudin laoreet viverra, tortor libero sodales leo, eget blandit nunc tortor eu nibh. Nullam mollis.
+                                                </p>
+                                            </div>
+                                        </div><!-- /o-grid -->
+                                    </div><!-- /o-content -->
+                                </div><!-- /c-timeline__item -->
+
+                                <div class="c-timeline__item">
+                                    <div class="c-timeline__point  t-timeline__point  t-primary-bg"></div>
+                                    <div class="o-content">
+                                        <div class="o-grid">
+                                            <div class="o-grid__col-md-5">
+                                                <div class="c-work__timeframe">
+                                                    2010 &ndash; 2013
+                                                </div>
+                                                <h3 class="c-work__heading">
+                                                    Dreamland Creative
+                                                </h3>
+                                                <h4 class="c-work__title">
+                                                    Front-end Designer
+                                                </h4>
+                                                <div class="c-work__location">
+                                                    New York, NY
+                                                </div>
+                                            </div>
+                                            <div class="o-grid__col-md-7">
+                                                <p>
+                                                    Fusce lacinia arcu et nulla. Nulla vitae mauris non felis mollis faucibus. Phasellus hendrerit. Pellentesque aaliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id, mattis vel, nisi. Sed pretium, ligula sollicitudin laoreet viverra, tortor libero sodales leo, eget blandit nunc tortor eu nibh.
+                                                </p>
+                                            </div>
+                                        </div><!-- /o-grid -->
+                                    </div><!-- /o-content -->
+                                </div><!-- /c-timeline__item -->
+
+                            </div><!-- /c-timeline -->
+
+                        </div><!-- /o-section__content -->
+
+                    </div><!-- /o-section__container -->
+                </div><!-- /o-container -->
+
+            </section><!-- /o-section -->
+
+
+
+            <!-- ################################ -->
+            <!-- ########### EDUCATION ########## -->
+            <!-- ################################ -->
+
+            <section class="o-section  t-section  ">
+
+                <div class="o-section__header-bg  t-section__header"></div>
+                <div class="o-section__content-bg  t-section__content"></div>
+
+                <div class="o-container">
+                    <div class="o-section__container">
+
+                        <header class="o-section__header  t-section__header">
+                            <div class="o-content">
+                                <h2 class="o-section__heading">
+                                    Education
+                                </h2>
+                                <div class="o-content__body  o-section__description">
+                                    Lazy isn&#39;t in my vocabulary.
+                                </div>
+                            </div>
+                        </header><!-- /o-section__header -->
+
+                        <div class="o-section__content  t-section__content  u-pt-0">
+
+                            <div class="o-content">
+                                <div class="a-education-timeline  c-timeline  t-border-color  o-section__full-top-space">
+                                    <div class="c-timeline__end  t-border-color"></div>
+
+                                    <div class="c-timeline__item">
+                                        <div class="c-timeline__point  t-timeline__point  t-primary-bg"></div>
+                                        <div class="o-content">
+                                            <div class="o-grid">
+                                                <div class="o-grid__col-md-5">
+                                                    <div class="c-work__timeframe">
+                                                        2008 &ndash; 2010
+                                                    </div>
+                                                    <h3 class="c-work__heading">
+                                                        Webster Tech University
+                                                    </h3>
+                                                    <h4 class="c-work__title">
+                                                        Master of Computer Science
+                                                    </h4>
+                                                    <div class="c-work__location">
+                                                        Miami, FL
+                                                    </div>
+                                                </div>
+                                                <div class="o-grid__col-md-7">
+                                                    <p>
+                                                        Consectetuer adipiscing elit. Phasellus hendrerit. Pellentesque aaliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id, mattis vel, nisi. Sed pretium, ligula sollicitudin laoreet viverra, tortor libero sodales leo, eget blandit nunc tortor eu nibh.
+                                                    </p>
+                                                </div>
+                                            </div><!-- /o-grid -->
+                                        </div><!-- /o-content -->
+                                    </div><!-- /c-timeline__item -->
+
+                                    <div class="c-timeline__item">
+                                        <div class="c-timeline__point  t-timeline__point  t-primary-bg"></div>
+                                        <div class="o-content">
+                                            <div class="o-grid">
+                                                <div class="o-grid__col-md-5">
+                                                    <div class="c-work__timeframe">
+                                                        2003 &ndash; 2008
+                                                    </div>
+                                                    <h3 class="c-work__heading">
+                                                        Ninsei University
+                                                    </h3>
+                                                    <h4 class="c-work__title">
+                                                        Bachelor of Computer Science
+                                                    </h4>
+                                                    <div class="c-work__location">
+                                                        Tokyo, Japan
+                                                    </div>
+                                                </div>
+                                                <div class="o-grid__col-md-7">
+                                                    <p>
+                                                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus hendrerit. Pellentesque aaliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id, mattis vel, nisi. Sed pretium, ligula sollicitudin laoreet viverra, tortor libero.
+                                                    </p>
+                                                </div>
+                                            </div><!-- /o-grid -->
+                                        </div><!-- /o-content -->
+                                    </div><!-- /c-timeline__item -->
+
+                                    <div class="c-timeline__item">
+                                        <div class="c-timeline__point  t-timeline__point  t-primary-bg"></div>
+                                        <div class="o-content">
+                                            <div class="o-grid">
+                                                <div class="o-grid__col-md-5">
+                                                    <div class="c-work__timeframe">
+                                                        2000 &ndash; 2003
+                                                    </div>
+                                                    <h3 class="c-work__heading">
+                                                        Academy of Fine Arts
+                                                    </h3>
+                                                    <h4 class="c-work__title">
+                                                        Master of Arts
+                                                    </h4>
+                                                    <div class="c-work__location">
+                                                        Berlin, Germany
+                                                    </div>
+                                                </div>
+                                                <div class="o-grid__col-md-7">
+                                                    <p>
+                                                        Fusce lacinia arcu et nulla. Nulla vitae mauris non felis mollis faucibus. Phasellus hendrerit. Pellentesque aaliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id, mattis vel, nisi. Sed pretium, ligula sollicitudin laoreet viverra, tortor libero sodales.
+                                                    </p>
+                                                </div>
+                                            </div><!-- /o-grid -->
+                                        </div><!-- /o-content -->
+                                    </div><!-- /c-timeline__item -->
+
+                                </div><!-- /c-timeline -->
+                            </div><!-- /o-content -->
+
+                        </div><!-- /o-section__content -->
+
+                    </div><!-- /o-section__container -->
+                </div><!-- /o-container -->
+
+            </section><!-- /o-section -->
+
+
+
+            <!-- ################################ -->
+            <!-- ########### PROFILES ########### -->
+            <!-- ################################ -->
+
+            <section class="o-section  t-section  ">
+
+                <div class="o-section__header-bg  t-section__header"></div>
+                <div class="o-section__content-bg  t-section__content"></div>
+
+                <div class="o-container">
+                    <div class="o-section__container">
+
+                        <header class="o-section__header  t-section__header">
+                            <div class="o-content">
+                                <h2 class="o-section__heading">
+                                    Profiles
+                                </h2>
+                                <div class="o-content__body  o-section__description">
+                                    Busy as usual.
+                                </div>
+                            </div>
+                        </header><!-- /o-section__header -->
+
+                        <div class="o-section__content  t-section__content  ">
+
+                            <div class="o-grid">
+
+                                <div class="o-grid__col-xl-4  o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <a href="http://themeforest.net/user/ruventhemes/portfolio" target="_blank" class="t-link-container">
+                                            <div class="o-media  o-media--block">
+                                                <div class="o-media__figure">
+                                                    <div class="c-profile__icon">
+                                                        <i class="fa  fa-lg  fa-envira"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="o-media__body  o-content__body">
+                                                    <h3 class="t-link-container__item">
+                                                        Themeforest
+                                                    </h3>
+                                                    <p>
+                                                        An overview of the themes and templates that I sell.
+                                                    </p>
+                                                </div>
+                                            </div><!-- /o-media -->
+                                        </a><!-- /t-link-container -->
+                                    </div><!-- /o-content -->
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-xl-4  o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <a href="https://github.com/hatra-e/" target="_blank" class="t-link-container">
+                                            <div class="o-media  o-media--block">
+                                                <div class="o-media__figure">
+                                                    <div class="c-profile__icon">
+                                                        <i class="fa  fa-lg  fa-github-alt"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="o-media__body  o-content__body">
+                                                    <h3 class="t-link-container__item">
+                                                        GitHub
+                                                    </h3>
+                                                    <p>
+                                                        All my open source projects for you analyze.
+                                                    </p>
+                                                </div>
+                                            </div><!-- /o-media -->
+                                        </a><!-- /t-link-container -->
+                                    </div><!-- /o-content -->
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-xl-4  o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <a href="http://wordpress.com" target="_blank" class="t-link-container">
+                                            <div class="o-media  o-media--block">
+                                                <div class="o-media__figure">
+                                                    <div class="c-profile__icon">
+                                                        <i class="fa  fa-lg  fa-medium"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="o-media__body  o-content__body">
+                                                    <h3 class="t-link-container__item">
+                                                        Medium
+                                                    </h3>
+                                                    <p>
+                                                        Yes. I'm also a blogger and here you find my writings.
+                                                    </p>
+                                                </div>
+                                            </div><!-- /o-media -->
+                                        </a><!-- /t-link-container -->
+                                    </div><!-- /o-content -->
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-xl-4  o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <a href="https://dribbble.com" target="_blank" class="t-link-container">
+                                            <div class="o-media  o-media--block">
+                                                <div class="o-media__figure">
+                                                    <div class="c-profile__icon">
+                                                        <i class="fa  fa-lg  fa-dribbble"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="o-media__body  o-content__body">
+                                                    <h3 class="t-link-container__item">
+                                                        Dribbble
+                                                    </h3>
+                                                    <p>
+                                                        Whenever a design is finalized, it lands right here.
+                                                    </p>
+                                                </div>
+                                            </div><!-- /o-media -->
+                                        </a><!-- /t-link-container -->
+                                    </div><!-- /o-content -->
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-xl-4  o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <a href="https://www.flickr.com" target="_blank" class="t-link-container">
+                                            <div class="o-media  o-media--block">
+                                                <div class="o-media__figure">
+                                                    <div class="c-profile__icon">
+                                                        <i class="fa  fa-lg  fa-flickr"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="o-media__body  o-content__body">
+                                                    <h3 class="t-link-container__item">
+                                                        Flickr
+                                                    </h3>
+                                                    <p>
+                                                        A selection of photos I shot throughout the years.
+                                                    </p>
+                                                </div>
+                                            </div><!-- /o-media -->
+                                        </a><!-- /t-link-container -->
+                                    </div><!-- /o-content -->
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-xl-4  o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <a href="http://www.deviantart.com" target="_blank" class="t-link-container">
+                                            <div class="o-media  o-media--block">
+                                                <div class="o-media__figure">
+                                                    <div class="c-profile__icon">
+                                                        <i class="fa  fa-lg  fa-deviantart"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="o-media__body  o-content__body">
+                                                    <h3 class="t-link-container__item">
+                                                        DeviantArt
+                                                    </h3>
+                                                    <p>
+                                                        A place for my sketches and drawings.
+                                                    </p>
+                                                </div>
+                                            </div><!-- /o-media -->
+                                        </a><!-- /t-link-container -->
+                                    </div><!-- /o-content -->
+                                </div><!-- /o-grid__col -->
+
+                            </div><!-- /o-grid -->
+
+                        </div><!-- /o-section__content -->
+
+                    </div><!-- /o-section__container -->
+                </div><!-- /o-container -->
+
+            </section><!-- /o-section -->
+
+
+
+            <!-- ################################ -->
+            <!-- ############ HEADER ############ -->
+            <!-- ################################ -->
+
+            <section class="o-section  t-section  ">
+
+                <div class="o-section__header-bg  t-section__header"></div>
+                <div class="o-section__content-bg  t-section__content"></div>
+
+                <div class="o-container">
+                    <div class="o-section__container">
+
+                        <header class="o-section__header  t-section__header">
+                            <div class="o-content">
+                                <h2 class="o-section__heading">
+                                    Awards
+                                </h2>
+                                <div class="o-content__body  o-section__description">
+                                    Happy times!
+                                </div>
+                            </div>
+                        </header><!-- /o-section__header -->
+
+                        <div class="o-section__content  t-section__content  ">
+
+                            <div class="o-grid">
+
+                                <div class="o-grid__col-md-4  o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <hr class="c-deco-line  t-primary-color-line" />
+                                        <div class="o-content__body">
+                                            <h3>Unicorn Developer Award 2016</h3>
+                                            <p>
+                                                Lorem ipsum dolor sit amet, justo eget porttitor mauris sit amet felis. Neque id cursus faucibus.
+                                            </p>
+                                        </div>
+                                    </div><!-- /o-content -->
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-md-4  o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <hr class="c-deco-line  t-primary-color-line" />
+                                        <div class="o-content__body">
+                                            <h3>Website of the Year Award 2015</h3>
+                                            <p>
+                                                Praesent dapibus dolor sit amet, justo eget porttitor mauris sit amet. Neque id cursus faucibus.
+                                            </p>
+                                        </div>
+                                    </div><!-- /o-content -->
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-md-4  o-grid__col-sm-6">
+                                    <div class="o-content">
+                                        <hr class="c-deco-line  t-primary-color-line" />
+                                        <div class="o-content__body">
+                                            <h3>1st Place at CSShacker Conference</h3>
+                                            <p>
+                                                Lorem ipsum dolor sit amet, justo eget porttitor mauris sit amet felis. Neque id cursus faucibus.
+                                            </p>
+                                        </div>
+                                    </div><!-- /o-content -->
+                                </div><!-- /o-grid__col -->
+
+                            </div><!-- /o-grid -->
+
+                        </div><!-- /o-section__content -->
+
+                    </div><!-- /o-section__container -->
+                </div><!-- /o-container -->
+
+            </section><!-- /o-section -->
+
+
+
+            <!-- ################################ -->
+            <!-- ########### PORTFOLIO ########## -->
+            <!-- ################################ -->
+
+            <section class="o-section  t-section  ">
+
+                <div class="o-section__header-bg  t-section__header"></div>
+                <div class="o-section__content-bg  t-section__content"></div>
+
+                <div class="o-container">
+                    <div class="o-section__container">
+
+                        <header class="o-section__header  t-section__header">
+                            <div class="o-content">
+                                <h2 class="o-section__heading">
+                                    Portfolio
+                                </h2>
+                                <div class="o-content__body  o-section__description">
+                                    Here it gets interesting.
+                                </div>
+                            </div>
+                        </header><!-- /o-section__header -->
+
+                        <div class="o-section__content  t-section__content  o-section__full-bottom-space">
+
+                            <div class="o-grid  o-grid--gallery">
+
+                                <div class="o-grid__col-sm-6">
+                                    <a class="c-image-overlay  t-image-overlay  js-lightbox" href="assets/images/portfolio/1_full.jpg" data-lightbox-hidpi="" title="Musée du Louvre" data-lightbox-gallery="portfolio">
+                                        <img src="assets/images/portfolio/1_thumb.jpg" alt="">
+                                        <div class="c-image-overlay__content">
+                                            <h3>
+                                                Musée du Louvre
+                                            </h3>
+                                            <hr class="c-image-overlay__deco-line  t-image-overlay__deco-line" />
+                                            <p>
+                                                Fusce lacinia arcu et nulla. Nulla vitae mauris non felis mollis faucibus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <a class="c-image-overlay  t-image-overlay  js-lightbox" href="assets/images/portfolio/2_full.jpg" data-lightbox-hidpi="" title="Tunnel Effect" data-lightbox-gallery="portfolio">
+                                        <img src="assets/images/portfolio/2_thumb.jpg" alt="">
+                                        <div class="c-image-overlay__content">
+                                            <h3>
+                                                Tunnel Effect
+                                            </h3>
+                                            <hr class="c-image-overlay__deco-line  t-image-overlay__deco-line" />
+                                            <p>
+                                                Fusce lacinia arcu et nulla. Nulla vitae mauris non felis mollis faucibus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <a class="c-image-overlay  t-image-overlay  js-lightbox" href="assets/images/portfolio/3_full.jpg" data-lightbox-hidpi="" title="New York, New York" data-lightbox-gallery="portfolio">
+                                        <img src="assets/images/portfolio/3_thumb.jpg" alt="">
+                                        <div class="c-image-overlay__content">
+                                            <h3>
+                                                New York, New York
+                                            </h3>
+                                            <hr class="c-image-overlay__deco-line  t-image-overlay__deco-line" />
+                                            <p>
+                                                Fusce lacinia arcu et nulla. Nulla vitae mauris non felis mollis faucibus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <a class="c-image-overlay  t-image-overlay  js-lightbox" href="assets/images/portfolio/4_full.jpg" data-lightbox-hidpi="" title="Sky High" data-lightbox-gallery="portfolio">
+                                        <img src="assets/images/portfolio/4_thumb.jpg" alt="">
+                                        <div class="c-image-overlay__content">
+                                            <h3>
+                                                Sky High
+                                            </h3>
+                                            <hr class="c-image-overlay__deco-line  t-image-overlay__deco-line" />
+                                            <p>
+                                                Fusce lacinia arcu et nulla. Nulla vitae mauris non felis mollis faucibus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <a class="c-image-overlay  t-image-overlay  js-lightbox" href="assets/images/portfolio/5_full.jpg" data-lightbox-hidpi="" title="The Eiffel Tower" data-lightbox-gallery="portfolio">
+                                        <img src="assets/images/portfolio/5_thumb.jpg" alt="">
+                                        <div class="c-image-overlay__content">
+                                            <h3>
+                                                The Eiffel Tower
+                                            </h3>
+                                            <hr class="c-image-overlay__deco-line  t-image-overlay__deco-line" />
+                                            <p>
+                                                Fusce lacinia arcu et nulla. Nulla vitae mauris non felis mollis faucibus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div><!-- /o-grid__col -->
+
+                                <div class="o-grid__col-sm-6">
+                                    <a class="c-image-overlay  t-image-overlay  js-lightbox" href="assets/images/portfolio/6_full.jpg" data-lightbox-hidpi="" title="Reaching the Clouds" data-lightbox-gallery="portfolio">
+                                        <img src="assets/images/portfolio/6_thumb.jpg" alt="">
+                                        <div class="c-image-overlay__content">
+                                            <h3>
+                                                Reaching the Clouds
+                                            </h3>
+                                            <hr class="c-image-overlay__deco-line  t-image-overlay__deco-line" />
+                                            <p>
+                                                Fusce lacinia arcu et nulla. Nulla vitae mauris non felis mollis faucibus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div><!-- /o-grid__col -->
+
+                            </div><!-- /o-grid -->
+
+                        </div><!-- /o-section__content -->
+
+                    </div><!-- /o-section__container -->
+                </div><!-- /o-container -->
+
+            </section><!-- /o-section -->
+
+
+
+            <!-- ################################ -->
+            <!-- ############ CLIENTS ########### -->
+            <!-- ################################ -->
+
+            <section class="o-section  t-section  ">
+
+                <div class="o-section__header-bg  t-section__header"></div>
+                <div class="o-section__content-bg  t-section__content"></div>
+
+                <div class="o-container">
+                    <div class="o-section__container">
+
+                        <header class="o-section__header  t-section__header">
+                            <div class="o-content">
+                                <h2 class="o-section__heading">
+                                    Clients
+                                </h2>
+                                <div class="o-content__body  o-section__description">
+                                    Happy people.
+                                </div>
+                            </div>
+                        </header><!-- /o-section__header -->
+
+                        <div class="o-section__content  t-section__content  ">
+
+                            <ul class="c-clients  o-content">
+                                <li>
+                                    <a href="http://example.com" target="_blank">
+                                        <img src="assets/images/clients/bbc.png" alt="">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://example.com" target="_blank">
+                                        <img src="assets/images/clients/disney.png" alt="">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://example.com" target="_blank">
+                                        <img src="assets/images/clients/github.png" alt="">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://example.com" target="_blank">
+                                        <img src="assets/images/clients/google.png" alt="">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://example.com" target="_blank">
+                                        <img src="assets/images/clients/html5.png" alt="">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://example.com" target="_blank">
+                                        <img src="assets/images/clients/kickstarter.png" alt="">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://example.com" target="_blank">
+                                        <img src="assets/images/clients/youtube.png" alt="">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://example.com" target="_blank">
+                                        <img src="assets/images/clients/vimeo.png" alt="">
+                                    </a>
+                                </li>
+                            </ul><!-- /o-float-box -->
+
+                        </div><!-- /o-section__content -->
+
+                    </div><!-- /o-section__container -->
+                </div><!-- /o-container -->
+
+            </section><!-- /o-section -->
+
+
+
+            <!-- ################################ -->
+            <!-- ############ FOOTER ############ -->
+            <!-- ################################ -->
+
+            <section class="o-section  t-section  o-section--footer">
+
+                <div class="o-section__header-bg  t-section__header"></div>
+                <div class="o-section__content-bg  t-section__content"></div>
+
+                <div class="o-container">
+                    <div class="o-section__container">
+
+                        <header class="o-section__header  t-section__header">
+                            <div class="o-content">
+                                <h2 class="o-section__heading">
+                                    Contact
+                                </h2>
+                                <div class="o-content__body  o-section__description">
+                                    Call me, maybe.
+                                </div>
+                            </div>
+                        </header><!-- /o-section__header -->
+
+                        <div class="o-section__content  t-section__content  ">
+
+                                <div class="c-footer__contact">
+                                    <div class="o-grid">
+
+                                    <div class="o-grid__col-md-3  o-grid__col-sm-6">
+                                        <div class="o-content">
+                                            <div class="o-content__body">
+                                                <h4>Location</h4>
+                                                <address>
+                                                    Portland, OR
+                                                </address>
+                                            </div>
+                                        </div><!-- /o-content -->
+                                    </div><!-- /o-grid__col -->
+
+                                    <div class="o-grid__col-md-3  o-grid__col-sm-6">
+                                        <div class="o-content">
+                                            <div class="o-content__body">
+                                                <h4>Phone</h4>
+                                                <p>
+                                                    534.456.886
+                                                </p>
+                                            </div>
+                                        </div><!-- /o-content -->
+                                    </div><!-- /o-grid__col -->
+
+                                    <div class="o-grid__col-md-3  o-grid__col-sm-6">
+                                        <div class="o-content">
+                                            <div class="o-content__body">
+                                                <a href="#" target="_blank" class="t-link-container">
+                                                    <h4>Web</h4>
+                                                    <p>
+                                                        <span class="t-link-container__item--blended">
+                                                            ruventhemes.com
+                                                        </span>
+                                                    </p>
+                                                </a><!-- /o-link-container -->
+                                            </div>
+                                        </div><!-- /o-content -->
+                                    </div><!-- /o-grid__col -->
+
+                                    <div class="o-grid__col-md-3  o-grid__col-sm-6">
+                                        <div class="o-content">
+                                            <div class="o-content__body">
+                                                <a href="#" target="_blank" class="t-link-container">
+                                                    <h4>Email</h4>
+                                                    <p>
+                                                        <span class="t-link-container__item--blended">
+                                                            hello@example.com
+                                                        </span>
+                                                    </p>
+                                                </a><!-- /o-link-container -->
+                                            </div>
+                                        </div><!-- /o-content -->
+                                    </div><!-- /o-grid__col -->
+
+                                </div><!-- /o-grid -->
+                                </div><!-- /c-footer__contact -->
+
+                                <hr class="c-footer__contact-divider" />
+
+                                <div class="o-content">
+                                    <div class="c-footer__bottom">
+                                        <div class="c-footer__brand">
+
+                                            <div class="c-brand">
+                                                <div class="o-content__body">
+                                                    <h1 class="c-brand__title  t-title">
+                                                        <span class="c-brand__sizer  c-brand__sizer--sm">
+                                                            <span class="a-footer  c-brand__first-word  t-title__first-word">
+                                                                Desmond
+                                                            </span>
+                                                            <span class="a-footer  c-brand__second-word  t-title__second-word">
+                                                                Rambowski
+                                                            </span>
+                                                        </span>
+                                                    </h1>
+                                                </div><!-- /o-content__body -->
+                                            </div><!-- /c-brand -->
+
+                                        </div><!-- /c-footer__brand -->
+
+                                        <ul class="c-footer__social-buttons  c-social-buttons  o-content__body">
+                                            <li class="a-footer">
+                                                <a href="https://www.facebook.com/RuvenThemes/" target="_blank" class="c-social-button  t-social-button">
+                                                    <i class="fa  fa-lg  fa-facebook"></i>
+                                                </a>
+                                            </li>
+                                            <li class="a-footer">
+                                                <a href="https://dribbble.com/" target="_blank" class="c-social-button  t-social-button">
+                                                    <i class="fa  fa-lg  fa-dribbble"></i>
+                                                </a>
+                                            </li>
+                                            <li class="a-footer">
+                                                <a href="https://twitter.com/_Ruven" target="_blank" class="c-social-button  t-social-button">
+                                                    <i class="fa  fa-lg  fa-twitter"></i>
+                                                </a>
+                                            </li>
+                                        </ul><!-- /c-footer__social-buttons -->
+
+                                    </div><!-- /c-footer__bottom -->
+                                </div><!-- /o-content -->
+
+                        </div><!-- /o-section__content -->
+
+                    </div><!-- /o-section__container -->
+                </div><!-- /o-container -->
+
+            </section><!-- /o-section -->
+
+
+
+        </div><!-- /c-main-container -->
+
+    </body>
+
 </html>
