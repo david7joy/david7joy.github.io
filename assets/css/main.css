@@ -2471,4 +2471,33 @@ img[height] {
   display: none !important;
 }
 
+#skills {
+    padding: 50px 15px;
+    text-align: center
+}
+
+#skills h2 {
+    color: #cccccc;
+    margin-bottom: 50px
+}
+
+#skills ul {
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 800px
+}
+
+#skills li {
+    display: inline-block;
+    margin: 7px;
+    padding: 5px 10px;
+    color: #a5a5a5;
+    border: 1px solid #a5a5a5;
+    /* background: #e4e4ea; */
+    list-style: none;
+    cursor: default;
+    font-size: 1.2em
+}
+
 /*# sourceMappingURL=main.css.map */
