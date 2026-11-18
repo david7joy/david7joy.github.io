@@ -26,7 +26,7 @@ window.PORTFOLIO = {
       { label: "GitHub", url: "https://github.com/david7joy" },
       { label: "LinkedIn", url: "https://www.linkedin.com/in/david-joy-dj" }
     ],
-    footer: "David Joy · Dallas–Fort Worth, Texas. No trackers, no frameworks: one page of HTML, CSS and JavaScript."
+    footer: "David Joy · Dallas–Fort Worth, Texas."
   },
 
   stats: [
@@ -35,6 +35,12 @@ window.PORTFOLIO = {
     { value: "71", label: "episodes in the Big Ideas in App Architecture feed; I host the show" },
     { value: "9", label: "published posts, several co-authored with AWS and Microsoft" },
     { value: "9", label: "talks and webinars, from GenAI apps to payments for AI agents" }
+  ],
+
+  now: [
+    { title: "Rig", text: "A toolkit that lets an AI agent run an app, drive it and prove that a change works." },
+    { title: "Agent-ready databases", text: "Plugins and skills that bring CockroachDB expertise into Claude Code, Codex and Cursor." },
+    { title: "Forward-deployed architects", text: "Turning a solutions team into builders who ship with AI coding tools." }
   ],
 
   /* Places to find more. Leave url empty to hide a link until you have one. */
@@ -50,11 +56,10 @@ window.PORTFOLIO = {
   },
 
   /*
-    The journey, newest first: one entry per chapter.
-    tone is the chapter's colour. facts with a numeric value count up on screen.
+    The journey, newest first: one entry per chapter. tone is the chapter's colour.
   */
   journey: [
-    { year: 2026, place: "Cockroach Labs · building with agents", coords: "Now · Dallas, Texas", world: "Agents", tone: "#6ee7f0",
+    { year: 2026, place: "Cockroach Labs · building with agents", coords: "Now · Dallas, Texas", world: "Agents", tone: "#0f6b7a",
       title: "Today I build for agents, with agents.",
       body: [
         "I lead AI, ecosystem and partnerships work at Cockroach Labs. When coding agents arrived, my team met them where they work: plugins for Claude Code, Codex and Cursor, and a LangChain integration for agent memory.",
@@ -71,7 +76,7 @@ window.PORTFOLIO = {
         { label: "langchain-cockroachdb", url: "https://github.com/cockroachdb/langchain-cockroachdb" }
       ] },
 
-    { year: 2025, place: "Behind the microphone", coords: "Big Ideas in App Architecture", world: "The podcast", tone: "#f59ad0",
+    { year: 2025, place: "Behind the microphone", coords: "Big Ideas in App Architecture", world: "The podcast", tone: "#9a2f73",
       title: "Somewhere along the way I picked up a microphone.",
       body: [
         "I host Big Ideas in App Architecture, where founders, CTOs and architects explain how real systems get built and what broke along the way.",
@@ -86,7 +91,7 @@ window.PORTFOLIO = {
         { label: "Spencer Kimball", url: "https://www.spreaker.com/episode/ai-market-cycles-and-the-systems-built-to-outlast-them-with-cockroach-labs-ceo-co-founder-spencer-kimball--69525858" }
       ] },
 
-    { year: 2022, place: "Cockroach Labs", coords: "Distributed SQL · Cockroach Labs", world: "The ecosystem", tone: "#6ee7f0",
+    { year: 2022, place: "Cockroach Labs", coords: "Distributed SQL · Cockroach Labs", world: "The ecosystem", tone: "#0f6b7a",
       title: "Before the title, I was the architect in the room.",
       body: [
         "I joined Cockroach Labs as a partner solutions architect, working with AWS, Google Cloud and Microsoft. I wrote Terraform, built demos, co-authored guides with their engineers and presented at AWS re:Invent.",
@@ -103,7 +108,7 @@ window.PORTFOLIO = {
         { label: "Bedrock demo", url: "https://www.youtube.com/watch?v=OHb4HrDdJvY" }
       ] },
 
-    { year: 2019, place: "DataStax", coords: "Distributed databases · DataStax", world: "500 demos", tone: "#ff8f88",
+    { year: 2019, place: "DataStax", coords: "Distributed databases · DataStax", world: "500 demos", tone: "#b3352e",
       title: "Before that, five hundred demos taught me to explain anything.",
       body: [
         "At DataStax I moved from building models to helping companies run data at scale. I stood in front of CIOs, CTOs and developers and showed them what was possible, live.",
@@ -118,7 +123,7 @@ window.PORTFOLIO = {
         { label: "NoSQLBench demo", url: "https://www.youtube.com/watch?v=jHZeGy_ZHcU" }
       ] },
 
-    { year: 2017, place: "Dallas, Texas", coords: "32.99°N 96.75°W · Dallas, Texas", world: "Starting over", tone: "#b9a8ff",
+    { year: 2017, place: "Dallas, Texas", coords: "32.99°N 96.75°W · Dallas, Texas", world: "Starting over", tone: "#5546a8",
       title: "Before that, I moved to the USA to be a student again.",
       body: [
         "A master's in business analytics at UT Dallas, and every spare hour on machine learning. I built recommenders, a neural network that invents names, and learned to put models into production.",
@@ -130,7 +135,7 @@ window.PORTFOLIO = {
         { label: "Serving models with Docker", url: "https://github.com/david7joy/tensorflow-servable-docker" }
       ] },
 
-    { year: 2010, place: "Pune, India · Hertfordshire, UK", coords: "18.52°N 73.86°E · Pune → Hertfordshire, UK", world: "Telecom and data", tone: "#7be3a0",
+    { year: 2010, place: "Pune, India · Hertfordshire, UK", coords: "18.52°N 73.86°E · Pune → Hertfordshire, UK", world: "Telecom and data", tone: "#1f7a43",
       title: "Before that, seven years learning how businesses actually run.",
       body: [
         "My first job was at Tech Mahindra, as a business analyst on telecom systems for BT, in India and then in the UK. I wrote requirements, ran releases and automated the boring parts with shell scripts.",
@@ -143,7 +148,7 @@ window.PORTFOLIO = {
         { value: 2, label: "countries" }
       ] },
 
-    { year: 2008, place: "Nagpur, India", coords: "21.15°N 79.09°E · Nagpur, India", world: "Where it started", tone: "#ffb86b",
+    { year: 2008, place: "Nagpur, India", coords: "21.15°N 79.09°E · Nagpur, India", world: "Where it started", tone: "#b4511a",
       title: "And it all started with a graphics card.",
       body: [
         "I was an engineering student in Nagpur who had just built his first PC from scratch. Then my NVIDIA GeForce 8500 GT died, and the shop had no replacement.",
