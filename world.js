@@ -857,28 +857,28 @@ function buildStudio() {
   box(.12, 1.35, 1.3, mat.walnut, sideboard, 1.72, deckY + .68, 0, .02);
   register(sideboard, 'music', [-1.3, deckY + 1.25, 0], 0);
 
-  /* Back wall, built around the window opening (x -2.1 to 9.6, y -1.7 to 10). */
-  box(14.9, 17, .4, mat.wall, scene, -9.55, 5, -6.2, 0);
-  box(7.4, 17, .4, mat.wall, scene, 13.3, 5, -6.2, 0);
-  box(11.7, 3.6, .4, mat.wall, scene, 3.75, 11.8, -6.2, 0);
-  box(11.7, 1.4, .4, mat.wall, scene, 3.75, -2.4, -6.2, 0);
-  box(12.1, .14, .9, mat.trim, scene, 3.75, -1.66, -6.05, .03);
+  /* Back wall, built around a window centred behind the monitors (x -5.85 to 5.85, y -1.7 to 10). */
+  box(11.15, 17, .4, mat.wall, scene, -11.425, 5, -6.2, 0);
+  box(11.15, 17, .4, mat.wall, scene, 11.425, 5, -6.2, 0);
+  box(11.7, 3.6, .4, mat.wall, scene, 0, 11.8, -6.2, 0);
+  box(11.7, 1.4, .4, mat.wall, scene, 0, -2.4, -6.2, 0);
+  box(12.1, .14, .9, mat.trim, scene, 0, -1.66, -6.05, .03);
   for (const side of [-1, 1]) box(.4, 17, 34, mat.wall, scene, side * 17, 5, 4, 0);
   box(34, .4, .1, mat.trim, scene, 0, -2.8, -5.98, 0);
   /* Slim steel frame: three tall panes and a transom. */
-  for (let i = 1; i <= 4; i++) box(.11, 11.7, .16, mat.steel, scene, -6 + i * 3.9, 4.15, -6.2, 0);
-  for (const y of [-1.62, 6.9, 9.96]) box(11.7, .11, .16, mat.steel, scene, 3.75, y, -6.2, 0);
+  for (let i = 0; i <= 3; i++) box(.11, 11.7, .16, mat.steel, scene, -5.85 + i * 3.9, 4.15, -6.2, 0);
+  for (const y of [-1.62, 6.9, 9.96]) box(11.7, .11, .16, mat.steel, scene, 0, y, -6.2, 0);
 
-  /* Wall calendar, above the left monitor. */
-  const calendar = group(-3.72, 6.35, -5.96);
-  calendar.scale.setScalar(.8);
+  /* Wall calendar, right of the window, first in a row with the two posters. */
+  const calendar = group(7.4, 6.75, -5.96);
+  calendar.scale.setScalar(.72);
   box(3.76, 2.34, .05, mat.white, calendar, 0, 0, 0, .01);
   plane(3.64, 2.22, new THREE.MeshStandardMaterial({ map: calendarSheet.texture, roughness: .85 }), calendar, 0, 0, .03);
   register(calendar, 'talks', [0, 1.4, .1], 0);
 
-  /* The posters hang on the right-hand wall, above the guitar. */
+  /* The posters hang on the right-hand wall, either side of the guitar's neck. */
   posters.forEach((poster, i) => {
-    const frame = group(10.98 + i * 2.62, 5.8, -5.96);
+    const frame = group(10.72 + i * 2.66, 5.75, -5.96);
     box(2.56, 3.82, .09, mat.steel, frame, 0, 0, 0, .02);
     plane(2.42, 3.63, new THREE.MeshStandardMaterial({ map: poster.texture, roughness: .7 }), frame, 0, 0, .055);
   });
@@ -1001,9 +1001,9 @@ function buildStudio() {
   note(storyMonitor, -2.02, -1.84, .1, -.06, '#ff9ec4', ['stay', 'curious']);
   note(mainMonitor, 2.74, -1.82, .1, .05, '#b9ec8a', ['run, drive,', 'verify']);
   register(mainMonitor, 'work', [.8, 1.78, .1], 0);
-  note(scene, -4.85, 4.86, -5.92, .06, '#f5e26b', ['Dec 15', 'webinar']);
-  note(scene, -4.05, 4.84, -5.92, -.08, '#9fd4f5', ['Big Ideas', 'podcast']);
-  note(scene, -3.25, 4.87, -5.92, .04, '#ff9ec4', ['ship it']);
+  note(scene, 6.62, 5.43, -5.92, .06, '#f5e26b', ['Dec 15', 'webinar']);
+  note(scene, 7.4, 5.41, -5.92, -.08, '#9fd4f5', ['Big Ideas', 'podcast']);
+  note(scene, 8.18, 5.44, -5.92, .04, '#ff9ec4', ['ship it']);
 
   /* ---------- Keyboard and mouse in the middle ---------- */
 
@@ -1217,7 +1217,7 @@ function buildStudio() {
     contact: { position: [4.5, 2.8, 7], look: [4.1, .9, 1.9] },
     podcast: { position: [-5.2, 2.9, 8.6], look: [-7.5, 2.1, 2] },
     writing: { position: [-4.2, 4.6, 8.2], look: [-4.9, .1, 2.3] },
-    talks: { position: [-3.3, 6, 5.6], look: [-3.95, 6.1, -5.96] },
+    talks: { position: [6.4, 6.3, 5.4], look: [7.4, 6.3, -5.96] },
     skills: { position: [-11.2, 2.8, 6.6], look: [-12.7, 2.55, -5.96] }
   };
   for (const view of Object.values(focusViews)) {
