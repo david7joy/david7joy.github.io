@@ -71,7 +71,7 @@ function buildStudio() {
   const random = () => { seed = (1664525 * seed + 1013904223) >>> 0; return seed / 4294967296; };
   const timeUniform = { value: 0 };
   const pickables = [];
-  let record = null, soundOn = false;
+  let record = null, soundOn = false, recordSpeed = 0;
   const halos = [], notes = [], stickerSheets = [];
   const targets = new Map();
 
@@ -844,6 +844,13 @@ function buildStudio() {
   }
   cylinder(.25, .25, .03, standard('#f0a868', .6), record, 0, .003, 0, 40);
   box(.16, .032, .05, mat.white, record, .13, .004, 0, 0);
+  /* Light streaks and a label stripe, so the turning reads from across the room. */
+  for (const turn of [.5, 2.1, 3.7]) {
+    const streak = box(.4, .006, .035, standard('#56565c', .2, .7), record, Math.cos(turn) * .48, .013, Math.sin(turn) * .48, 0);
+    streak.rotation.y = -turn;
+    streak.castShadow = false;
+  }
+  box(.05, .034, .46, standard('#3d2619', .6), record, -.06, .004, 0, 0);
   cylinder(.025, .025, .09, mat.silver, record, 0, .04, 0, 12);
   cylinder(.1, .1, .16, mat.silver, sideboard, -.42, deckY + .32, -.55, 20);
   beam([-.42, deckY + .42, -.55], [-.98, deckY + .4, .42], .022, mat.silver, sideboard);
@@ -1473,7 +1480,11 @@ function buildStudio() {
       item.group.position.y = item.group.userData.baseY + item.hover * item.lift;
       if (!item.lift) item.group.scale.setScalar(1 + item.hover * .018);
     }
-    if (record && soundOn) record.rotation.y -= dt * 3.49;
+    if (record) {
+      /* The platter eases up to 33 rpm while music plays, and winds down when it stops. */
+      recordSpeed += ((soundOn ? 3.49 : 0) - recordSpeed) * Math.min(dt * 2.2, 1);
+      record.rotation.y -= dt * recordSpeed;
+    }
     timeUniform.value = elapsed;
     placeLabels();
     renderer.render(scene, camera);

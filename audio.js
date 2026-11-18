@@ -21,7 +21,7 @@
     [196.0, 246.94, 293.66, 329.63]
   ];
   const MODES = ['music', 'fx', 'off'];
-  const MUSIC_LEVEL = .15;
+  const MUSIC_LEVEL = .1;
   const LABELS = { fx: 'Sound: effects', music: 'Sound: music', off: 'Sound: off' };
   let context = null, music = null, effects = null, noise = null, drums = null, synths = null, pump = null;
   let mode = 'music', started = false, timer = 0, nextTime = 0, step = 0, lastFx = 0;
@@ -255,7 +255,7 @@
     });
     document.querySelectorAll('[data-sound-label]').forEach(node => { node.textContent = mode === 'music' ? 'Pause music' : 'Play music'; });
     document.body.classList.toggle('sound-on', mode === 'music');
-    window.dispatchEvent(new CustomEvent('studio:sound', { detail: { playing: mode === 'music', mode } }));
+    window.dispatchEvent(new CustomEvent('studio:sound', { detail: { playing: mode === 'music' && started, mode } }));
   }
 
   function startMusic() {
@@ -290,7 +290,7 @@
 
   /* Music is the default, but it can only begin once the visitor has interacted with the page. */
   function arm() {
-    if (mode === 'music' && !started) startMusic();
+    if (mode === 'music' && !started && startMusic()) sync();
     if (started || mode !== 'music') {
       document.removeEventListener('pointerdown', arm, true);
       document.removeEventListener('keydown', arm, true);
