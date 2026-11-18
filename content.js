@@ -52,7 +52,7 @@ window.PORTFOLIO = {
       { label: "GitHub", url: "https://github.com/david7joy" },
       { label: "X", url: "https://x.com/Joybeanns" },
       { label: "YouTube", url: "https://www.youtube.com/@joybeans" },
-      { label: "Substack", url: "https://joybeans.substack.com/" },
+      { label: "Substack", url: "https://thejoybeans.substack.com/" },
       { label: "Medium", url: "https://medium.com/@david.joy1588" }
     ]
   },
@@ -285,9 +285,21 @@ window.PORTFOLIO = {
       url: "https://github.com/david7joy/Recommendation_App", source: "GitHub", tags: ["machine learning", "django", "python"] },
 
     /* ---------- Writing ---------- */
-    /* ---------- Substack ---------- */
-    { type: "writing", date: "2025-11-12", title: "You have 43,200 minutes a month to talk to your friend. (Part 1)",
-      url: "https://joybeans.substack.com/p/you-have-43200-minutes-a-month-to", source: "Substack", role: "Author", tags: [] },
+    /* ---------- Substack (thejoybeans.substack.com) ---------- */
+    { type: "writing", date: "2025-11-19", title: "Deperciating insights",
+      url: "https://thejoybeans.substack.com/p/deperciating-insights", source: "Substack", role: "Author", tags: [] },
+    { type: "writing", date: "2024-11-26", title: "Give a man a purpose and the ability to achieve it, and he will crawl over broken glass with a smile.",
+      url: "https://thejoybeans.substack.com/p/give-a-man-a-purpose-and-the-ability", source: "Substack", role: "Author", tags: [] },
+    { type: "writing", date: "2024-10-18", title: "Are LLMs really REASONING or are we overfitting the intelligence messaging to LLMs?",
+      url: "https://thejoybeans.substack.com/p/are-llms-really-reasoning-or-are", source: "Substack", role: "Author", tags: [] },
+    { type: "writing", date: "2024-10-04", title: "50 Episodes of \"Big Ideas in App Architecture\"",
+      url: "https://thejoybeans.substack.com/p/50-episodes-of-big-ideas-in-app-architecture", source: "Substack", role: "Author", tags: [] },
+    { type: "writing", date: "2024-09-27", title: "NotebookLM by Google is NOW Absolutely Amazing, but Why?",
+      url: "https://thejoybeans.substack.com/p/notebooklm-by-google-is-now-absolutely", source: "Substack", role: "Author", tags: [] },
+    { type: "writing", date: "2024-09-25", title: "Practical Considerations for Running CockroachDB on AWS in Multi-Region Production",
+      url: "https://thejoybeans.substack.com/p/practical-considerations-for-running", source: "Substack", role: "Author", tags: [] },
+    { type: "writing", date: "2024-09-25", title: "I killed my personal website.",
+      url: "https://thejoybeans.substack.com/p/coming-soon", source: "Substack", role: "Author", tags: [] },
 
     /* ---------- Earlier writing on Medium ---------- */
     { type: "writing", date: "2019-04-04", title: "A/B Testing: Clearing Perspective",
