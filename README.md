@@ -1,17 +1,21 @@
 # David Joy — The Idea Studio
 
-A personal portfolio inside a real-time 3D studio, served from this repository by GitHub Pages. There is no build step.
+A personal portfolio set at a 3D model of my real desk, served from this repository by GitHub Pages. There is no build step.
+
+Every object on the desk opens a section: the main monitor (Work), the second monitor (My story), the microphone (Podcast), the terminal laptop (Rig), the chat laptop (Contact), the stack of pages (Writing) and the wall calendar (Talks). The room's light follows the time in Dallas; add `?hour=22` to the URL to preview another hour.
 
 ## Files
 
-- `index.html` — page structure and the panel templates (Work, Rig, Podcast, Writing, Talks, My story, Contact)
-- `content.js` — **all the content**: `items` (the library cards), `journey` (the story chapters, newest first), `stats` and `profile`
+- `index.html` — page structure, the intro screen and the panel templates
+- `content.js` — **all the content**: `items` (the library cards), `journey` (the story chapters), `stats` and `profile`
 - `library.js`, `library.css` — the content library: cards, filters and search for Work, Podcast, Writing and Talks
-- `app.js` — panels, routes (`#work`, `#podcast`, `#writing`, `#talks`, `#story`, `#contact`), keyboard shortcuts 1–6, the Dallas clock
-- `studio.css`, `world.css` — design tokens, typography and layout
-- `world.js` — the Three.js scene: geometry, lighting, shaders, object picking and camera controls
+- `app.js` — intro, panels, routes (`#work`, `#podcast`, `#writing`, `#talks`, `#story`, `#contact`, `#rig`), keys 1–6, the exploration tracker, the Dallas clock
+- `world.js` — the Three.js scene: the desk, canvas-drawn screens, lighting, object picking, camera close-ups (`focusViews`)
+- `studio.css`, `world.css` — design tokens (fonts and colours are at the top of `studio.css`), layout and panels
+- `game.css` — the intro, HUD, tracker, docked panel and type scale
 - `vendor/` — Three.js 0.180.0 and helpers (MIT, see `vendor/THREE-LICENSE.txt`)
-- `assets/studio-panorama.png` — the still image shown when WebGL is unavailable
+
+After changing a stylesheet or script, bump the `?v=` value on its link in `index.html` so browsers fetch the new file.
 
 ## Add something
 

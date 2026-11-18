@@ -38,6 +38,68 @@
   let returnFocus = null;
   let activePanel = null;
 
+  /* ---------- Intro: one screen before you step in ---------- */
+
+  const intro = document.getElementById('intro');
+  const stage = document.querySelectorAll('.site-header, .studio-home, .studio-footer');
+  let entered = false;
+  try { entered = sessionStorage.getItem('idea-studio-entered') === '1'; } catch (_) { /* Storage is optional. */ }
+
+  function enterStudio() {
+    if (!body.classList.contains('intro')) return;
+    body.classList.remove('intro');
+    body.classList.add('entering');
+    intro.classList.add('is-leaving');
+    stage.forEach(node => { node.inert = false; });
+    try { sessionStorage.setItem('idea-studio-entered', '1'); } catch (_) { /* Storage is optional. */ }
+    window.dispatchEvent(new CustomEvent('studio:enter'));
+    setTimeout(() => { intro.hidden = true; body.classList.remove('entering'); }, 2600);
+  }
+
+  /* Direct links to a section, and return visits in the same tab, skip it. */
+  if (intro && !entered && !resolve(location.hash)) {
+    body.classList.add('intro');
+    intro.hidden = false;
+    stage.forEach(node => { node.inert = true; });
+    intro.addEventListener('click', enterStudio);
+    document.addEventListener('keydown', event => {
+      if (!body.classList.contains('intro') || event.ctrlKey || event.metaKey || event.altKey) return;
+      if (event.key === 'Enter' || event.key === ' ' || event.key === 'Escape') { event.preventDefault(); enterStudio(); }
+    });
+    document.getElementById('intro-enter').focus({ preventScroll: true });
+  }
+
+  /* ---------- Exploration tracker ---------- */
+
+  const questKeys = ['work', 'rig', 'podcast', 'writing', 'talks', 'story', 'contact'];
+  const found = new Set();
+  try {
+    for (const key of JSON.parse(localStorage.getItem('idea-studio-found') || '[]')) if (questKeys.includes(key)) found.add(key);
+  } catch (_) { /* Storage is optional. */ }
+
+  function syncQuest() {
+    const quest = document.getElementById('quest');
+    if (!quest) return;
+    document.getElementById('quest-pips').replaceChildren(...questKeys.map(key => {
+      const pip = document.createElement('i');
+      if (found.has(key)) pip.className = 'is-found';
+      return pip;
+    }));
+    document.getElementById('quest-label').textContent = found.size === questKeys.length
+      ? 'Desk explored'
+      : `Explored ${found.size} of ${questKeys.length}`;
+    quest.hidden = false;
+    document.querySelectorAll('.collection-button').forEach(button => button.classList.toggle('is-found', found.has(button.dataset.open)));
+  }
+
+  function markFound(name) {
+    if (found.has(name) || !questKeys.includes(name)) return;
+    found.add(name);
+    try { localStorage.setItem('idea-studio-found', JSON.stringify([...found])); } catch (_) { /* Storage is optional. */ }
+    syncQuest();
+  }
+  syncQuest();
+
   /* ---------- Motion preference ---------- */
 
   let motionPreference = null;
@@ -207,6 +269,8 @@
   function openPanel(requested, trigger, updateUrl = true) {
     const name = resolve(requested);
     if (!name) return;
+    enterStudio();
+    markFound(name);
     const wasOpen = dialog.open;
     if (!wasOpen) returnFocus = trigger || document.activeElement;
 
@@ -319,11 +383,13 @@
   /* ---------- Dallas clock ---------- */
 
   const clock = document.getElementById('dallas-time');
+  const introClock = document.getElementById('intro-time');
   const formatter = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit' });
   function updateClock() {
     const now = new Date();
     clock.textContent = formatter.format(now);
     clock.dateTime = now.toISOString();
+    if (introClock) { introClock.textContent = clock.textContent; introClock.dateTime = clock.dateTime; }
   }
   updateClock();
   setInterval(updateClock, 30000);

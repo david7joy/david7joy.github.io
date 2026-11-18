@@ -5,28 +5,14 @@
 
 /* ---------- The live scene replaces the still image ---------- */
 
-.scene-3d .scene-world {
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: auto;
-  transform: none;
-  container-type: normal;
-}
-
 .scene-3d #studio-canvas {
   pointer-events: auto;
   touch-action: none;
-  opacity: 1;
   cursor: grab;
 }
 
 .scene-3d #studio-canvas.is-dragging {
   cursor: grabbing;
-}
-
-.scene-3d .studio-plate {
-  opacity: 0;
 }
 
 /* ---------- Hotspots follow the 3D objects (positioned by world.js) ---------- */
@@ -57,7 +43,7 @@
 }
 
 .scene-3d .scene-hotspot.is-hover > i {
-  background: #edf7df;
+  background: var(--accent);
   transform: scale(1.3);
 }
 
