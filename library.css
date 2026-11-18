@@ -8,7 +8,7 @@
   container-name: lib;
   min-width: 0;
   color: var(--ink, #f2f4ee);
-  font-family: var(--sans, 'Inter', system-ui, sans-serif);
+  font-family: var(--sans, 'DM Sans', system-ui, sans-serif);
   font-size: 16px;
   line-height: 1.5;
   text-align: left;
@@ -90,7 +90,7 @@
   flex: 0 0 auto;
   color: var(--muted, #b4c2c2);
   font-family: var(--mono, 'JetBrains Mono', ui-monospace, monospace);
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: .04em;
   text-transform: uppercase;
   font-variant-numeric: tabular-nums;
@@ -247,8 +247,8 @@
 
 .lib-title {
   color: var(--ink, #f2f4ee);
-  font-family: var(--display, 'Sora', system-ui, sans-serif);
-  font-size: 19px;
+  font-family: var(--display, 'Bricolage Grotesque', system-ui, sans-serif);
+  font-size: 18px;
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: -.015em;
@@ -445,8 +445,8 @@ a.lib-row:focus-visible { outline-offset: -2px; }
 }
 
 .lib-empty-title {
-  font-family: var(--display, 'Sora', system-ui, sans-serif);
-  font-size: 22px;
+  font-family: var(--display, 'Bricolage Grotesque', system-ui, sans-serif);
+  font-size: 20px;
   font-weight: 600;
   line-height: 1.2;
 }
@@ -494,4 +494,11 @@ a.lib-row:focus-visible { outline-offset: -2px; }
   a.lib-card:hover .lib-img,
   a.lib-card:hover .lib-go,
   a.lib-row:hover .lib-go { transform: none; }
+}
+
+.lib-group-note {
+  margin: 8px 0 16px;
+  color: var(--muted, #b3bec6);
+  font-size: 14px;
+  line-height: 1.5;
 }

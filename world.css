@@ -75,7 +75,7 @@
   border-radius: 999px;
   background: rgba(9, 28, 34, .62);
   color: var(--ink);
-  font: 500 13px/1 var(--sans);
+  font: 500 14px/1 var(--sans);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   transition: background-color .18s, border-color .18s;
@@ -95,14 +95,14 @@
 }
 
 .camera-icon {
-  font-size: 17px;
+  font-size: 18px;
   line-height: 12px;
   color: var(--accent);
 }
 
 .camera-help {
   display: none;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--ink);
   text-shadow: 0 1px 8px rgba(7, 24, 26, .7);

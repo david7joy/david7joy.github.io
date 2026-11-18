@@ -12,8 +12,12 @@
   var SECTIONS = {
     work: {
       types: ['project', 'integration'], layout: 'grid', noun: ['item', 'items'],
-      searchLabel: 'Search projects and integrations', restLabel: 'More work',
-      chips: [['all', 'All'], ['project', 'Projects'], ['integration', 'Integrations']]
+      searchLabel: 'Search all work', restLabel: 'More work',
+      chips: [['all', 'All'], ['project', 'Independent projects'], ['integration', 'Company work']],
+      groups: [
+        { type: 'project', label: 'Independent projects', note: 'Built on my own, open source, on my GitHub.' },
+        { type: 'integration', label: 'Company work', note: 'Built with my team and published by Cockroach Labs.' }
+      ]
     },
     podcast: {
       types: ['podcast'], layout: 'list', noun: ['entry', 'entries'],
@@ -36,7 +40,7 @@
     }
   };
   var PUBLIC_SECTIONS = ['work', 'podcast', 'writing', 'talks'];
-  var TYPE_LABEL = { project: 'Project', integration: 'Integration', writing: 'Writing', podcast: 'Episode', video: 'Video', talk: 'Talk' };
+  var TYPE_LABEL = { project: 'Independent project', integration: 'Company work', writing: 'Writing', podcast: 'Episode', video: 'Video', talk: 'Talk' };
   var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   var HIDDEN_TAGS = { upcoming: 1, show: 1 };
   var MAX_TAG_CHIPS = 6;
@@ -408,6 +412,17 @@
 
       if (filtering) {
         results.appendChild(buildCollection(shown, cfg.layout, false));
+        return;
+      }
+
+      if (cfg.groups) {
+        cfg.groups.forEach(function (group) {
+          var members = shown.filter(function (it) { return it.type === group.type; });
+          if (!members.length) return;
+          results.appendChild(groupLabel(group.label + ' · ' + members.length));
+          results.appendChild(h('p', 'lib-group-note', group.note));
+          results.appendChild(buildCollection(members, cfg.layout, false));
+        });
         return;
       }
 

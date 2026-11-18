@@ -13,6 +13,7 @@ Every object on the desk opens a section: the main monitor (Work), the second mo
 - `world.js` — the Three.js scene: the desk, canvas-drawn screens, lighting, object picking, camera close-ups (`focusViews`)
 - `studio.css`, `world.css` — design tokens (fonts and colours are at the top of `studio.css`), layout and panels
 - `game.css` — the intro, HUD, tracker, docked panel and type scale
+- `assets/logos/` — brand marks for the desk stickers. Most are from Simple Icons (CC0 files; the marks remain their owners' trademarks); the Fiserv and UT Dallas logos are from Wikimedia Commons
 - `vendor/` — Three.js 0.180.0 and helpers (MIT, see `vendor/THREE-LICENSE.txt`)
 
 After changing a stylesheet or script, bump the `?v=` value on its link in `index.html` so browsers fetch the new file.

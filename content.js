@@ -50,8 +50,10 @@ window.PORTFOLIO = {
       { label: "Podcast", url: "https://www.cockroachlabs.com/big-ideas-podcast/" },
       { label: "Podcast on YouTube", url: "https://www.youtube.com/playlist?list=PL_QaflmEF2e_qCul_43FZ76FPEPodRScX" },
       { label: "GitHub", url: "https://github.com/david7joy" },
-      { label: "Medium", url: "" },
-      { label: "Stack Overflow", url: "" }
+      { label: "X", url: "https://x.com/Joybeanns" },
+      { label: "YouTube", url: "https://www.youtube.com/@joybeans" },
+      { label: "Substack", url: "https://joybeans.substack.com/" },
+      { label: "Medium", url: "https://medium.com/@david.joy1588" }
     ]
   },
 
@@ -162,8 +164,19 @@ window.PORTFOLIO = {
       ] }
   ],
 
+  /*
+    Career, oldest first. `to: null` means now. Shown on the left monitor and at the top of My story.
+  */
+  career: [
+    { from: 2010, to: 2017, org: "Tech Mahindra · Sungard AS", short: "Tech Mahindra", role: "Business analyst for BT, then business intelligence" },
+    { from: 2017, to: 2019, org: "UT Dallas · Fiserv · Walmart eCommerce", short: "Fiserv · Walmart", role: "Master's in business analytics, then machine learning and A/B testing" },
+    { from: 2019, to: 2022, org: "DataStax", short: "DataStax", role: "Demos, proofs of concept and partner training" },
+    { from: 2022, to: null, org: "Cockroach Labs", short: "Cockroach Labs", role: "Partner solutions architect to Director, AI, Ecosystem & Partnerships" }
+  ],
+
+
   items: [
-    /* ---------- Integrations (shipped by my team at Cockroach Labs) ---------- */
+    /* ---------- type "integration" = company work: built with my team, published by Cockroach Labs ---------- */
     { type: "integration", featured: true, date: "2026-11-05", title: "CockroachDB plugin for ChatGPT and OpenAI Codex",
       description: "A plugin with 34 skills that gives ChatGPT and Codex CockroachDB-specific guidance, with an optional connection to CockroachDB Cloud.",
       url: "https://github.com/cockroachdb/codex-plugin", source: "OpenAI Codex", role: "Team lead, launch co-author", tags: ["mcp", "agents", "openai"] },
@@ -186,7 +199,7 @@ window.PORTFOLIO = {
       description: "The public directory of 33 partner integrations from the certification program I lead, across AI and agents, data pipelines, developer tools, infrastructure, observability and financial services.",
       url: "https://www.cockroachlabs.com/product/partner-integrations/", source: "Cockroach Labs", role: "Program lead", tags: ["ecosystem", "certification", "isv"] },
 
-    /* ---------- Projects (my GitHub) ---------- */
+    /* ---------- type "project" = my own projects: open source, on my GitHub ---------- */
     { type: "project", date: "2024-06-05", title: "Multi-region trading app on CockroachDB",
       description: "Demo trading app with a React front end and Node.js back end, running on CockroachDB across US West, US East and EU West.",
       url: "https://github.com/david7joy/trade-app-crdb-multi-region", source: "GitHub", tags: ["react", "node", "multi-region", "demo"] },
@@ -207,6 +220,29 @@ window.PORTFOLIO = {
       url: "https://github.com/david7joy/Recommendation_App", source: "GitHub", tags: ["machine learning", "django", "python"] },
 
     /* ---------- Writing ---------- */
+    /* ---------- Earlier writing on Medium ---------- */
+    { type: "writing", date: "2019-04-04", title: "A/B Testing: Clearing Perspective",
+      description: "A/B testing and the chi-square test, worked through in Python.",
+      url: "https://medium.com/@david.joy1588/a-b-testing-clearing-perspective-bb28a9a4d5c7", source: "Medium", role: "Author", tags: ["a/b testing", "statistics", "python"] },
+    { type: "writing", date: "2019-03-20", title: "A bit of Kafka",
+      description: "Notes on Apache Kafka and streaming analytics.",
+      url: "https://medium.com/@david.joy1588/a-bit-of-kafka-952cab07d945", source: "Medium", role: "Author", tags: ["kafka", "streaming"] },
+    { type: "writing", date: "2019-03-19", title: "Spark Essentials",
+      description: "The essentials of Apache Spark for big data work.",
+      url: "https://medium.com/@david.joy1588/spark-essentials-33c0ab7509c6", source: "Medium", role: "Author", tags: ["spark", "big data"] },
+    { type: "writing", date: "2019-02-11", title: "Data Science Interview Prep",
+      description: "Preparation notes for data science and machine learning interviews.",
+      url: "https://medium.com/@david.joy1588/data-science-interview-prep-cf32c03f5780", source: "Medium", role: "Author", tags: ["data science", "machine learning"] },
+    { type: "writing", date: "2019-01-21", title: "Google Cloud Platform for Data Scientists and an Introduction to BigQuery, Part 1",
+      description: "Getting started with Google Cloud and BigQuery as a data scientist.",
+      url: "https://medium.com/@david.joy1588/google-cloud-platform-gcp-for-data-scientist-and-introduction-to-big-query-part-1-4f04022ea1e9", source: "Medium", role: "Author", tags: ["google cloud", "bigquery"] },
+    { type: "writing", date: "2018-11-07", title: "An Exploration into Churn Modeling, Part 2",
+      description: "Exploratory analysis and modelling of customer churn in Python.",
+      url: "https://medium.com/@david.joy1588/an-exploration-into-churn-modeling-part-2-8d5eddd17a9f", source: "Medium", role: "Author", tags: ["churn", "python", "data science"] },
+    { type: "writing", date: "2018-10-31", title: "An Exploration into Churn Modelling, Part 1",
+      description: "Predicting customer churn: framing the problem and the data.",
+      url: "https://medium.com/@david.joy1588/an-exploration-into-churn-modelling-part1-311529444c91", source: "Medium", role: "Author", tags: ["churn", "machine learning", "data science"] },
+
     { type: "writing", featured: true, date: "2026-11-05", title: "Introducing the CockroachDB plugin for ChatGPT and Codex: Database expertise for the agentic era",
       description: "Announces the plugin that gives agents schema design, PostgreSQL migration and slow-query guidance.",
       url: "https://www.cockroachlabs.com/blog/cockroachdb-plugin-for-chatgpt-and-codex/", source: "Cockroach Labs blog", role: "Co-author", tags: ["openai", "agents"] },

@@ -20,12 +20,13 @@
     podcast: { kicker: 'Podcast', nav: 'podcast' },
     writing: { kicker: 'Writing', nav: 'writing' },
     talks: { kicker: 'Talks & videos', nav: 'talks' },
+    skills: { kicker: 'Skills', nav: 'skills' },
     story: { kicker: 'My story', nav: 'story' },
     contact: { kicker: 'Contact', nav: 'contact' }
   };
   /* Older links keep working. */
   const aliases = { projects: 'work', conversations: 'podcast', about: 'story', connect: 'contact' };
-  const shortcuts = { 1: 'work', 2: 'podcast', 3: 'writing', 4: 'talks', 5: 'story', 6: 'contact' };
+  const shortcuts = { 1: 'work', 2: 'podcast', 3: 'writing', 4: 'talks', 5: 'story', 6: 'skills', 7: 'contact' };
 
   function resolve(value) {
     let name = String(value || '').replace(/^#/, '');
@@ -71,7 +72,7 @@
 
   /* ---------- Exploration tracker ---------- */
 
-  const questKeys = ['work', 'rig', 'podcast', 'writing', 'talks', 'story', 'contact'];
+  const questKeys = ['work', 'rig', 'podcast', 'writing', 'talks', 'story', 'skills', 'contact'];
   const found = new Set();
   try {
     for (const key of JSON.parse(localStorage.getItem('idea-studio-found') || '[]')) if (questKeys.includes(key)) found.add(key);
@@ -210,7 +211,6 @@
     const chapters = [...journey].sort((a, b) => (b.year || 0) - (a.year || 0));
     list.replaceChildren(...chapters.map(chapter => {
       const item = el('li');
-      if (/^#[0-9a-f]{3,8}$/i.test(chapter.tone || '')) item.style.setProperty('--tone', chapter.tone);
 
       const when = el('p', 'timeline-when');
       when.append(el('span', 'timeline-year', chapter.year));
@@ -250,6 +250,23 @@
     }));
   }
 
+  function renderCareer(root) {
+    const list = root.querySelector('[data-career]');
+    const career = window.PORTFOLIO?.career;
+    if (!list || !Array.isArray(career) || !career.length) return;
+    const steps = [...career].sort((a, b) => (b.from || 0) - (a.from || 0));
+    list.replaceChildren(...steps.map(step => {
+      const item = el('li', step.to == null ? 'is-now' : null);
+      item.append(
+        el('p', 'career-years', `${step.from} – ${step.to == null ? 'now' : step.to}`),
+        el('p', 'career-org', step.org),
+        el('p', 'career-role', step.role)
+      );
+      return item;
+    }));
+    list.closest('[data-career-block]')?.removeAttribute('hidden');
+  }
+
   /* ---------- Panels ---------- */
 
   function syncNav(name) {
@@ -280,6 +297,7 @@
       content.replaceChildren(document.getElementById(`${name}-template`).content.cloneNode(true));
       renderStats(content);
       renderJourney(content);
+      renderCareer(content);
       mountLibraries(content);
       kicker.textContent = panels[name].kicker;
       dialog.dataset.panel = name;

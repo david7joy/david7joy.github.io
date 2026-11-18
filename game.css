@@ -6,7 +6,7 @@
 /* ---------- Type scale ---------- */
 
 .monogram-mark {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
   letter-spacing: -.05em;
 }
@@ -18,13 +18,13 @@
 }
 
 .portfolio-dialog h2 {
-  font-size: clamp(30px, 3.1vw, 44px);
+  font-size: clamp(32px, 3.1vw, 44px);
   line-height: 1.08;
   letter-spacing: -.035em;
 }
 
 .portfolio-dialog h3 {
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.2;
   letter-spacing: -.02em;
 }
@@ -44,7 +44,7 @@
 }
 
 .timeline-year {
-  font-size: 26px;
+  font-size: 24px;
   letter-spacing: -.03em;
 }
 
@@ -53,13 +53,13 @@
 }
 
 .contact-email {
-  font-size: clamp(19px, 5vw, 28px);
+  font-size: clamp(18px, 5vw, 32px);
   letter-spacing: -.02em;
   overflow-wrap: anywhere;
 }
 
 .contact-signoff {
-  font-size: 22px;
+  font-size: 20px;
   letter-spacing: -.02em;
 }
 
@@ -222,7 +222,7 @@ body:not(.scene-3d) .scene-hotspot {
 
 .intro-line {
   margin-top: 24px;
-  font-size: clamp(17px, 1.5vw, 21px);
+  font-size: clamp(18px, 1.5vw, 20px);
   color: var(--muted);
   text-wrap: balance;
 }
@@ -252,7 +252,7 @@ body:not(.scene-3d) .scene-hotspot {
   padding: 7px 9px;
   border-radius: 999px;
   background: rgba(11, 16, 22, .14);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: .06em;
   text-transform: uppercase;
 }
@@ -316,11 +316,11 @@ body.entering .scene-hotspot {
 
   .hero-copy h1 {
     margin: 10px 0 16px;
-    font-size: clamp(56px, 5.4vw, 92px);
+    font-size: clamp(48px, 4.6vw, 80px);
   }
 
   .hero-description {
-    font-size: clamp(18px, 1.4vw, 22px);
+    font-size: clamp(18px, 1.4vw, 20px);
   }
 
   .hero-hint,
@@ -333,21 +333,22 @@ body.entering .scene-hotspot {
   }
 
   .story-note p {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .timeline h4 {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .timeline-year {
-    font-size: 28px;
+    font-size: 32px;
   }
 
   .scene-shade {
     background:
       linear-gradient(0deg, rgba(6, 9, 13, .94) 0%, rgba(6, 9, 13, .55) 16%, transparent 34%),
-      linear-gradient(90deg, rgba(6, 9, 13, .62), transparent 46%),
+      linear-gradient(90deg, rgba(6, 9, 13, .5), transparent 36%),
+      radial-gradient(120% 95% at 55% 48%, transparent 62%, rgba(4, 6, 9, .34) 100%),
       linear-gradient(180deg, rgba(6, 9, 13, .5), transparent 22%);
   }
 
@@ -467,5 +468,327 @@ body.entering .scene-hotspot {
 @media (max-height: 640px) and (max-width: 759px) {
   .hero-copy h1 {
     font-size: 46px;
+  }
+}
+
+/* ---------- Hero: a quiet name plate, so the desk is the main event ---------- */
+
+.hero-copy h1 {
+  margin: 0 0 10px;
+  font-size: clamp(44px, 11vw, 52px);
+  letter-spacing: -.035em;
+  line-height: 1;
+}
+
+.hero-description {
+  font: 400 18px/1.45 var(--sans);
+  letter-spacing: 0;
+  color: #e6ebe6;
+}
+
+.hero-roles {
+  margin-top: 8px;
+  font: 400 14px/1.5 var(--sans);
+  color: var(--muted);
+}
+
+.hero-roles i {
+  margin: 0 2px;
+}
+
+.intro-title {
+  letter-spacing: -.04em;
+}
+
+@media (min-width: 760px) {
+  .hero-copy {
+    top: 104px;
+  }
+
+  .hero-copy h1 {
+    margin: 0 0 12px;
+    font-size: clamp(44px, 3.6vw, 60px);
+  }
+
+  .hero-description {
+    font-size: 18px;
+  }
+
+  .hero-roles {
+    margin-top: 8px;
+    font-size: 14px;
+  }
+}
+
+@media (max-height: 700px) and (min-width: 760px) {
+  .hero-copy {
+    top: 88px;
+  }
+
+  .hero-copy h1 {
+    font-size: 44px;
+  }
+}
+
+/* ---------- Scene labels: always on, a dot and a name on each clickable thing ---------- */
+
+.scene-3d .scene-hotspot {
+  flex-direction: row;
+  gap: 8px;
+  width: auto;
+  height: 30px;
+  padding: 0 12px 0 10px;
+  border: 1px solid rgba(184, 239, 107, .45);
+  border-radius: 999px;
+  background: rgba(8, 12, 16, .78);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: opacity .4s, background-color .18s, border-color .18s;
+}
+
+.scene-3d .scene-hotspot > i {
+  width: 7px;
+  height: 7px;
+  border: 0;
+  background: var(--accent);
+  opacity: 1;
+}
+
+.scene-3d .scene-hotspot > span {
+  position: static;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 12px;
+  opacity: 1;
+  transform: none;
+}
+
+.scene-3d .scene-hotspot.is-hover,
+.scene-3d .scene-hotspot:hover,
+.scene-3d .scene-hotspot:focus-visible {
+  border-color: var(--accent);
+  background: rgba(8, 12, 16, .96);
+}
+
+.scene-3d .scene-hotspot.is-hover > i,
+.scene-3d .scene-hotspot:hover > i {
+  transform: none;
+}
+
+/* ---------- My story: career at a glance ---------- */
+
+.career {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.career li {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2px 24px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.career-years {
+  font: 500 12px/1.6 var(--mono);
+  letter-spacing: .06em;
+  color: var(--faint);
+}
+
+.career li.is-now .career-years {
+  color: var(--warm);
+}
+
+.career-org {
+  font: 600 18px/1.3 var(--display);
+  letter-spacing: -.01em;
+  color: var(--ink);
+}
+
+.career-role {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@container panel (min-width: 520px) {
+  .career li {
+    grid-template-columns: 128px minmax(0, 1fr);
+  }
+
+  .career-years {
+    grid-row: 1 / span 2;
+    padding-top: 3px;
+  }
+}
+
+/* ---------- Extra profile icons: desktop header only ---------- */
+
+.icon-extra {
+  display: none;
+}
+
+@media (min-width: 760px) {
+  .icon-extra {
+    display: grid;
+  }
+}
+
+@media (min-width: 480px) {
+  .contact-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ---------- Skills panel ---------- */
+
+.claude-art {
+  background: linear-gradient(135deg, #2a1a14, #17212a);
+}
+
+.claude-art .rig-word span {
+  color: #d97757;
+}
+
+.plain-list {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+}
+
+.plain-list li {
+  position: relative;
+  padding-left: 18px;
+}
+
+.plain-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: .62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.skill-groups {
+  display: grid;
+  gap: 0;
+  margin-top: 40px;
+  border-top: 1px solid var(--line);
+}
+
+.skill-groups > div {
+  display: grid;
+  gap: 10px 24px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.skill-groups dt {
+  font: 600 18px/1.3 var(--display);
+  color: var(--ink);
+}
+
+.skill-groups dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-groups dd span {
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+@container panel (min-width: 520px) {
+  .skill-groups > div {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+}
+
+/* ---------- Sound toggle ---------- */
+
+.sound-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  white-space: nowrap;
+}
+
+.sound-toggle:hover,
+.sound-toggle[aria-pressed="true"] {
+  color: var(--accent);
+}
+
+@media (min-width: 760px) {
+  .collection-nav {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+}
+
+/* ---------- One menu per screen size ----------
+   Desktop and tablet: the labels on the objects are the menu, so the bottom row and the top links step aside.
+   Phones: the bottom buttons are the menu, and the objects carry dots only. */
+
+@media (min-width: 760px) {
+  .collection-nav,
+  .site-sections {
+    display: none !important;
+  }
+
+  .scene-shade {
+    background:
+      linear-gradient(0deg, rgba(6, 9, 13, .8) 0%, transparent 16%),
+      linear-gradient(90deg, rgba(6, 9, 13, .5), transparent 36%),
+      radial-gradient(120% 95% at 55% 48%, transparent 62%, rgba(4, 6, 9, .34) 100%),
+      linear-gradient(180deg, rgba(6, 9, 13, .5), transparent 22%);
+  }
+}
+
+@media (max-width: 759px) {
+  .scene-3d .scene-hotspot {
+    display: flex;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border-color: rgba(184, 239, 107, .7);
+  }
+
+  .scene-3d .scene-hotspot > span {
+    display: none;
+  }
+
+  body:not(.exploring) .camera-controls {
+    display: none;
+  }
+}
+
+@media (min-width: 760px) and (max-width: 1099px) {
+  .hero-roles {
+    display: none;
   }
 }
