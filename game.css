@@ -2617,9 +2617,3 @@ button.span-seg:hover {
     white-space: normal;
   }
 }
-
-/* With motion paused the entrance must not freeze on its first, invisible frame. */
-.motion-paused .intro-inner > *,
-.tab-inactive .intro-inner > * {
-  animation: none !important;
-}

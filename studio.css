@@ -1481,7 +1481,11 @@ kbd {
 
 /* ---------- Motion preferences ---------- */
 
-.motion-paused *,
+/* Paused motion drops animations outright, so nothing freezes on an invisible first frame. */
+.motion-paused * {
+  animation: none !important;
+}
+
 .tab-inactive * {
   animation-play-state: paused !important;
 }
