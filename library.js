@@ -25,7 +25,7 @@
     },
     writing: {
       types: ['writing'], layout: 'list', noun: ['post', 'posts'],
-      searchLabel: 'Search writing', restLabel: 'More writing', chips: null
+      searchLabel: 'Search writing', restLabel: 'More writing', chips: null, plain: true
     },
     talks: {
       types: ['talk', 'video'], layout: 'grid', noun: ['item', 'items'],
@@ -280,6 +280,30 @@
     return a;
   }
 
+  /* Plain link list: one line per item (date, title, where it was published), newest first. */
+  function buildLinks(items) {
+    var list = h('ul', 'lib-links');
+    list.setAttribute('role', 'list');
+    items.slice().sort(function (a, b) { return dateKey(b) - dateKey(a); }).forEach(function (it) {
+      var li = h('li');
+      var a = h('a', 'lib-link');
+      a.href = it.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      var when = h('time', 'lib-link-date', formatDate(it.date));
+      when.setAttribute('datetime', String(it.date));
+      a.appendChild(when);
+      a.appendChild(h('span', 'lib-link-title', it.title));
+      if (it.source) a.appendChild(h('span', 'lib-link-source', it.source));
+      var go = h('span', 'lib-link-go', '↗');
+      go.setAttribute('aria-hidden', 'true');
+      a.appendChild(go);
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+    return list;
+  }
+
   function buildCollection(items, layout, featured) {
     var list = h('ul', layout === 'list' && !featured ? 'lib-list' : 'lib-grid' + (featured ? ' lib-grid--featured' : ''));
     list.setAttribute('role', 'list');
@@ -353,7 +377,7 @@
       if (typeChips.length > 2) chipBar.appendChild(typeGroup); else typeChips = [];
     }
     var tags = topTags(items);
-    if (tags.length >= 2) {
+    if (tags.length >= 2 && !cfg.plain) {
       var tagGroup = h('div', 'lib-chips lib-chips--tags');
       tagGroup.setAttribute('role', 'group');
       tagGroup.setAttribute('aria-label', 'Filter by topic');
@@ -407,6 +431,11 @@
           empty.appendChild(btn);
         }
         results.appendChild(empty);
+        return;
+      }
+
+      if (cfg.plain) {
+        results.appendChild(buildLinks(shown));
         return;
       }
 
