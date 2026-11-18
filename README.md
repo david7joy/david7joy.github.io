@@ -1,4 +1,4 @@
-# David Joy — The Idea Studio
+# David Joy · Open Desk
 
 A personal portfolio set at a 3D model of my real desk, served from this repository by GitHub Pages. There is no build step.
 
