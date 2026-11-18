@@ -885,7 +885,7 @@ function buildStudio() {
   for (const y of [-1.62, 6.9, 9.96]) box(11.7, .11, .16, mat.steel, scene, 3.75, y, -6.2, 0);
 
   /* Wall calendar, above the left monitor. */
-  const calendar = group(-3.95, 6.35, -5.96);
+  const calendar = group(-3.72, 6.35, -5.96);
   calendar.scale.setScalar(.8);
   box(3.76, 2.34, .05, mat.white, calendar, 0, 0, 0, .01);
   plane(3.64, 2.22, new THREE.MeshStandardMaterial({ map: calendarSheet.texture, roughness: .85 }), calendar, 0, 0, .03);

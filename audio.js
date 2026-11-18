@@ -1,10 +1,11 @@
 /*
   Studio sound.
   Three modes, cycled by the Sound button in the footer:
-    "fx"    (default) short interface sounds only: a swoosh when a panel opens or closes, a tick between sections
-    "music" the effects plus a generated lo-fi beat: soft kick, clap, hats, sub bass, pumping chords, vinyl crackle
+    "music" (default) a quiet generated lo-fi beat at 15% volume, plus the interface sounds
+    "fx"    interface sounds only: a swoosh when a panel opens or closes, a tick between sections
     "off"   silence
-  The record player switches the music on and off. Nothing sounds before the visitor's first click.
+  The record player switches the music on and off. Browsers do not allow sound before the visitor's
+  first click or key press, so the music starts on that first interaction (normally "Step inside").
   window.StudioSound: toggle() (music on/off), fx(name), mode, playing
 */
 (() => {
@@ -19,11 +20,12 @@
     [130.81, 196.0, 246.94, 329.63],
     [196.0, 246.94, 293.66, 329.63]
   ];
-  const MODES = ['fx', 'music', 'off'];
+  const MODES = ['music', 'fx', 'off'];
+  const MUSIC_LEVEL = .15;
   const LABELS = { fx: 'Sound: effects', music: 'Sound: music', off: 'Sound: off' };
   let context = null, music = null, effects = null, noise = null, drums = null, synths = null, pump = null;
-  let mode = 'fx', timer = 0, nextTime = 0, step = 0, lastFx = 0;
-  try { const saved = localStorage.getItem('idea-studio-sound'); if (saved === 'off' || saved === 'fx') mode = saved; } catch (_) { /* Storage is optional. */ }
+  let mode = 'music', started = false, timer = 0, nextTime = 0, step = 0, lastFx = 0;
+  try { const saved = localStorage.getItem('idea-studio-sound-v2'); if (MODES.includes(saved)) mode = saved; } catch (_) { /* Storage is optional. */ }
 
   function build() {
     if (context) return true;
@@ -256,27 +258,46 @@
     window.dispatchEvent(new CustomEvent('studio:sound', { detail: { playing: mode === 'music', mode } }));
   }
 
+  function startMusic() {
+    if (!build()) return false;
+    context.resume();
+    nextTime = Math.max(nextTime, context.currentTime + .1);
+    schedule();
+    clearInterval(timer);
+    timer = setInterval(schedule, 120);
+    music.gain.cancelScheduledValues(context.currentTime);
+    music.gain.setTargetAtTime(MUSIC_LEVEL, context.currentTime, .8);
+    started = true;
+    return true;
+  }
+
+  function stopMusic() {
+    clearInterval(timer);
+    started = false;
+    if (!context) return;
+    music.gain.cancelScheduledValues(context.currentTime);
+    music.gain.setTargetAtTime(0, context.currentTime, .25);
+  }
+
   function setMode(next) {
     if (!MODES.includes(next) || next === mode) return;
-    const wasMusic = mode === 'music';
     mode = next;
-    try { localStorage.setItem('idea-studio-sound', mode === 'music' ? 'fx' : mode); } catch (_) { /* Storage is optional. */ }
-    if (mode === 'music') {
-      if (!build()) { mode = 'fx'; sync(); return; }
-      context.resume();
-      nextTime = Math.max(nextTime, context.currentTime + .1);
-      schedule();
-      clearInterval(timer);
-      timer = setInterval(schedule, 120);
-      music.gain.cancelScheduledValues(context.currentTime);
-      music.gain.setTargetAtTime(.75, context.currentTime, .6);
-    } else if (wasMusic && context) {
-      clearInterval(timer);
-      music.gain.cancelScheduledValues(context.currentTime);
-      music.gain.setTargetAtTime(0, context.currentTime, .25);
-    }
+    try { localStorage.setItem('idea-studio-sound-v2', mode); } catch (_) { /* Storage is optional. */ }
+    if (mode === 'music') { if (!startMusic()) mode = 'fx'; }
+    else stopMusic();
     sync();
   }
+
+  /* Music is the default, but it can only begin once the visitor has interacted with the page. */
+  function arm() {
+    if (mode === 'music' && !started) startMusic();
+    if (started || mode !== 'music') {
+      document.removeEventListener('pointerdown', arm, true);
+      document.removeEventListener('keydown', arm, true);
+    }
+  }
+  document.addEventListener('pointerdown', arm, true);
+  document.addEventListener('keydown', arm, true);
 
   document.addEventListener('click', event => {
     if (event.target.closest('[data-open="music"]')) setMode(mode === 'music' ? 'fx' : 'music');
