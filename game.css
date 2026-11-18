@@ -2059,3 +2059,214 @@ button.span-seg:hover {
     width: min(880px, 58vw);
   }
 }
+
+/* ---------- My career header, third pass ---------- */
+
+.portfolio-dialog[data-panel="career"] .panel-lede {
+  margin-bottom: 14px;
+}
+
+.glance {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 0 0 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: linear-gradient(120deg, rgba(185, 163, 255, .09), rgba(16, 21, 26, .7) 45%, rgba(240, 168, 104, .07));
+  overflow: hidden;
+}
+
+.glance > div {
+  display: grid;
+  gap: 2px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: inset -1px -1px 0 var(--line);
+  transition: background-color .25s;
+}
+
+.glance > div:hover {
+  background: rgba(185, 163, 255, .08);
+}
+
+.glance dt {
+  font: 700 26px/1 var(--mono);
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(90deg, #ffffff, var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glance dd {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+@container panel (min-width: 520px) {
+  .glance {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* The timeline bar */
+
+.flow-rail {
+  top: -14px;
+  margin: 0 0 4px;
+  padding: 22px 0 6px;
+  background: rgba(10, 13, 16, .78);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 0 100vmax rgba(10, 13, 16, 0);
+}
+
+.span-bar {
+  gap: 2px;
+  height: 34px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: rgba(16, 21, 26, .8);
+}
+
+.span-seg {
+  position: relative;
+  justify-content: center;
+  overflow: visible;
+  border: 0;
+  border-radius: 5px;
+  background: rgba(185, 163, 255, var(--strength, .2));
+  color: var(--ink);
+}
+
+.span-seg.is-gap {
+  border: 0;
+  background: repeating-linear-gradient(135deg, rgba(240, 168, 104, .22) 0 4px, transparent 4px 8px);
+  color: var(--warm);
+}
+
+button.span-seg:hover {
+  transform: none;
+  background: rgba(185, 163, 255, .55);
+}
+
+.span-seg.is-current {
+  background: rgba(185, 163, 255, .72);
+  color: #0a0d10;
+}
+
+.span-seg.is-active {
+  background: var(--accent);
+  color: #0a0d10;
+  box-shadow: 0 0 18px rgba(185, 163, 255, .55);
+}
+
+.span-label {
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Hover names any segment, including the ones too short for a label. */
+.span-seg[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #0a0d10;
+  color: var(--ink);
+  font: 500 11px/1.4 var(--mono);
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.span-seg:first-child[data-tip]:hover::after {
+  left: 0;
+  transform: none;
+}
+
+.span-seg:last-child[data-tip]:hover::after {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+.span-scale {
+  position: relative;
+  display: block;
+  height: 18px;
+  margin: 4px 4px 0;
+  font-size: 10px;
+}
+
+.span-tick {
+  position: absolute;
+  top: 0;
+  padding-top: 6px;
+  color: var(--faint);
+  transform: translateX(-50%);
+}
+
+.span-tick::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 4px;
+  background: var(--faint);
+}
+
+.span-tick:first-child {
+  transform: none;
+}
+
+.span-tick:first-child::before {
+  left: 0;
+}
+
+.span-tick.is-now {
+  left: auto;
+  right: 0;
+  color: var(--accent);
+  transform: none;
+}
+
+.span-tick.is-now::before {
+  left: auto;
+  right: 0;
+  background: var(--accent);
+}
+
+.flow-tools {
+  margin-bottom: 8px;
+}
+
+.glance dt {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: var(--ink);
+}
+
+.glance > div:first-child dt {
+  color: var(--accent);
+}
+
+.flow-rail {
+  top: -8px;
+  margin: 10px -8px 4px;
+  padding: 8px 8px 6px;
+  border-radius: 10px;
+  background: rgba(10, 13, 16, .88);
+}

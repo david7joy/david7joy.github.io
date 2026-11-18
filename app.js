@@ -359,7 +359,21 @@
     const stops = [...track.children];
     const awardCount = career.reduce((sum, company) => sum + (company.awards?.length || 0), 0) + (window.PORTFOLIO?.education || []).filter(entry => entry.award).length;
     const awardSlot = root.querySelector('[data-award-count]');
-    if (awardSlot && awardCount) awardSlot.textContent = String(awardCount);
+    if (awardSlot && awardCount) { awardSlot.textContent = String(awardCount); awardSlot.dataset.tally = String(awardCount); }
+
+    /* The headline numbers count up once when the panel opens. */
+    root.querySelectorAll('[data-tally]').forEach(node => {
+      const target = Number(node.dataset.tally), suffix = node.dataset.suffix || '';
+      const show = value => { node.textContent = `${Math.round(value).toLocaleString('en-US')}${suffix}`; };
+      if (paused || !Number.isFinite(target)) { show(target); return; }
+      const started = performance.now();
+      const frame = now => {
+        const t = Math.min(1, (now - started) / 900);
+        show(target * (1 - Math.pow(1 - t, 3)));
+        if (t < 1 && node.isConnected) requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    });
 
     /* Expand or collapse every role at once. */
     const allButton = root.querySelector('[data-flow-all]');
@@ -373,34 +387,48 @@
       syncAll();
     });
 
-    /* The span bar: fifteen years to scale, one segment per company, with study time shown where it falls. */
+    /* The span bar: fifteen years to scale, one segment per company, with study time shown where it falls.
+       Segments brighten toward the present; a year axis sits underneath. */
     const ordered = career.map((company, index) => ({ company, index, start: monthIndex(company.from), end: monthIndex(company.to) })).sort((a, b) => a.start - b.start);
+    const firstMonth = ordered[0].start, lastMonth = Math.max(...ordered.map(entry => entry.end));
+    const total = Math.max(1, lastMonth - firstMonth + 1);
     const bar = el('div', 'span-bar');
     const segments = new Map();
-    let cursor = ordered[0].start;
-    for (const entry of ordered) {
+    let cursor = firstMonth;
+    ordered.forEach((entry, position) => {
       if (entry.start - cursor >= 3) {
         const study = el('span', 'span-seg is-gap');
         study.style.flexGrow = String(entry.start - cursor);
-        study.title = 'Master of Science at UT Dallas';
+        study.dataset.tip = 'MS, UT Dallas';
         study.append(el('span', 'span-label', 'MS'));
         bar.append(study);
       }
       const months = Math.max(1, entry.end - entry.start + 1);
+      const name = entry.company.short || entry.company.org;
       const segment = el('button', 'span-seg');
       segment.type = 'button';
       segment.style.flexGrow = String(months);
-      segment.title = `${entry.company.org}, ${entry.company.from} – ${entry.company.to}`;
-      segment.setAttribute('aria-label', segment.title);
-      if (months >= 30) segment.append(el('span', 'span-label', entry.company.short || entry.company.org));
+      segment.style.setProperty('--strength', (.16 + .5 * position / Math.max(1, ordered.length - 1)).toFixed(2));
+      segment.dataset.tip = `${name} · ${entry.company.from} – ${entry.company.to}`;
+      segment.setAttribute('aria-label', `${entry.company.org}, ${entry.company.from} to ${entry.company.to}`);
+      /* Long stays carry the name; short ones carry initials. */
+      const initials = name.split(/\s+/).map(word => word[0]).join('').slice(0, 2).toUpperCase();
+      if (months >= 9) segment.append(el('span', 'span-label', months >= 30 ? name : initials));
       if (entry.company.to === 'Present') segment.classList.add('is-current');
       segment.addEventListener('click', () => stops[entry.index].scrollIntoView({ block: 'start', behavior: paused ? 'instant' : 'smooth' }));
       segments.set(entry.index, segment);
       bar.append(segment);
       cursor = Math.max(cursor, entry.end + 1);
-    }
+    });
     const scale = el('div', 'span-scale');
-    scale.append(el('span', null, String(Math.floor(ordered[0].start / 12))), el('span', null, 'now'));
+    const firstYear = Math.floor(firstMonth / 12), lastYear = Math.floor(lastMonth / 12);
+    for (let year = firstYear; year <= lastYear; year += 2) {
+      const tick = el('span', 'span-tick', year === firstYear ? String(year) : `’${String(year).slice(2)}`);
+      tick.style.left = `${Math.max(0, (year * 12 - firstMonth) / total * 100).toFixed(2)}%`;
+      scale.append(tick);
+    }
+    const nowTick = el('span', 'span-tick is-now', 'now');
+    scale.append(nowTick);
     rail.replaceChildren(bar, scale);
 
     function setActive(index) {
