@@ -83,18 +83,18 @@ body:not(.scene-3d) .scene-hotspot {
 
 .scene-3d .scene-hotspot > i {
   border-color: var(--accent);
-  background: rgba(184, 239, 107, .35);
+  background: rgba(185, 163, 255, .35);
   box-shadow: none;
   animation: marker 2.6s ease-out infinite;
 }
 
 @keyframes marker {
-  from { box-shadow: 0 0 0 0 rgba(184, 239, 107, .55); }
-  to { box-shadow: 0 0 0 16px rgba(184, 239, 107, 0); }
+  from { box-shadow: 0 0 0 0 rgba(185, 163, 255, .55); }
+  to { box-shadow: 0 0 0 16px rgba(185, 163, 255, 0); }
 }
 
 .scene-hotspot > span {
-  border-color: rgba(184, 239, 107, .4);
+  border-color: rgba(185, 163, 255, .4);
   background: rgba(8, 12, 16, .9);
   font: 500 12px/1.2 var(--mono);
   letter-spacing: .06em;
@@ -244,7 +244,7 @@ body:not(.scene-3d) .scene-hotspot {
 }
 
 .intro-enter:hover {
-  background: #cdf78e;
+  background: #d6c8ff;
   transform: translateY(-1px);
 }
 
@@ -258,8 +258,8 @@ body:not(.scene-3d) .scene-hotspot {
 }
 
 @keyframes enter-pulse {
-  from { box-shadow: 0 0 0 0 rgba(184, 239, 107, .5); }
-  to { box-shadow: 0 0 0 22px rgba(184, 239, 107, 0); }
+  from { box-shadow: 0 0 0 0 rgba(185, 163, 255, .5); }
+  to { box-shadow: 0 0 0 22px rgba(185, 163, 255, 0); }
 }
 
 .intro-help {
@@ -401,7 +401,7 @@ body.entering .scene-hotspot {
 
   .collection-button.is-found kbd {
     border-color: var(--accent);
-    background: rgba(184, 239, 107, .12);
+    background: rgba(185, 163, 255, .12);
     color: var(--accent);
   }
 
@@ -538,7 +538,7 @@ body.entering .scene-hotspot {
   width: auto;
   height: 30px;
   padding: 0 12px 0 10px;
-  border: 1px solid rgba(184, 239, 107, .45);
+  border: 1px solid rgba(185, 163, 255, .45);
   border-radius: 999px;
   background: rgba(8, 12, 16, .78);
   -webkit-backdrop-filter: blur(6px);
@@ -775,7 +775,7 @@ body.entering .scene-hotspot {
     width: 20px;
     height: 20px;
     padding: 0;
-    border-color: rgba(184, 239, 107, .7);
+    border-color: rgba(185, 163, 255, .7);
   }
 
   .scene-3d .scene-hotspot > span {
@@ -898,7 +898,7 @@ body.entering .scene-hotspot {
 
 .flow-stop.is-current::before {
   background: var(--accent);
-  box-shadow: 0 0 0 5px rgba(184, 239, 107, .16);
+  box-shadow: 0 0 0 5px rgba(185, 163, 255, .16);
 }
 
 .flow-dates {
@@ -1288,7 +1288,7 @@ body.entering .scene-hotspot {
   }
 
   .panel-tabs button.is-active {
-    background: rgba(184, 239, 107, .08);
+    background: rgba(185, 163, 255, .08);
   }
 
   .panel-tabs button::after {
@@ -1442,7 +1442,7 @@ body.entering .scene-hotspot {
 .panel::before {
   inset: 0;
   background:
-    radial-gradient(42% 36% at 22% 28%, rgba(184, 239, 107, .12), transparent 70%),
+    radial-gradient(42% 36% at 22% 28%, rgba(185, 163, 255, .12), transparent 70%),
     radial-gradient(38% 32% at 78% 70%, rgba(240, 168, 104, .10), transparent 70%),
     radial-gradient(30% 26% at 62% 18%, rgba(143, 176, 216, .09), transparent 70%);
   background-size: 170% 170%, 160% 160%, 180% 180%;
@@ -1454,7 +1454,7 @@ body.entering .scene-hotspot {
   right: 0;
   top: -20%;
   height: 20%;
-  background: linear-gradient(180deg, transparent, rgba(184, 239, 107, .045) 60%, rgba(184, 239, 107, .09) 98%, transparent);
+  background: linear-gradient(180deg, transparent, rgba(185, 163, 255, .045) 60%, rgba(185, 163, 255, .09) 98%, transparent);
   animation: scan 9s linear infinite;
 }
 
@@ -1566,7 +1566,7 @@ body.entering .scene-hotspot {
 }
 
 .flow-role.is-open {
-  border-color: rgba(184, 239, 107, .32);
+  border-color: rgba(185, 163, 255, .32);
 }
 
 .flow-role-head {
@@ -1583,7 +1583,7 @@ body.entering .scene-hotspot {
 }
 
 .flow-role-head:hover {
-  background: rgba(184, 239, 107, .05);
+  background: rgba(185, 163, 255, .05);
 }
 
 .flow-role-heading {
@@ -1767,7 +1767,7 @@ button.span-seg:hover {
 }
 
 .span-seg.is-current {
-  border-color: rgba(184, 239, 107, .55);
+  border-color: rgba(185, 163, 255, .55);
 }
 
 .span-seg.is-active {
@@ -2016,7 +2016,7 @@ button.span-seg:hover {
 }
 
 .lib-link:hover {
-  background: rgba(184, 239, 107, .06);
+  background: rgba(185, 163, 255, .06);
   color: var(--accent);
 }
 
@@ -2051,5 +2051,11 @@ button.span-seg:hover {
   .lib-link-go {
     grid-area: 1 / 2 / span 3;
     align-self: center;
+  }
+}
+
+@media (min-width: 1100px) {
+  .portfolio-dialog {
+    width: min(880px, 58vw);
   }
 }

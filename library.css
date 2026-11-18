@@ -81,9 +81,9 @@
 .lib-input::placeholder { color: var(--faint, #8499a0); opacity: 1; }
 .lib-input:hover { background-color: var(--surface-2, #16313a); }
 .lib-input:focus-visible {
-  outline: 2px solid var(--accent, #b8ef6b);
+  outline: 2px solid var(--accent, #b9a3ff);
   outline-offset: 2px;
-  border-color: var(--accent, #b8ef6b);
+  border-color: var(--accent, #b9a3ff);
 }
 
 .lib-count {
@@ -144,18 +144,18 @@
 
 .lib-chip:hover {
   background: var(--surface-2, #16313a);
-  border-color: var(--accent, #b8ef6b);
+  border-color: var(--accent, #b9a3ff);
 }
 
 .lib-chip:focus-visible {
-  outline: 2px solid var(--accent, #b8ef6b);
+  outline: 2px solid var(--accent, #b9a3ff);
   outline-offset: 2px;
 }
 
 .lib-chip[aria-pressed="true"] {
   color: #06222a;
-  background: var(--accent, #b8ef6b);
-  border-color: var(--accent, #b8ef6b);
+  background: var(--accent, #b9a3ff);
+  border-color: var(--accent, #b9a3ff);
 }
 
 .lib-chip-count {
@@ -219,7 +219,7 @@
   text-transform: uppercase;
 }
 
-.lib-type { color: var(--accent, #b8ef6b); }
+.lib-type { color: var(--accent, #b9a3ff); }
 .lib-date { color: var(--muted, #b4c2c2); font-variant-numeric: tabular-nums; }
 
 .lib-badge {
@@ -281,7 +281,7 @@
 
 .lib-go {
   flex: 0 0 auto;
-  color: var(--accent, #b8ef6b);
+  color: var(--accent, #b9a3ff);
   font-size: 18px;
   line-height: 1;
   transition: transform .18s ease;
@@ -355,7 +355,7 @@
 
 a.lib-card:hover {
   background: var(--surface-2, #16313a);
-  border-color: var(--accent, #b8ef6b);
+  border-color: var(--accent, #b9a3ff);
   transform: translateY(-2px);
 }
 
@@ -369,13 +369,13 @@ a.lib-card:hover .lib-img { transform: scale(1.03); }
 
 a.lib-card:focus-visible,
 a.lib-row:focus-visible {
-  outline: 2px solid var(--accent, #b8ef6b);
+  outline: 2px solid var(--accent, #b9a3ff);
   outline-offset: 2px;
 }
 
 a.lib-card:focus-visible { background: var(--surface-2, #16313a); }
 
-.lib-card--featured { border-color: rgba(184, 239, 107, .34); }
+.lib-card--featured { border-color: rgba(185, 163, 255, .34); }
 .lib-card--featured .lib-card-body { gap: 12px; padding: 24px; }
 .lib-card--featured .lib-title { font-size: 28px; line-height: 1.12; }
 .lib-card--featured .lib-desc { max-width: 62ch; font-size: 16px; color: var(--ink, #f2f4ee); }

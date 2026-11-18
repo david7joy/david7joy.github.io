@@ -161,7 +161,7 @@ function buildStudio() {
   /* ---------- Canvas-drawn surfaces (screens, calendar, paper) ---------- */
 
   const FONT = { hand: 'Caveat, "Bradley Hand", cursive', display: '"Bricolage Grotesque", system-ui, sans-serif', sans: '"DM Sans", system-ui, sans-serif', mono: '"JetBrains Mono", ui-monospace, monospace' };
-  const INK = '#f2f4ee', ACCENT = '#b8ef6b', WARM = '#f0a868';
+  const INK = '#f2f4ee', ACCENT = '#b9a3ff', WARM = '#f0a868';
 
   function surface(width, height) {
     const element = document.createElement('canvas');
@@ -331,8 +331,8 @@ function buildStudio() {
     };
     const reach = count > 1 ? active / (count - 1) : 1;
     const fill = ctx.createLinearGradient(0, high - 40, 0, height);
-    fill.addColorStop(0, 'rgba(184, 239, 107, .16)');
-    fill.addColorStop(1, 'rgba(184, 239, 107, 0)');
+    fill.addColorStop(0, 'rgba(185, 163, 255, .16)');
+    fill.addColorStop(1, 'rgba(185, 163, 255, 0)');
     trace(reach);
     ctx.lineTo(left + (right - left) * reach, height);
     ctx.lineTo(left, height);
@@ -346,9 +346,9 @@ function buildStudio() {
     ctx.stroke();
     const stroke = ctx.createLinearGradient(left, 0, right, 0);
     stroke.addColorStop(0, '#f0a868');
-    stroke.addColorStop(1, '#b8ef6b');
+    stroke.addColorStop(1, '#b9a3ff');
     ctx.save();
-    ctx.shadowColor = 'rgba(184, 239, 107, .7)';
+    ctx.shadowColor = 'rgba(185, 163, 255, .7)';
     ctx.shadowBlur = 22;
     ctx.strokeStyle = stroke;
     ctx.lineWidth = 6;
@@ -589,7 +589,7 @@ function buildStudio() {
   rim.position.set(-9, 9, -9);
   scene.add(rim);
   /* The screens light the desk; they carry the room at night. */
-  const monitorGlow = new THREE.PointLight('#a8dc6c', 4 + (1 - day) * 10, 9, 1.8);
+  const monitorGlow = new THREE.PointLight('#b9a3ff', 4 + (1 - day) * 10, 9, 1.8);
   monitorGlow.position.set(1.5, 2.3, .4);
   scene.add(monitorGlow);
 
@@ -757,7 +757,7 @@ function buildStudio() {
   box(.14, .06, .22, mat.black, sideboard, -1, deckY + .38, .45, .01);
   for (const x of [-.5, -.32]) cylinder(.06, .06, .05, mat.black, sideboard, x, deckY + .26, .62, 16);
   /* A few records leaning beside it. */
-  ['#b8ef6b', '#e8d9b5', '#c8432f', '#2f8f8a', '#1c2228', '#f0a868'].forEach((color, i) => {
+  ['#b9a3ff', '#e8d9b5', '#c8432f', '#2f8f8a', '#1c2228', '#f0a868'].forEach((color, i) => {
     const sleeve = box(.05, 1.3, 1.3, standard(color, .7), sideboard, .9 + i * .1, deckY + .66, 0, .01);
     sleeve.rotation.z = -.16;
   });
@@ -893,7 +893,7 @@ function buildStudio() {
   }
   const storyMonitor = monitor(-3.25, 2.8, -1.9, 6.2, 3.1, storyScreen, .1, '#7fd0b0');
   register(storyMonitor, 'career', [0, 1.78, .1], 0);
-  const mainMonitor = monitor(3.25, 2.8, -1.9, 6.2, 3.1, mainScreen, -.1, '#b8ef6b');
+  const mainMonitor = monitor(3.25, 2.8, -1.9, 6.2, 3.1, mainScreen, -.1, '#b9a3ff');
   box(.6, .2, .22, mat.black, mainMonitor, 0, 1.72, .02, .05);
   sphere(.055, mat.lens, mainMonitor, 0, 1.72, .13);
   note(storyMonitor, -2.72, -1.8, .1, .07, '#f5e26b', ['what if?']);
