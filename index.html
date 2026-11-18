@@ -10,15 +10,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Caveat:wght@600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="studio.css?v=desk35">
-  <link rel="stylesheet" href="world.css?v=desk35">
-  <link rel="stylesheet" href="library.css?v=desk35">
-  <link rel="stylesheet" href="game.css?v=desk35">
-  <script defer src="content.js?v=desk35"></script>
-  <script defer src="library.js?v=desk35"></script>
-  <script defer src="app.js?v=desk35"></script>
-  <script defer src="audio.js?v=desk35"></script>
-  <script type="module" src="world.js?v=desk35"></script>
+  <link rel="stylesheet" href="studio.css?v=desk37">
+  <link rel="stylesheet" href="world.css?v=desk37">
+  <link rel="stylesheet" href="library.css?v=desk37">
+  <link rel="stylesheet" href="game.css?v=desk37">
+  <script defer src="content.js?v=desk37"></script>
+  <script defer src="library.js?v=desk37"></script>
+  <script defer src="app.js?v=desk37"></script>
+  <script defer src="audio.js?v=desk37"></script>
+  <script type="module" src="world.js?v=desk37"></script>
 </head>
 <body>
   <a class="skip-link" href="#work" data-open="work">Explore the portfolio</a>
@@ -235,9 +235,19 @@
   <!-- Career: a scrolling flow, rendered from `career` in content.js -->
   <template id="career-template">
     <h2 id="panel-title">My career<span>.</span></h2>
-    <p class="panel-lede">Fifteen years, from business analyst to director. Open any role for the detail.</p>
+    <p class="panel-lede">Fifteen years, from business analyst to director.</p>
+    <ol class="arc" aria-label="The path, role by role">
+      <li>Business analyst</li><li>BI analyst</li><li>Data scientist</li><li>Data architect</li><li>Solutions architect</li><li>Senior manager</li><li class="is-now">Director</li>
+    </ol>
+    <dl class="glance">
+      <div><dt>15+</dt><dd>years in data, cloud and AI</dd></div>
+      <div><dt>3</dt><dd>roles in four years at Cockroach Labs</dd></div>
+      <div><dt>8</dt><dd>architects on my team</dd></div>
+      <div><dt>3</dt><dd>regions: US, EMEA, APAC</dd></div>
+    </dl>
     <div class="flow">
-      <nav class="flow-rail" data-flow-rail aria-label="Jump to a company"></nav>
+      <div class="flow-rail" data-flow-rail></div>
+      <div class="flow-tools"><p class="flow-hint">Open a role for the detail.</p><button type="button" class="text-link" data-flow-all>Expand all</button></div>
       <ol class="flow-track" data-flow-track></ol>
     </div>
     <div data-education-block hidden>

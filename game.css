@@ -1664,3 +1664,263 @@ body.entering .scene-hotspot {
     display: none;
   }
 }
+
+/* ---------- My career, second pass: the arc, the numbers, a span bar to scale, logos and previews ---------- */
+
+.arc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 0;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.arc li {
+  display: flex;
+  align-items: center;
+}
+
+.arc li + li::before {
+  content: '→';
+  margin: 0 8px;
+  color: var(--faint);
+}
+
+.arc li.is-now {
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--accent);
+  color: #0a0d10;
+  font-weight: 700;
+}
+
+.arc li.is-now::before {
+  margin-left: -8px;
+}
+
+.glance {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 8px;
+}
+
+.glance > div {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(16, 21, 26, .72);
+}
+
+.glance dt {
+  font: 700 22px/1.1 var(--mono);
+  color: var(--ink);
+}
+
+.glance dd {
+  margin-top: 4px;
+  color: var(--faint);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+@container panel (min-width: 520px) {
+  .glance {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.flow-rail {
+  display: block;
+  top: -26px;
+  margin: 0 0 6px;
+  padding: 36px 0 8px;
+  overflow: visible;
+}
+
+.span-bar {
+  display: flex;
+  gap: 3px;
+  height: 30px;
+}
+
+.span-seg {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  min-width: 5px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--muted);
+  transition: background-color .3s, border-color .3s, color .3s, transform .2s;
+}
+
+button.span-seg:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.span-seg.is-current {
+  border-color: rgba(184, 239, 107, .55);
+}
+
+.span-seg.is-active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #0a0d10;
+}
+
+.span-seg.is-gap {
+  border-style: dashed;
+  background: repeating-linear-gradient(135deg, transparent 0 5px, rgba(214, 226, 236, .1) 5px 6px);
+}
+
+.span-label {
+  padding: 0 8px;
+  overflow: hidden;
+  font: 500 11px/1 var(--mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.span-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  color: var(--faint);
+  font-size: 11px;
+}
+
+.flow-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.flow-hint {
+  color: var(--faint);
+  font-size: 12px;
+}
+
+.portfolio-dialog .flow-tools .text-link {
+  min-height: 28px;
+  font-size: 12px;
+}
+
+.flow-top {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px 12px;
+}
+
+.flow-logo {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  background: #f6f4ee;
+  color: #16191d;
+  font: 700 12px/1 var(--mono);
+}
+
+.flow-logo img {
+  width: 26px;
+  height: auto;
+}
+
+.flow-logo-mark {
+  width: 20px;
+  height: 20px;
+  -webkit-mask: var(--logo) center / contain no-repeat;
+  mask: var(--logo) center / contain no-repeat;
+}
+
+.flow-when {
+  text-align: right;
+}
+
+.flow-length {
+  color: var(--faint);
+  font-size: 11px;
+}
+
+.flow-stop::before {
+  top: 10px;
+}
+
+.flow-note,
+.flow-role,
+.flow-step {
+  margin-left: 46px;
+}
+
+.flow-step {
+  margin-left: 60px;
+}
+
+.flow-role-peek {
+  display: block;
+  max-width: 100%;
+  margin-top: 2px;
+  overflow: hidden;
+  color: var(--faint);
+  font-size: 12px;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flow-role-heading {
+  min-width: 0;
+}
+
+.flow-role.is-open .flow-role-peek {
+  display: none;
+}
+
+.flow-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 14px 14px;
+}
+
+.flow-tags span {
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+@media (max-width: 479px) {
+  .flow-note,
+  .flow-role,
+  .flow-step {
+    margin-left: 0;
+  }
+}
+
+.arc li.is-now {
+  padding: 0;
+  background: none;
+  color: var(--accent);
+}
+
+.arc li.is-now::before {
+  margin-left: 8px;
+}
+
+.flow-rail {
+  background: linear-gradient(transparent, rgba(10, 13, 16, .96) 42%, rgba(10, 13, 16, .96) 86%, transparent);
+}

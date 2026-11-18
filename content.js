@@ -169,38 +169,38 @@ window.PORTFOLIO = {
     `year` and `short` feed the line on the left monitor; `onScreen: false` keeps a stop off it.
   */
   career: [
-    { org: "Cockroach Labs", short: "Cockroach Labs", year: 2022, place: "Dallas, Texas", from: "Sep 2022", to: "Present",
+    { org: "Cockroach Labs", short: "Cockroach Labs", year: 2022, logo: "cockroachlabs", tint: "#6933FF", place: "Dallas, Texas", from: "Sep 2022", to: "Present",
       note: "Partner Manager of the Year, FY26",
       roles: [
-        { title: "Director, Solutions Architecture (AI, Ecosystem & Channels)", from: "Jan 2026", to: "Present", points: [
+        { title: "Director, Solutions Architecture (AI, Ecosystem & Channels)", from: "Jan 2026", to: "Present", tags: ["Claude Code", "Codex", "MCP", "LangChain", "Team of 8"], points: [
           "Lead the partner solutions architecture team: eight architects across the US, EMEA and APAC.",
           "Turned partner solutions architects into forward-deployed builders who ship integrations, demos and reference architectures with Claude Code and Codex.",
           "Directed the team behind the CockroachDB plugins for Claude Code, Codex and ChatGPT, and Cursor, plus the LangChain and Google MCP Toolbox integrations.",
           "Built the ecosystem certification program, now a public directory of 33 partner integrations.",
           "Host of the Big Ideas in App Architecture podcast." ] },
-        { title: "Senior Manager, Solutions Architecture (AI, Ecosystem & Channels)", from: "Aug 2024", to: "Dec 2025", points: [
+        { title: "Senior Manager, Solutions Architecture (AI, Ecosystem & Channels)", from: "Aug 2024", to: "Dec 2025", tags: ["AWS", "Amazon Bedrock", "Vector search", "Team of 4"], points: [
           "Managed a global team of four senior solutions architects covering cloud, ISV and AI partners.",
           "Led the technical side of the AWS alliance and the CockroachDB integration with Amazon Bedrock.",
           "Presented on stage at AWS re:Invent, Google Cloud Next and Microsoft Ignite." ] },
-        { title: "Senior Sales Engineer, Channels (Partner Solutions Architect)", from: "Sep 2022", to: "Aug 2024", points: [
+        { title: "Senior Sales Engineer, Channels (Partner Solutions Architect)", from: "Sep 2022", to: "Aug 2024", tags: ["AWS", "Google Cloud", "Terraform"], points: [
           "Led AWS and Google Cloud integrations and wrote the Terraform to deploy CockroachDB on AWS.",
           "Ran partner briefings, proofs of concept and live demos." ] }
       ] },
-    { org: "DataStax", short: "DataStax", year: 2019, place: "Santa Clara, California", from: "Oct 2019", to: "Sep 2022",
+    { org: "DataStax", short: "DataStax", year: 2019, logo: "datastax", tint: "#111111", place: "Santa Clara, California", from: "Oct 2019", to: "Sep 2022",
       roles: [
-        { title: "Senior Data Architect (Partnerships)", points: [
+        { title: "Senior Data Architect (Partnerships)", tags: ["Astra DB", "Cassandra", "Spark", "Kafka"], points: [
           "Ran demos and proofs of concept for buyers from developers to CTOs.",
           "Trained 1,000+ partner engineers at IBM, AWS, Google Cloud, Azure and global systems integrators.",
           "Built joint solutions with AWS, Google Cloud and Azure on Astra DB, Cassandra, Spark and Kafka." ] }
       ] },
     { org: "LatentView Analytics", short: "LatentView", year: 2019, onScreen: false, place: "Sunnyvale, California", from: "Jul 2019", to: "Oct 2019",
       roles: [
-        { title: "Analytics Consultant, Walmart eCommerce", points: [
+        { title: "Analytics Consultant, Walmart eCommerce", tags: ["Python", "Databricks", "Airflow"], points: [
           "Built the A/B testing framework and data pipeline for the Sam's Club website and mobile app, on Python, Databricks and Airflow." ] }
       ] },
-    { org: "Fiserv", short: "Fiserv", year: 2018, place: "Dallas–Fort Worth, Texas", from: "May 2018", to: "May 2019",
+    { org: "Fiserv", short: "Fiserv", year: 2018, logo: "fiserv", place: "Dallas–Fort Worth, Texas", from: "May 2018", to: "May 2019",
       roles: [
-        { title: "Data Science & BI Analyst", points: [
+        { title: "Data Science & BI Analyst", tags: ["Machine learning", "IBM Cognos"], points: [
           "Developed an ATM cash-level recommendation model and the dashboard that put it in analysts' hands." ] }
       ] },
     { org: "Sungard Availability Services", short: "Sungard AS", year: 2015, place: "Pune, India", from: "Jan 2015", to: "Jul 2017",

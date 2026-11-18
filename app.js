@@ -254,6 +254,18 @@
 
   let flowObserver = null;
 
+  const MONTHS = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+  /* "Sep 2022" -> months since year 0; "Present" -> this month. */
+  function monthIndex(text) {
+    const match = /^([A-Za-z]{3})\s+(\d{4})$/.exec(String(text || '').trim());
+    if (!match) { const now = new Date(); return now.getFullYear() * 12 + now.getMonth(); }
+    return Number(match[2]) * 12 + (MONTHS[match[1]] ?? 0);
+  }
+  function lengthLabel(months) {
+    const years = Math.floor(months / 12), rest = months % 12;
+    return [years ? `${years} yr${years > 1 ? 's' : ''}` : '', rest ? `${rest} mo${rest > 1 ? 's' : ''}` : ''].filter(Boolean).join(' ') || '1 mo';
+  }
+
   function renderCareer(root) {
     const track = root.querySelector('[data-flow-track]');
     const rail = root.querySelector('[data-flow-rail]');
@@ -261,16 +273,37 @@
     if (flowObserver) { flowObserver.disconnect(); flowObserver = null; }
     if (!track || !rail || !Array.isArray(career) || !career.length) return;
 
-    const chips = [];
+    const cards = [];
     track.replaceChildren(...career.map((company, index) => {
       const stop = el('li', 'flow-stop');
       stop.id = `career-${index}`;
       if (company.to === 'Present') stop.classList.add('is-current');
+      const months = Math.max(1, monthIndex(company.to) - monthIndex(company.from) + 1);
 
+      /* Company line: logo tile, name, dates and length. */
       const top = el('div', 'flow-top');
-      top.append(el('h3', 'flow-org', company.org), el('p', 'flow-dates', `${company.from} – ${company.to}`));
+      const tile = el('span', 'flow-logo');
+      tile.setAttribute('aria-hidden', 'true');
+      if (company.logo && company.tint) {
+        const mark = el('span', 'flow-logo-mark');
+        mark.style.setProperty('--logo', `url("assets/logos/${company.logo}.svg")`);
+        mark.style.backgroundColor = company.tint;
+        tile.append(mark);
+      } else if (company.logo) {
+        const image = el('img');
+        image.src = `assets/logos/${company.logo}.svg`;
+        image.alt = '';
+        tile.append(image);
+      } else {
+        tile.textContent = String(company.short || company.org).split(/\s+/).map(word => word[0]).join('').slice(0, 2).toUpperCase();
+      }
+      const name = el('div', 'flow-name');
+      name.append(el('h3', 'flow-org', company.org));
+      if (company.place) name.append(el('p', 'flow-place', company.place));
+      const when = el('div', 'flow-when');
+      when.append(el('p', 'flow-dates', `${company.from} – ${company.to}`), el('p', 'flow-length', lengthLabel(months)));
+      top.append(tile, name, when);
       stop.append(top);
-      if (company.place) stop.append(el('p', 'flow-place', company.place));
       if (company.note) stop.append(el('p', 'flow-note', company.note));
 
       (company.roles || []).forEach((role, roleIndex) => {
@@ -284,6 +317,8 @@
         const heading = el('span', 'flow-role-heading');
         heading.append(el('span', 'flow-role-title', role.title));
         if (role.from) heading.append(el('span', 'flow-role-dates', `${role.from} – ${role.to}`));
+        /* A one-line preview, shown only while the row is closed. */
+        if (role.points?.[0]) heading.append(el('span', 'flow-role-peek', role.points[0]));
         const mark = el('span', 'flow-role-mark');
         mark.setAttribute('aria-hidden', 'true');
         head.append(heading, mark);
@@ -294,36 +329,71 @@
           for (const point of role.points) list.append(el('li', null, point));
           inner.append(list);
         }
+        if (role.tags?.length) {
+          const tags = el('p', 'flow-tags');
+          for (const tag of role.tags) tags.append(el('span', null, tag));
+          inner.append(tags);
+        }
         body.append(inner);
-        card.classList.toggle('is-open', open);
-        head.addEventListener('click', () => {
-          const next = !card.classList.contains('is-open');
-          card.classList.toggle('is-open', next);
-          head.setAttribute('aria-expanded', String(next));
-          window.StudioSound?.fx('tick');
-        });
+        const set = next => { card.classList.toggle('is-open', next); head.setAttribute('aria-expanded', String(next)); };
+        set(open);
+        head.addEventListener('click', () => { set(!card.classList.contains('is-open')); window.StudioSound?.fx('tick'); syncAll(); });
         card.append(head, body);
+        cards.push({ card, set });
         stop.append(card);
       });
-
-      const chip = el('button', 'flow-chip', company.short || company.org);
-      chip.type = 'button';
-      chip.addEventListener('click', () => stop.scrollIntoView({ block: 'start', behavior: paused ? 'instant' : 'smooth' }));
-      chips.push(chip);
       return stop;
     }));
-    rail.replaceChildren(...chips);
-
     const stops = [...track.children];
+
+    /* Expand or collapse every role at once. */
+    const allButton = root.querySelector('[data-flow-all]');
+    function syncAll() {
+      if (allButton) allButton.textContent = cards.every(entry => entry.card.classList.contains('is-open')) ? 'Collapse all' : 'Expand all';
+    }
+    allButton?.addEventListener('click', () => {
+      const openAll = !cards.every(entry => entry.card.classList.contains('is-open'));
+      cards.forEach(entry => entry.set(openAll));
+      window.StudioSound?.fx('tick');
+      syncAll();
+    });
+
+    /* The span bar: fifteen years to scale, one segment per company, with study time shown where it falls. */
+    const ordered = career.map((company, index) => ({ company, index, start: monthIndex(company.from), end: monthIndex(company.to) })).sort((a, b) => a.start - b.start);
+    const bar = el('div', 'span-bar');
+    const segments = new Map();
+    let cursor = ordered[0].start;
+    for (const entry of ordered) {
+      if (entry.start - cursor >= 3) {
+        const study = el('span', 'span-seg is-gap');
+        study.style.flexGrow = String(entry.start - cursor);
+        study.title = 'Master of Science at UT Dallas';
+        study.append(el('span', 'span-label', 'MS'));
+        bar.append(study);
+      }
+      const months = Math.max(1, entry.end - entry.start + 1);
+      const segment = el('button', 'span-seg');
+      segment.type = 'button';
+      segment.style.flexGrow = String(months);
+      segment.title = `${entry.company.org}, ${entry.company.from} – ${entry.company.to}`;
+      segment.setAttribute('aria-label', segment.title);
+      if (months >= 30) segment.append(el('span', 'span-label', entry.company.short || entry.company.org));
+      if (entry.company.to === 'Present') segment.classList.add('is-current');
+      segment.addEventListener('click', () => stops[entry.index].scrollIntoView({ block: 'start', behavior: paused ? 'instant' : 'smooth' }));
+      segments.set(entry.index, segment);
+      bar.append(segment);
+      cursor = Math.max(cursor, entry.end + 1);
+    }
+    const scale = el('div', 'span-scale');
+    scale.append(el('span', null, String(Math.floor(ordered[0].start / 12))), el('span', null, 'now'));
+    rail.replaceChildren(bar, scale);
+
     function setActive(index) {
-      chips.forEach((chip, i) => {
-        chip.classList.toggle('is-active', i === index);
-        if (i === index) chip.setAttribute('aria-current', 'true'); else chip.removeAttribute('aria-current');
-      });
+      segments.forEach((segment, key) => segment.classList.toggle('is-active', key === index));
     }
     setActive(0);
 
-    /* Stops fade in as they arrive; the chip for the one nearest the top lights up. */
+    /* Stops fade in as they arrive; the segment for the one nearest the top lights up. */
     if ('IntersectionObserver' in window && !paused) {
       flowObserver = new IntersectionObserver(entries => {
         for (const entry of entries) if (entry.isIntersecting) entry.target.classList.add('is-in');
@@ -333,7 +403,7 @@
       stops.forEach(stop => stop.classList.add('is-in'));
     }
     track._sync = () => {
-      const top = scrollArea.getBoundingClientRect().top + 96;
+      const top = scrollArea.getBoundingClientRect().top + 110;
       let current = 0;
       stops.forEach((stop, i) => { if (stop.getBoundingClientRect().top <= top) current = i; });
       setActive(current);
