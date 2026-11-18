@@ -2,7 +2,7 @@
   Studio sound.
   Three modes, cycled by the Sound button in the footer:
     "fx"    (default) short interface sounds only: a swoosh when a panel opens or closes, a tick between sections
-    "music" the effects plus a quiet generated loop (soft chords, plucked notes, vinyl crackle)
+    "music" the effects plus a generated lo-fi beat: soft kick, clap, hats, sub bass, pumping chords, vinyl crackle
     "off"   silence
   The record player switches the music on and off. Nothing sounds before the visitor's first click.
   window.StudioSound: toggle() (music on/off), fx(name), mode, playing
@@ -10,7 +10,8 @@
 (() => {
   'use strict';
 
-  const CHORD_SECONDS = 6;
+  const BPM = 92;
+  const STEP = 60 / BPM / 4; /* one sixteenth note */
   /* Am7, Fmaj7, Cmaj7, G6 */
   const chords = [
     [220.0, 261.63, 329.63, 392.0],
@@ -20,7 +21,7 @@
   ];
   const MODES = ['fx', 'music', 'off'];
   const LABELS = { fx: 'Sound: effects', music: 'Sound: music', off: 'Sound: off' };
-  let context = null, music = null, effects = null, noise = null;
+  let context = null, music = null, effects = null, noise = null, drums = null, synths = null, pump = null;
   let mode = 'fx', timer = 0, nextTime = 0, step = 0, lastFx = 0;
   try { const saved = localStorage.getItem('idea-studio-sound'); if (saved === 'off' || saved === 'fx') mode = saved; } catch (_) { /* Storage is optional. */ }
 
@@ -29,9 +30,23 @@
     try { context = new (window.AudioContext || window.webkitAudioContext)(); } catch (_) { return false; }
     const limiter = context.createDynamicsCompressor();
     limiter.connect(context.destination);
+    /* Music bus: everything passes a low-pass filter for the worn, lo-fi top end.
+       Chords and bass run through `pump`, which ducks on every kick (the side-chain feel). */
     music = context.createGain();
     music.gain.value = 0;
-    music.connect(limiter);
+    const lofi = context.createBiquadFilter();
+    lofi.type = 'lowpass';
+    lofi.frequency.value = 5200;
+    music.connect(lofi);
+    lofi.connect(limiter);
+    drums = context.createGain();
+    drums.gain.value = .9;
+    drums.connect(music);
+    pump = context.createGain();
+    pump.connect(music);
+    synths = context.createGain();
+    synths.gain.value = .9;
+    synths.connect(pump);
     effects = context.createGain();
     effects.gain.value = .5;
     effects.connect(limiter);
@@ -116,51 +131,116 @@
 
   /* ---------- Music ---------- */
 
-  function pad(frequency, time, duration) {
+  function kick(time, strong) {
+    const oscillator = context.createOscillator();
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(130, time);
+    oscillator.frequency.exponentialRampToValueAtTime(44, time + .11);
+    const gain = context.createGain();
+    gain.gain.setValueAtTime(strong ? .5 : .36, time);
+    gain.gain.exponentialRampToValueAtTime(.0008, time + .3);
+    oscillator.connect(gain);
+    gain.connect(drums);
+    oscillator.start(time);
+    oscillator.stop(time + .32);
+    /* Duck the chords and bass, then let them swell back. */
+    pump.gain.cancelScheduledValues(time);
+    pump.gain.setValueAtTime(.38, time);
+    pump.gain.linearRampToValueAtTime(1, time + STEP * 3.2);
+  }
+
+  function burst(time, duration, frequency, type, loudness) {
+    const source = context.createBufferSource();
+    source.buffer = noise;
+    const filter = context.createBiquadFilter();
+    filter.type = type;
+    filter.frequency.value = frequency;
+    filter.Q.value = .8;
+    const gain = context.createGain();
+    gain.gain.setValueAtTime(loudness, time);
+    gain.gain.exponentialRampToValueAtTime(.0006, time + duration);
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(drums);
+    source.start(time, Math.random() * 3);
+    source.stop(time + duration + .02);
+  }
+
+  /* One bar of warm, detuned chord with a filter that opens and closes. */
+  function chordPad(notes, time, duration) {
     const filter = context.createBiquadFilter();
     filter.type = 'lowpass';
-    filter.frequency.value = 900;
+    filter.Q.value = 2;
+    filter.frequency.setValueAtTime(500, time);
+    filter.frequency.linearRampToValueAtTime(1500, time + duration * .5);
+    filter.frequency.linearRampToValueAtTime(600, time + duration);
     const gain = context.createGain();
     gain.gain.setValueAtTime(0, time);
-    gain.gain.linearRampToValueAtTime(.05, time + 1.6);
-    gain.gain.setValueAtTime(.05, time + duration - 1);
-    gain.gain.linearRampToValueAtTime(0, time + duration + 1.8);
-    for (const detune of [-6, 6]) {
-      const oscillator = context.createOscillator();
-      oscillator.type = 'triangle';
-      oscillator.frequency.value = frequency;
-      oscillator.detune.value = detune;
-      oscillator.connect(filter);
-      oscillator.start(time);
-      oscillator.stop(time + duration + 2);
+    gain.gain.linearRampToValueAtTime(.05, time + .08);
+    gain.gain.setValueAtTime(.05, time + duration - .15);
+    gain.gain.linearRampToValueAtTime(0, time + duration + .12);
+    for (const frequency of notes) {
+      for (const detune of [-9, 8]) {
+        const oscillator = context.createOscillator();
+        oscillator.type = 'sawtooth';
+        oscillator.frequency.value = frequency;
+        oscillator.detune.value = detune;
+        oscillator.connect(filter);
+        oscillator.start(time);
+        oscillator.stop(time + duration + .2);
+      }
     }
     filter.connect(gain);
-    gain.connect(music);
+    gain.connect(synths);
+  }
+
+  function bass(frequency, time, length) {
+    const oscillator = context.createOscillator();
+    oscillator.type = 'triangle';
+    oscillator.frequency.value = frequency;
+    const filter = context.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 320;
+    const gain = context.createGain();
+    gain.gain.setValueAtTime(0, time);
+    gain.gain.linearRampToValueAtTime(.22, time + .02);
+    gain.gain.exponentialRampToValueAtTime(.001, time + length);
+    oscillator.connect(filter);
+    filter.connect(gain);
+    gain.connect(synths);
+    oscillator.start(time);
+    oscillator.stop(time + length + .05);
   }
 
   function pluck(frequency, time) {
     const oscillator = context.createOscillator();
-    oscillator.type = 'sine';
+    oscillator.type = 'triangle';
     oscillator.frequency.value = frequency * 2;
     const gain = context.createGain();
     gain.gain.setValueAtTime(0, time);
-    gain.gain.linearRampToValueAtTime(.045, time + .02);
-    gain.gain.exponentialRampToValueAtTime(.0005, time + 1.6);
+    gain.gain.linearRampToValueAtTime(.05, time + .01);
+    gain.gain.exponentialRampToValueAtTime(.0005, time + .7);
     oscillator.connect(gain);
-    gain.connect(music);
+    gain.connect(synths);
     oscillator.start(time);
-    oscillator.stop(time + 1.7);
+    oscillator.stop(time + .75);
   }
 
+  /* Sixteen steps to the bar, one chord per bar: four-on-the-floor kick, clap on two and four,
+     swung hats, a syncopated sub bass and a few plucked notes on top. */
   function schedule() {
-    while (nextTime < context.currentTime + 1.5) {
-      const chord = chords[step % chords.length];
-      chord.forEach(frequency => pad(frequency, nextTime, CHORD_SECONDS));
-      pad(chord[0] / 2, nextTime, CHORD_SECONDS);
-      for (let beat = 0; beat < 8; beat++) {
-        if (Math.random() < .55) pluck(chord[Math.floor(Math.random() * chord.length)], nextTime + beat * CHORD_SECONDS / 8 + (beat % 2 ? .04 : 0));
-      }
-      nextTime += CHORD_SECONDS;
+    while (nextTime < context.currentTime + .5) {
+      const position = step % 16, chord = chords[Math.floor(step / 16) % chords.length];
+      const time = nextTime + (position % 2 ? STEP * .16 : 0);
+      if (position === 0) chordPad(chord, nextTime, STEP * 16);
+      if (position % 4 === 0) kick(nextTime, position === 0);
+      if (position === 4 || position === 12) burst(time, .16, 1700, 'bandpass', .2);
+      if (position % 2 === 0) burst(time, position % 4 === 2 ? .09 : .035, 7500, 'highpass', position % 4 === 2 ? .07 : .04);
+      else if (Math.random() < .3) burst(time, .03, 8000, 'highpass', .025);
+      if (position === 0 || position === 3 || position === 10) bass(chord[0] / 2, time, STEP * 2.6);
+      if (position === 6 || position === 14) bass(chord[2] / 4, time, STEP * 1.6);
+      if ([2, 5, 7, 11, 13].includes(position) && Math.random() < .5) pluck(chord[Math.floor(Math.random() * chord.length)], time);
+      nextTime += STEP;
       step++;
     }
   }
@@ -187,9 +267,9 @@
       nextTime = Math.max(nextTime, context.currentTime + .1);
       schedule();
       clearInterval(timer);
-      timer = setInterval(schedule, 400);
+      timer = setInterval(schedule, 120);
       music.gain.cancelScheduledValues(context.currentTime);
-      music.gain.setTargetAtTime(.7, context.currentTime, .6);
+      music.gain.setTargetAtTime(.75, context.currentTime, .6);
     } else if (wasMusic && context) {
       clearInterval(timer);
       music.gain.cancelScheduledValues(context.currentTime);

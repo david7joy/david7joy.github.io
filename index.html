@@ -10,15 +10,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Caveat:wght@600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="studio.css?v=desk45">
-  <link rel="stylesheet" href="world.css?v=desk45">
-  <link rel="stylesheet" href="library.css?v=desk45">
-  <link rel="stylesheet" href="game.css?v=desk45">
-  <script defer src="content.js?v=desk45"></script>
-  <script defer src="library.js?v=desk45"></script>
-  <script defer src="app.js?v=desk45"></script>
-  <script defer src="audio.js?v=desk45"></script>
-  <script type="module" src="world.js?v=desk45"></script>
+  <link rel="stylesheet" href="studio.css?v=desk48">
+  <link rel="stylesheet" href="world.css?v=desk48">
+  <link rel="stylesheet" href="library.css?v=desk48">
+  <link rel="stylesheet" href="game.css?v=desk48">
+  <script defer src="content.js?v=desk48"></script>
+  <script defer src="library.js?v=desk48"></script>
+  <script defer src="app.js?v=desk48"></script>
+  <script defer src="audio.js?v=desk48"></script>
+  <script type="module" src="world.js?v=desk48"></script>
 </head>
 <body>
   <a class="skip-link" href="#work" data-open="work">Explore the portfolio</a>
@@ -69,11 +69,6 @@
       <p class="hero-roles">AI builder <i aria-hidden="true">·</i> Ecosystem leader <i aria-hidden="true">·</i> Podcast host</p>
     </div>
 
-    <div class="camera-controls" id="camera-controls" hidden>
-      <button type="button" id="explore-toggle"><span class="camera-icon" aria-hidden="true">◇</span><span id="explore-label">Look around</span><kbd>F</kbd></button>
-      <span class="camera-help">Drag to turn · scroll to zoom · Esc to return</span>
-      <button type="button" id="camera-reset" aria-label="Reset the view" hidden>Reset view ↺</button>
-    </div>
 
     <nav class="collection-nav" aria-label="Explore the studio">
       <button type="button" class="collection-button" data-open="work" aria-keyshortcuts="1"><kbd aria-hidden="true">1</kbd><span class="collection-name">Work<span class="count" data-count="work" hidden></span></span><small>On the right monitor</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
@@ -89,6 +84,11 @@
   <footer class="studio-footer">
     <span class="location"><span class="live-dot" aria-hidden="true"></span>Dallas, Texas <time id="dallas-time"></time></span>
     <span class="quest" id="quest" hidden><span class="quest-pips" id="quest-pips" aria-hidden="true"></span><span id="quest-label"></span></span>
+    <div class="camera-controls" id="camera-controls" hidden>
+      <button type="button" id="explore-toggle"><span class="camera-icon" aria-hidden="true">◇</span><span id="explore-label">Look around</span><kbd>F</kbd></button>
+      <span class="camera-help">Drag to turn · scroll to zoom · Esc to return</span>
+      <button type="button" id="camera-reset" aria-label="Reset the view" hidden>Reset view ↺</button>
+    </div>
     <button type="button" class="sound-toggle" data-sound-toggle aria-pressed="false"><span aria-hidden="true">♪</span><span data-sound-text>Sound: effects</span></button>
     <button type="button" id="motion-toggle" aria-label="Pause studio motion"><span class="motion-symbol" aria-hidden="true">Ⅱ</span><span id="motion-label">Pause motion</span></button>
   </footer>

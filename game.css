@@ -2270,3 +2270,150 @@ button.span-seg:hover {
   border-radius: 10px;
   background: rgba(10, 13, 16, .88);
 }
+
+/* ---------- Readable chrome: every piece of interface text sits on its own dark chip,
+   so nothing is white on a bright wall, sky or floor ---------- */
+
+.site-nav,
+.monogram,
+.studio-footer .location,
+.studio-footer .quest,
+.studio-footer .sound-toggle,
+.studio-footer #motion-toggle,
+.studio-footer .camera-controls button {
+  border: 1px solid rgba(214, 226, 236, .16);
+  border-radius: 999px;
+  background: rgba(8, 12, 16, .74);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.site-nav {
+  padding: 4px;
+}
+
+.monogram {
+  padding: 0 14px;
+}
+
+.icon-link {
+  filter: none;
+}
+
+.studio-footer {
+  gap: 8px;
+  color: var(--ink);
+}
+
+.studio-footer .location,
+.studio-footer .quest,
+.studio-footer .sound-toggle,
+.studio-footer #motion-toggle,
+.studio-footer .camera-controls button {
+  min-height: 36px;
+  padding: 0 14px;
+  color: var(--ink);
+  font: 500 12px/1 var(--sans);
+  text-shadow: none;
+}
+
+.studio-footer .quest {
+  font-family: var(--mono);
+}
+
+/* "Look around" now lives in the footer with the other controls. */
+.studio-footer .camera-controls {
+  position: static;
+  margin-left: auto;
+  gap: 8px;
+  transform: none;
+}
+
+.studio-footer .sound-toggle {
+  margin-left: 0;
+}
+
+.studio-footer .camera-controls button:hover,
+.studio-footer .sound-toggle:hover,
+.studio-footer #motion-toggle:hover {
+  border-color: var(--accent);
+  background: rgba(8, 12, 16, .92);
+  color: var(--ink);
+}
+
+.studio-footer .camera-controls kbd {
+  padding: 2px 5px;
+  font-size: 11px;
+}
+
+.exploring .studio-footer .camera-controls {
+  position: fixed;
+  left: 50%;
+  right: auto;
+  top: auto;
+  bottom: 72px;
+  width: auto;
+  flex-wrap: nowrap;
+  transform: translateX(-50%);
+}
+
+.exploring .camera-help {
+  order: 0;
+  width: auto;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(8, 12, 16, .74);
+  white-space: nowrap;
+}
+
+/* The name plate gets a soft dark card behind it. */
+.hero-copy {
+  width: fit-content;
+  max-width: calc(100% - var(--gutter) * 2);
+  padding: 16px 20px 16px;
+  border: 1px solid rgba(214, 226, 236, .12);
+  border-radius: 16px;
+  background: rgba(8, 12, 16, .58);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.hero-copy h1,
+.hero-description,
+.hero-roles {
+  text-shadow: none;
+}
+
+.hero-roles {
+  color: #c9d2d6;
+}
+
+@media (max-width: 759px) {
+  .studio-footer .location,
+  .studio-footer .sound-toggle,
+  .studio-footer #motion-toggle {
+    padding: 0 10px;
+    font-size: 11px;
+  }
+
+  .hero-copy {
+    padding: 12px 14px;
+  }
+}
+
+.studio-footer > *,
+.studio-footer .camera-controls button {
+  white-space: nowrap;
+}
+
+@media (max-width: 1099px) {
+  #quest-label {
+    display: none;
+  }
+}
+
+@media (max-width: 479px) {
+  #motion-label {
+    display: none;
+  }
+}

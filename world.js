@@ -387,6 +387,37 @@ function buildStudio() {
     storyScreen.texture.needsUpdate = true;
   }
 
+  /* Two framed posters from David's own wall. */
+  const posters = [
+    { sheet: surface(1024, 572), lines: ['Be fearless in the', 'pursuit of what sets', 'your soul on fire.'], from: '#1b1320', to: '#3a1626', ink: ['#f0a868', '#ff8bb0'], size: 92 },
+    { sheet: surface(1024, 572), lines: ['Do what is right,', 'not what is easy.'], from: '#14122a', to: '#241a4a', ink: ['#f2f4ee', '#b9a3ff'], size: 104 }
+  ];
+  function drawPosters() {
+    for (const { sheet, lines, from, to, ink, size } of posters) {
+      const { ctx, width, height } = sheet;
+      const wash = ctx.createLinearGradient(0, 0, width, height);
+      wash.addColorStop(0, from);
+      wash.addColorStop(1, to);
+      ctx.fillStyle = wash;
+      ctx.fillRect(0, 0, width, height);
+      ctx.strokeStyle = 'rgba(255, 255, 255, .14)';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(28, 28, width - 56, height - 56);
+      const colour = ctx.createLinearGradient(120, 0, width - 120, 0);
+      colour.addColorStop(0, ink[0]);
+      colour.addColorStop(1, ink[1]);
+      ctx.fillStyle = colour;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = `700 ${size}px ${FONT.display}`;
+      const lineHeight = size * 1.16, top = height / 2 - lineHeight * (lines.length - 1) / 2;
+      lines.forEach((text, i) => ctx.fillText(text, width / 2, top + i * lineHeight + 4));
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
+      sheet.texture.needsUpdate = true;
+    }
+  }
+
   /* Sticky notes. */
   function note(parent, x, y, z, tilt, color, lines, flat = false) {
     const sheet = surface(160, 160);
@@ -553,6 +584,7 @@ function buildStudio() {
     drawPage();
     drawNotes();
     drawStickers();
+    drawPosters();
     terminalState = '';
   }
   drawSurfaces();
@@ -764,23 +796,31 @@ function buildStudio() {
   box(.12, 1.35, 1.3, mat.walnut, sideboard, 1.72, deckY + .68, 0, .02);
   register(sideboard, 'music', [-1.3, deckY + 1.25, 0], 0);
 
-  /* Back wall, built around the window opening (x -6 to 9.6, y -1.7 to 10). */
-  box(11, 17, .4, mat.wall, scene, -11.5, 5, -6.2, 0);
+  /* Back wall, built around the window opening (x -2.1 to 9.6, y -1.7 to 10). */
+  box(14.9, 17, .4, mat.wall, scene, -9.55, 5, -6.2, 0);
   box(7.4, 17, .4, mat.wall, scene, 13.3, 5, -6.2, 0);
-  box(15.6, 3.6, .4, mat.wall, scene, 1.8, 11.8, -6.2, 0);
-  box(15.6, 1.4, .4, mat.wall, scene, 1.8, -2.4, -6.2, 0);
-  box(16, .14, .9, mat.trim, scene, 1.8, -1.66, -6.05, .03);
+  box(11.7, 3.6, .4, mat.wall, scene, 3.75, 11.8, -6.2, 0);
+  box(11.7, 1.4, .4, mat.wall, scene, 3.75, -2.4, -6.2, 0);
+  box(12.1, .14, .9, mat.trim, scene, 3.75, -1.66, -6.05, .03);
   for (const side of [-1, 1]) box(.4, 17, 34, mat.wall, scene, side * 17, 5, 4, 0);
   box(34, .4, .1, mat.trim, scene, 0, -2.8, -5.98, 0);
-  /* Slim steel frame: four tall panes and a transom. */
-  for (let i = 0; i <= 4; i++) box(.11, 11.7, .16, mat.steel, scene, -6 + i * 3.9, 4.15, -6.2, 0);
-  for (const y of [-1.62, 6.9, 9.96]) box(15.6, .11, .16, mat.steel, scene, 1.8, y, -6.2, 0);
+  /* Slim steel frame: three tall panes and a transom. */
+  for (let i = 1; i <= 4; i++) box(.11, 11.7, .16, mat.steel, scene, -6 + i * 3.9, 4.15, -6.2, 0);
+  for (const y of [-1.62, 6.9, 9.96]) box(11.7, .11, .16, mat.steel, scene, 3.75, y, -6.2, 0);
 
   /* Wall calendar, on the wall right of the window. */
   const calendar = group(12.1, 5.2, -5.96);
   box(3.76, 2.34, .05, mat.white, calendar, 0, 0, 0, .01);
   plane(3.64, 2.22, new THREE.MeshStandardMaterial({ map: calendarSheet.texture, roughness: .85 }), calendar, 0, 0, .03);
   register(calendar, 'talks', [0, 1.4, .1], 0);
+
+  /* The posters hang side by side on the wall above the left monitor. */
+  posters.forEach((poster, i) => {
+    const frame = group(-6.55 + i * 3.2, 6.25, -5.96);
+    frame.scale.setScalar(.86);
+    box(3.62, 2.08, .08, mat.steel, frame, 0, 0, 0, .02);
+    plane(3.46, 1.93, new THREE.MeshStandardMaterial({ map: poster.sheet.texture, roughness: .8 }), frame, 0, 0, .05);
+  });
 
   /* A guitar amp on the floor to the left, and an electric guitar hung on the wall under the calendar. */
   const guitarAmp = group(13.4, -3, -4.2);
