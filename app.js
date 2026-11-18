@@ -267,22 +267,42 @@
       stop.id = `career-${index}`;
       if (company.to === 'Present') stop.classList.add('is-current');
 
-      stop.append(el('p', 'flow-dates', `${company.from} – ${company.to}`), el('h3', 'flow-org', company.org));
+      const top = el('div', 'flow-top');
+      top.append(el('h3', 'flow-org', company.org), el('p', 'flow-dates', `${company.from} – ${company.to}`));
+      stop.append(top);
       if (company.place) stop.append(el('p', 'flow-place', company.place));
       if (company.note) stop.append(el('p', 'flow-note', company.note));
 
       (company.roles || []).forEach((role, roleIndex) => {
         if (roleIndex > 0) stop.append(el('p', 'flow-step', 'Promoted from'));
+        /* Each role is a row you can open. Only the current role starts open, to keep the page short. */
+        const open = index === 0 && roleIndex === 0;
         const card = el('div', 'flow-role');
-        const head = el('div', 'flow-role-head');
-        head.append(el('h4', 'flow-role-title', role.title));
-        if (role.from) head.append(el('p', 'flow-role-dates', `${role.from} – ${role.to}`));
-        card.append(head);
+        const head = el('button', 'flow-role-head');
+        head.type = 'button';
+        head.setAttribute('aria-expanded', String(open));
+        const heading = el('span', 'flow-role-heading');
+        heading.append(el('span', 'flow-role-title', role.title));
+        if (role.from) heading.append(el('span', 'flow-role-dates', `${role.from} – ${role.to}`));
+        const mark = el('span', 'flow-role-mark');
+        mark.setAttribute('aria-hidden', 'true');
+        head.append(heading, mark);
+        const body = el('div', 'flow-role-body');
+        const inner = el('div', 'flow-role-inner');
         if (role.points?.length) {
           const list = el('ul', 'plain-list');
           for (const point of role.points) list.append(el('li', null, point));
-          card.append(list);
+          inner.append(list);
         }
+        body.append(inner);
+        card.classList.toggle('is-open', open);
+        head.addEventListener('click', () => {
+          const next = !card.classList.contains('is-open');
+          card.classList.toggle('is-open', next);
+          head.setAttribute('aria-expanded', String(next));
+          window.StudioSound?.fx('tick');
+        });
+        card.append(head, body);
         stop.append(card);
       });
 

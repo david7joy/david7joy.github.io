@@ -1175,6 +1175,7 @@ function buildStudio() {
     clearTimeout(openTimer);
     if (key === 'music') { window.StudioSound?.toggle(); return; }
     const announce = () => window.dispatchEvent(new CustomEvent('studio:open', { detail: { section: key } }));
+    window.StudioSound?.fx('open');
     if (paused) { announce(); return; }
     focusKey = lastFocusKey = key;
     openTimer = setTimeout(announce, 520);
