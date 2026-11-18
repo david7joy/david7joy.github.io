@@ -21,12 +21,12 @@
     writing: { kicker: 'Writing', nav: 'writing' },
     talks: { kicker: 'Talks & videos', nav: 'talks' },
     skills: { kicker: 'Skills', nav: 'skills' },
-    story: { kicker: 'My story', nav: 'story' },
+    career: { kicker: 'My career', nav: 'career' },
     contact: { kicker: 'Contact', nav: 'contact' }
   };
   /* Older links keep working. */
-  const aliases = { projects: 'work', conversations: 'podcast', about: 'story', connect: 'contact' };
-  const shortcuts = { 1: 'work', 2: 'podcast', 3: 'writing', 4: 'talks', 5: 'story', 6: 'skills', 7: 'contact' };
+  const aliases = { projects: 'work', conversations: 'podcast', about: 'career', story: 'career', connect: 'contact' };
+  const shortcuts = { 1: 'work', 2: 'podcast', 3: 'writing', 4: 'talks', 5: 'career', 6: 'skills', 7: 'contact' };
 
   function resolve(value) {
     let name = String(value || '').replace(/^#/, '');
@@ -72,7 +72,7 @@
 
   /* ---------- Exploration tracker ---------- */
 
-  const questKeys = ['work', 'rig', 'podcast', 'writing', 'talks', 'story', 'skills', 'contact'];
+  const questKeys = ['work', 'rig', 'podcast', 'writing', 'talks', 'career', 'skills', 'contact'];
   const found = new Set();
   try {
     for (const key of JSON.parse(localStorage.getItem('idea-studio-found') || '[]')) if (questKeys.includes(key)) found.add(key);
@@ -250,22 +250,92 @@
     }));
   }
 
+  /* ---------- Career: a flow you scroll through ---------- */
+
+  let flowObserver = null;
+
   function renderCareer(root) {
-    const list = root.querySelector('[data-career]');
+    const track = root.querySelector('[data-flow-track]');
+    const rail = root.querySelector('[data-flow-rail]');
     const career = window.PORTFOLIO?.career;
-    if (!list || !Array.isArray(career) || !career.length) return;
-    const steps = [...career].sort((a, b) => (b.from || 0) - (a.from || 0));
-    list.replaceChildren(...steps.map(step => {
-      const item = el('li', step.to == null ? 'is-now' : null);
-      item.append(
-        el('p', 'career-years', `${step.from} – ${step.to == null ? 'now' : step.to}`),
-        el('p', 'career-org', step.org),
-        el('p', 'career-role', step.role)
-      );
-      return item;
+    if (flowObserver) { flowObserver.disconnect(); flowObserver = null; }
+    if (!track || !rail || !Array.isArray(career) || !career.length) return;
+
+    const chips = [];
+    track.replaceChildren(...career.map((company, index) => {
+      const stop = el('li', 'flow-stop');
+      stop.id = `career-${index}`;
+      if (company.to === 'Present') stop.classList.add('is-current');
+
+      stop.append(el('p', 'flow-dates', `${company.from} – ${company.to}`), el('h3', 'flow-org', company.org));
+      if (company.place) stop.append(el('p', 'flow-place', company.place));
+      if (company.note) stop.append(el('p', 'flow-note', company.note));
+
+      (company.roles || []).forEach((role, roleIndex) => {
+        if (roleIndex > 0) stop.append(el('p', 'flow-step', 'Promoted from'));
+        const card = el('div', 'flow-role');
+        const head = el('div', 'flow-role-head');
+        head.append(el('h4', 'flow-role-title', role.title));
+        if (role.from) head.append(el('p', 'flow-role-dates', `${role.from} – ${role.to}`));
+        card.append(head);
+        if (role.points?.length) {
+          const list = el('ul', 'plain-list');
+          for (const point of role.points) list.append(el('li', null, point));
+          card.append(list);
+        }
+        stop.append(card);
+      });
+
+      const chip = el('button', 'flow-chip', company.short || company.org);
+      chip.type = 'button';
+      chip.addEventListener('click', () => stop.scrollIntoView({ block: 'start', behavior: paused ? 'instant' : 'smooth' }));
+      chips.push(chip);
+      return stop;
     }));
-    list.closest('[data-career-block]')?.removeAttribute('hidden');
+    rail.replaceChildren(...chips);
+
+    const stops = [...track.children];
+    function setActive(index) {
+      chips.forEach((chip, i) => {
+        chip.classList.toggle('is-active', i === index);
+        if (i === index) chip.setAttribute('aria-current', 'true'); else chip.removeAttribute('aria-current');
+      });
+    }
+    setActive(0);
+
+    /* Stops fade in as they arrive; the chip for the one nearest the top lights up. */
+    if ('IntersectionObserver' in window && !paused) {
+      flowObserver = new IntersectionObserver(entries => {
+        for (const entry of entries) if (entry.isIntersecting) entry.target.classList.add('is-in');
+      }, { root: scrollArea, threshold: .12 });
+      stops.forEach(stop => flowObserver.observe(stop));
+    } else {
+      stops.forEach(stop => stop.classList.add('is-in'));
+    }
+    track._sync = () => {
+      const top = scrollArea.getBoundingClientRect().top + 96;
+      let current = 0;
+      stops.forEach((stop, i) => { if (stop.getBoundingClientRect().top <= top) current = i; });
+      setActive(current);
+      const box = track.getBoundingClientRect();
+      const progress = Math.min(1, Math.max(0, (top + 40 - box.top) / Math.max(box.height, 1)));
+      track.style.setProperty('--progress', progress.toFixed(3));
+    };
+    track._sync();
+    requestAnimationFrame(() => track._sync());
+
+    const list = root.querySelector('[data-education]');
+    const education = window.PORTFOLIO?.education;
+    if (list && Array.isArray(education) && education.length) {
+      list.replaceChildren(...education.map(entry => {
+        const item = el('li');
+        item.append(el('p', 'career-years', entry.years), el('p', 'career-org', entry.school), el('p', 'career-role', entry.degree));
+        return item;
+      }));
+      list.closest('[data-education-block]')?.removeAttribute('hidden');
+    }
   }
+  scrollArea.addEventListener('scroll', () => content.querySelector('[data-flow-track]')?._sync?.(), { passive: true });
 
   /* ---------- Panels ---------- */
 

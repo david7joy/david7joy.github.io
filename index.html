@@ -10,15 +10,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Caveat:wght@600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="studio.css?v=desk29">
-  <link rel="stylesheet" href="world.css?v=desk29">
-  <link rel="stylesheet" href="library.css?v=desk29">
-  <link rel="stylesheet" href="game.css?v=desk29">
-  <script defer src="content.js?v=desk29"></script>
-  <script defer src="library.js?v=desk29"></script>
-  <script defer src="app.js?v=desk29"></script>
-  <script defer src="audio.js?v=desk29"></script>
-  <script type="module" src="world.js?v=desk29"></script>
+  <link rel="stylesheet" href="studio.css?v=desk31">
+  <link rel="stylesheet" href="world.css?v=desk31">
+  <link rel="stylesheet" href="library.css?v=desk31">
+  <link rel="stylesheet" href="game.css?v=desk31">
+  <script defer src="content.js?v=desk31"></script>
+  <script defer src="library.js?v=desk31"></script>
+  <script defer src="app.js?v=desk31"></script>
+  <script defer src="audio.js?v=desk31"></script>
+  <script type="module" src="world.js?v=desk31"></script>
 </head>
 <body>
   <a class="skip-link" href="#work" data-open="work">Explore the portfolio</a>
@@ -31,7 +31,7 @@
         <button type="button" data-open="podcast">Podcast</button>
         <button type="button" data-open="writing">Writing</button>
         <button type="button" data-open="talks">Talks</button>
-        <button type="button" data-open="story">Story</button>
+        <button type="button" data-open="career">Career</button>
         <button type="button" data-open="skills">Skills</button>
       </div>
       <a class="icon-link" href="https://www.linkedin.com/in/david-joy-dj/" target="_blank" rel="noopener noreferrer" aria-label="David Joy on LinkedIn (opens in a new tab)">
@@ -51,7 +51,7 @@
       <div class="scene-world" id="scene-world">
         <canvas id="studio-canvas" aria-hidden="true"></canvas>
         <button type="button" class="scene-hotspot" data-open="work" aria-label="Work: projects on the right monitor"><i aria-hidden="true"></i><span>Work <b aria-hidden="true">↗</b></span></button>
-        <button type="button" class="scene-hotspot" data-open="story" aria-label="My story: on the left monitor"><i aria-hidden="true"></i><span>My story <b aria-hidden="true">↗</b></span></button>
+        <button type="button" class="scene-hotspot" data-open="career" aria-label="My career: on the left monitor"><i aria-hidden="true"></i><span>My career <b aria-hidden="true">↗</b></span></button>
         <button type="button" class="scene-hotspot" data-open="podcast" aria-label="Podcast: at the microphone"><i aria-hidden="true"></i><span>Podcast <b aria-hidden="true">↗</b></span></button>
         <button type="button" class="scene-hotspot" data-open="rig" aria-label="Rig: my side project, in the terminal"><i aria-hidden="true"></i><span>Rig <b aria-hidden="true">↗</b></span></button>
         <button type="button" class="scene-hotspot" data-open="contact" aria-label="Say hello: on the phone"><i aria-hidden="true"></i><span>Say hello <b aria-hidden="true">↗</b></span></button>
@@ -80,7 +80,7 @@
       <button type="button" class="collection-button" data-open="podcast" aria-keyshortcuts="2"><kbd aria-hidden="true">2</kbd><span class="collection-name">Podcast<span class="count" data-count="podcast" hidden></span></span><small>At the microphone</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
       <button type="button" class="collection-button" data-open="writing" aria-keyshortcuts="3"><kbd aria-hidden="true">3</kbd><span class="collection-name">Writing<span class="count" data-count="writing" hidden></span></span><small>In the stack of pages</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
       <button type="button" class="collection-button" data-open="talks" aria-keyshortcuts="4"><kbd aria-hidden="true">4</kbd><span class="collection-name">Talks<span class="count" data-count="talks" hidden></span></span><small>On the wall calendar</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
-      <button type="button" class="collection-button" data-open="story" aria-keyshortcuts="5"><kbd aria-hidden="true">5</kbd><span class="collection-name">My story</span><small>On the left monitor</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
+      <button type="button" class="collection-button" data-open="career" aria-keyshortcuts="5"><kbd aria-hidden="true">5</kbd><span class="collection-name">My career</span><small>On the left monitor</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
       <button type="button" class="collection-button" data-open="skills" aria-keyshortcuts="6"><kbd aria-hidden="true">6</kbd><span class="collection-name">Skills</span><small>On the sticker board</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
       <button type="button" class="collection-button collection-contact" data-open="contact" aria-keyshortcuts="7"><kbd aria-hidden="true">7</kbd><span class="collection-name">Say hello</span><small>On the phone</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
     </nav>
@@ -116,7 +116,7 @@
           <button type="button" data-open="podcast">Podcast<span class="count" data-count="podcast" hidden></span></button>
           <button type="button" data-open="writing">Writing<span class="count" data-count="writing" hidden></span></button>
           <button type="button" data-open="talks">Talks<span class="count" data-count="talks" hidden></span></button>
-          <button type="button" data-open="story">My story</button>
+          <button type="button" data-open="career">My career</button>
           <button type="button" data-open="skills">Skills</button>
           <button type="button" data-open="contact">Contact</button>
         </div>
@@ -232,25 +232,19 @@
     <div class="inline-actions"><button type="button" class="ink-button" data-open="contact">Let’s make a connection <span aria-hidden="true">→</span></button></div>
   </template>
 
-  <!-- Story: the journey, rendered from content.js -->
-  <template id="story-template">
-    <h2 id="panel-title">Follow the curiosity<span>.</span></h2>
-    <p class="panel-lede">I’m David. I build AI tools, grow partner ecosystems, and bring people together around what technology can do.</p>
-    <div class="story-note"><span class="eyebrow">The short version</span><p>Fifteen years across data, cloud, and AI.<br>A builder’s instinct. A partner’s mindset.<br>Still asking <em>“what if?”</em></p></div>
-    <div class="prose"><p>Today, I lead AI, ecosystem, and partnerships work at Cockroach Labs, with a global team of eight solutions architects across the US, EMEA, and APAC. I’m helping turn solutions architecture into a hands-on building practice: integrations, demos, proofs of concept, and reference architectures.</p><p>I also host <em>Big Ideas in App Architecture</em>, write code with AI tools, and build Rig on the side. I’m happiest when the work connects a useful idea with the people who can make it happen.</p></div>
-    <dl class="stats" data-stats hidden></dl>
-    <div data-career-block hidden>
-      <h3 class="section-title">My career, year by year</h3>
-      <ol class="career" data-career></ol>
+  <!-- Career: a scrolling flow, rendered from `career` in content.js -->
+  <template id="career-template">
+    <h2 id="panel-title">My career<span>.</span></h2>
+    <p class="panel-lede">Fifteen years across data, cloud and AI, from business analyst to director. Scroll down to follow it back to the start.</p>
+    <div class="flow">
+      <nav class="flow-rail" data-flow-rail aria-label="Jump to a company"></nav>
+      <ol class="flow-track" data-flow-track></ol>
     </div>
-    <h3 class="section-title">The longer story</h3>
-    <ol class="timeline" data-journey>
-      <li><p class="timeline-when"><span class="timeline-year">Now</span></p><h4>Building for agents, with agents.</h4><p>Cockroach Labs · AI, ecosystems, and a global team.</p></li>
-      <li><p class="timeline-when"><span class="timeline-year">2019</span></p><h4>Learning to explain what’s possible.</h4><p>DataStax · Hundreds of demos, proofs of concept, and conversations with partners.</p></li>
-      <li><p class="timeline-when"><span class="timeline-year">2017</span></p><h4>A new chapter in Texas.</h4><p>A master’s in business analytics at UT Dallas, followed by work at Fiserv and Walmart eCommerce.</p></li>
-      <li><p class="timeline-when"><span class="timeline-year">2008</span></p><h4>It started with a graphics card.</h4><p>A broken GeForce. Three buses, two auto-rickshaws, and eight hours to find the supplier. An early lesson in showing up and figuring things out.</p></li>
-    </ol>
-    <div class="inline-actions"><button type="button" class="ink-button" data-open="contact">Let’s make a connection <span aria-hidden="true">→</span></button></div>
+    <div data-education-block hidden>
+      <h3 class="section-title">Education</h3>
+      <ol class="career" data-education></ol>
+    </div>
+    <div class="inline-actions"><button type="button" class="ink-button" data-open="skills">See my skills <span aria-hidden="true">→</span></button><button type="button" class="text-link" data-open="work">See the work <span aria-hidden="true">→</span></button><button type="button" class="text-link" data-open="contact">Say hello <span aria-hidden="true">→</span></button></div>
   </template>
 
   <!-- Skills -->
@@ -279,7 +273,7 @@
       <div><dt>Leading</dt><dd><span>A global team of eight solutions architects</span><span>Partner ecosystems with AWS, Google Cloud and Microsoft</span><span>A certification program with 33 integrations</span></dd></div>
       <div><dt>Explaining</dt><dd><span>Podcast host</span><span>Talks, including AWS re:Invent</span><span>500+ demos and proofs of concept</span><span>Technical writing</span></dd></div>
     </dl>
-    <div class="inline-actions"><button type="button" class="ink-button" data-open="work">See the work <span aria-hidden="true">→</span></button><button type="button" class="text-link" data-open="story">Read my story <span aria-hidden="true">→</span></button></div>
+    <div class="inline-actions"><button type="button" class="ink-button" data-open="work">See the work <span aria-hidden="true">→</span></button><button type="button" class="text-link" data-open="career">See my career <span aria-hidden="true">→</span></button></div>
   </template>
 
   <!-- Contact -->

@@ -7,7 +7,7 @@ import { RoomEnvironment } from './vendor/RoomEnvironment.js';
   Everything is geometry and canvas-drawn screens; there are no image assets.
 
   Clickable things and the panel each one opens:
-    ultrawide monitor -> work      left monitor  -> story     wall calendar -> talks
+    ultrawide monitor -> work      left monitor  -> career     wall calendar -> talks
     terminal laptop   -> rig       chat laptop   -> contact
     microphone        -> podcast   paper stack   -> writing
 
@@ -279,15 +279,14 @@ function buildStudio() {
   /* Left monitor: the career, year by year, as rising steps. The highlight walks through them. */
   const storyScreen = surface(1280, 640);
   let storyStep = -1;
-  let career = (data.career || []).filter(step => Number.isFinite(Number(step.from)));
-  if (career.length < 2) career = (data.journey || []).map(chapter => ({ from: chapter.year, to: undefined, org: chapter.place || '', role: '' })).sort((a, b) => a.from - b.from);
+  const career = (data.career || []).filter(step => Number.isFinite(Number(step.year)) && step.onScreen !== false).sort((a, b) => a.year - b.year);
   function drawStoryScreen() {
     const { ctx, width, height } = storyScreen;
     backdrop(ctx, width, height, '#1b1a26');
     ctx.textBaseline = 'alphabetic';
     ctx.fillStyle = '#8fa0a6';
     ctx.font = `500 24px ${FONT.mono}`;
-    ctx.fillText('MY STORY', 72, 100);
+    ctx.fillText('MY CAREER', 72, 100);
     ctx.fillStyle = INK;
     ctx.font = `600 62px ${FONT.display}`;
     ctx.fillText('Fifteen years across', 72, 196);
@@ -295,7 +294,7 @@ function buildStudio() {
     /* A quiet line with one stop per chapter: a year and a name, nothing more. */
     const count = Math.max(career.length, 1);
     const active = storyStep < 0 ? count - 1 : storyStep % count;
-    const left = 84, right = width - 300, lineY = 430;
+    const left = 84, right = width - 290, lineY = 430;
     ctx.strokeStyle = 'rgba(242, 244, 238, .22)';
     ctx.lineWidth = 3;
     ctx.beginPath();
@@ -311,10 +310,10 @@ function buildStudio() {
       ctx.fill();
       ctx.fillStyle = on ? WARM : '#8fa0a6';
       ctx.font = `500 23px ${FONT.mono}`;
-      ctx.fillText(String(step.from), x - 8, lineY + 56);
+      ctx.fillText(String(step.year), x - 8, lineY + 56);
       ctx.fillStyle = on ? INK : '#b9c4cc';
-      ctx.font = `600 31px ${FONT.display}`;
-      ctx.fillText(fit(ctx, step.short || step.org || '', 260), x - 8, lineY + 100);
+      ctx.font = `600 28px ${FONT.display}`;
+      ctx.fillText(fit(ctx, step.short || step.org || '', 215), x - 8, lineY + 98);
     });
     sheen(ctx, width, height);
     storyScreen.texture.needsUpdate = true;
@@ -825,7 +824,7 @@ function buildStudio() {
     return g;
   }
   const storyMonitor = monitor(-3.25, 2.8, -1.9, 6.2, 3.1, storyScreen, .1, '#7fd0b0');
-  register(storyMonitor, 'story', [0, 1.78, .1], 0);
+  register(storyMonitor, 'career', [0, 1.78, .1], 0);
   const mainMonitor = monitor(3.25, 2.8, -1.9, 6.2, 3.1, mainScreen, -.1, '#b8ef6b');
   box(.6, .2, .22, mat.black, mainMonitor, 0, 1.72, .02, .05);
   sphere(.055, mat.lens, mainMonitor, 0, 1.72, .13);
@@ -1044,7 +1043,7 @@ function buildStudio() {
   /* Close-ups for each clickable thing: where the camera stands and what it looks at. */
   const focusViews = {
     work: { position: [3.1, 3.9, 11], look: [3.25, 2.8, -1.9] },
-    story: { position: [-3.1, 3.9, 11], look: [-3.25, 2.8, -1.9] },
+    career: { position: [-3.1, 3.9, 11], look: [-3.25, 2.8, -1.9] },
     rig: { position: [4.6, 3.4, 7.6], look: [6.2, 1, 1.1] },
     contact: { position: [4.5, 2.8, 7], look: [4.1, .9, 1.9] },
     podcast: { position: [-5.2, 2.9, 8.6], look: [-7.5, 2.1, 2] },
