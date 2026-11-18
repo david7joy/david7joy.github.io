@@ -387,34 +387,110 @@ function buildStudio() {
     storyScreen.texture.needsUpdate = true;
   }
 
-  /* Two framed posters from David's own wall. */
-  const posters = [
-    { sheet: surface(1024, 572), lines: ['Be fearless in the', 'pursuit of what sets', 'your soul on fire.'], from: '#1b1320', to: '#3a1626', ink: ['#f0a868', '#ff8bb0'], size: 92 },
-    { sheet: surface(1024, 572), lines: ['Do what is right,', 'not what is easy.'], from: '#14122a', to: '#241a4a', ink: ['#f2f4ee', '#b9a3ff'], size: 104 }
-  ];
+  /* Two framed posters from David's own wall, drawn as portrait prints. */
+  const posters = [surface(720, 1080), surface(720, 1080)];
+  function fitted(ctx, text, weight, maxWidth, start) {
+    let size = start;
+    do { ctx.font = `${weight} ${size}px ${FONT.display}`; size -= 4; } while (ctx.measureText(text).width > maxWidth && size > 24);
+  }
   function drawPosters() {
-    for (const { sheet, lines, from, to, ink, size } of posters) {
-      const { ctx, width, height } = sheet;
-      const wash = ctx.createLinearGradient(0, 0, width, height);
-      wash.addColorStop(0, from);
-      wash.addColorStop(1, to);
-      ctx.fillStyle = wash;
+    /* 1. "Be fearless": a retro sunset, the sun sliced by the horizon. */
+    {
+      const { ctx, width, height } = posters[0];
+      ctx.fillStyle = '#fbf6ea';
       ctx.fillRect(0, 0, width, height);
-      ctx.strokeStyle = 'rgba(255, 255, 255, .14)';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(28, 28, width - 56, height - 56);
-      const colour = ctx.createLinearGradient(120, 0, width - 120, 0);
-      colour.addColorStop(0, ink[0]);
-      colour.addColorStop(1, ink[1]);
-      ctx.fillStyle = colour;
+      const x = 40, y = 40, w = width - 80, h = height - 80;
+      const sky = ctx.createLinearGradient(0, y, 0, y + h);
+      sky.addColorStop(0, '#24093a');
+      sky.addColorStop(.42, '#b21e5b');
+      sky.addColorStop(.72, '#ff6a1f');
+      sky.addColorStop(1, '#ffc94d');
+      ctx.fillStyle = sky;
+      ctx.fillRect(x, y, w, h);
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x, y, w, h);
+      ctx.clip();
+      const sunY = y + h * .86, sun = ctx.createLinearGradient(0, sunY - 250, 0, sunY + 250);
+      sun.addColorStop(0, '#fff3a6');
+      sun.addColorStop(1, '#ff8a3c');
+      ctx.fillStyle = sun;
+      ctx.beginPath();
+      ctx.arc(width / 2, sunY, 250, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#c2305a';
+      for (let i = 0; i < 6; i++) ctx.fillRect(x, sunY + 16 + i * 44, w, 8 + i * 5);
+      ctx.restore();
       ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.font = `700 ${size}px ${FONT.display}`;
-      const lineHeight = size * 1.16, top = height / 2 - lineHeight * (lines.length - 1) / 2;
-      lines.forEach((text, i) => ctx.fillText(text, width / 2, top + i * lineHeight + 4));
+      ctx.fillStyle = '#fff4e0';
+      fitted(ctx, 'BE', 700, w - 120, 190);
+      ctx.fillText('BE', width / 2, y + 200);
+      fitted(ctx, 'FEARLESS', 700, w - 90, 190);
+      ctx.fillText('FEARLESS', width / 2, y + 330);
+      ctx.fillStyle = '#ffd9a8';
+      ctx.font = `500 30px ${FONT.mono}`;
+      ctx.fillText('I N   T H E   P U R S U I T   O F', width / 2, y + 400);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `600 54px ${FONT.display}`;
+      ctx.fillText('what sets your', width / 2, y + 478);
+      ctx.fillText('soul on fire.', width / 2, y + 542);
       ctx.textAlign = 'left';
-      ctx.textBaseline = 'alphabetic';
-      sheet.texture.needsUpdate = true;
+      posters[0].texture.needsUpdate = true;
+    }
+    /* 2. "Do what is right": the harder path up the mountain. */
+    {
+      const { ctx, width, height } = posters[1];
+      ctx.fillStyle = '#fbf6ea';
+      ctx.fillRect(0, 0, width, height);
+      const x = 40, y = 40, w = width - 80, h = height - 80;
+      const wash = ctx.createLinearGradient(x, y, x + w, y + h);
+      wash.addColorStop(0, '#0a1550');
+      wash.addColorStop(.55, '#4520a8');
+      wash.addColorStop(1, '#0fb5a6');
+      ctx.fillStyle = wash;
+      ctx.fillRect(x, y, w, h);
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x, y, w, h);
+      ctx.clip();
+      const peak = (px, top, half, colour) => {
+        ctx.fillStyle = colour;
+        ctx.beginPath();
+        ctx.moveTo(px, top);
+        ctx.lineTo(px + half, y + h);
+        ctx.lineTo(px - half, y + h);
+        ctx.closePath();
+        ctx.fill();
+      };
+      peak(190, y + h * .62, 330, 'rgba(10, 21, 80, .55)');
+      peak(560, y + h * .56, 360, 'rgba(18, 12, 70, .6)');
+      peak(380, y + h * .5, 300, '#120a4a');
+      /* The path: steep, with switchbacks, ending at a bright summit. */
+      ctx.strokeStyle = '#ffe66d';
+      ctx.lineWidth = 8;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.setLineDash([2, 20]);
+      ctx.beginPath();
+      [[250, y + h - 20], [430, y + h * .86], [320, y + h * .74], [420, y + h * .64], [350, y + h * .57], [380, y + h * .5]].forEach(([px, py], i) => { if (i) ctx.lineTo(px, py); else ctx.moveTo(px, py); });
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#ffe66d';
+      ctx.beginPath();
+      ctx.arc(380, y + h * .5 - 6, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#ffffff';
+      fitted(ctx, 'DO WHAT', 700, w - 100, 150);
+      ctx.fillText('DO WHAT', width / 2, y + 170);
+      fitted(ctx, 'IS RIGHT,', 700, w - 100, 150);
+      ctx.fillText('IS RIGHT,', width / 2, y + 290);
+      ctx.fillStyle = '#ffe66d';
+      ctx.font = `600 62px ${FONT.display}`;
+      ctx.fillText('not what is easy.', width / 2, y + 384);
+      ctx.textAlign = 'left';
+      posters[1].texture.needsUpdate = true;
     }
   }
 
@@ -808,18 +884,17 @@ function buildStudio() {
   for (let i = 1; i <= 4; i++) box(.11, 11.7, .16, mat.steel, scene, -6 + i * 3.9, 4.15, -6.2, 0);
   for (const y of [-1.62, 6.9, 9.96]) box(11.7, .11, .16, mat.steel, scene, 3.75, y, -6.2, 0);
 
-  /* Wall calendar, on the wall right of the window. */
-  const calendar = group(12.1, 5.2, -5.96);
+  /* Wall calendar, above the left monitor. */
+  const calendar = group(-5.3, 6.25, -5.96);
   box(3.76, 2.34, .05, mat.white, calendar, 0, 0, 0, .01);
   plane(3.64, 2.22, new THREE.MeshStandardMaterial({ map: calendarSheet.texture, roughness: .85 }), calendar, 0, 0, .03);
   register(calendar, 'talks', [0, 1.4, .1], 0);
 
-  /* The posters hang side by side on the wall above the left monitor. */
+  /* The posters hang on the right-hand wall, above the guitar. */
   posters.forEach((poster, i) => {
-    const frame = group(-6.55 + i * 3.2, 6.25, -5.96);
-    frame.scale.setScalar(.86);
-    box(3.62, 2.08, .08, mat.steel, frame, 0, 0, 0, .02);
-    plane(3.46, 1.93, new THREE.MeshStandardMaterial({ map: poster.sheet.texture, roughness: .8 }), frame, 0, 0, .05);
+    const frame = group(10.95 + i * 2.55, 5.65, -5.96);
+    box(2.36, 3.5, .09, mat.steel, frame, 0, 0, 0, .02);
+    plane(2.22, 3.33, new THREE.MeshStandardMaterial({ map: poster.texture, roughness: .7 }), frame, 0, 0, .055);
   });
 
   /* A guitar amp on the floor to the left, and an electric guitar hung on the wall under the calendar. */
@@ -940,9 +1015,9 @@ function buildStudio() {
   note(storyMonitor, -2.02, -1.84, .1, -.06, '#ff9ec4', ['stay', 'curious']);
   note(mainMonitor, 2.74, -1.82, .1, .05, '#b9ec8a', ['run, drive,', 'verify']);
   register(mainMonitor, 'work', [.8, 1.78, .1], 0);
-  note(scene, 9.72, 5.95, -5.92, .06, '#f5e26b', ['Dec 15', 'webinar']);
-  note(scene, 9.78, 5.2, -5.92, -.08, '#9fd4f5', ['Big Ideas', 'podcast']);
-  note(scene, 9.7, 4.45, -5.92, .04, '#ff9ec4', ['ship it']);
+  note(scene, -2.95, 7, -5.92, .06, '#f5e26b', ['Dec 15', 'webinar']);
+  note(scene, -2.9, 6.25, -5.92, -.08, '#9fd4f5', ['Big Ideas', 'podcast']);
+  note(scene, -2.95, 5.5, -5.92, .04, '#ff9ec4', ['ship it']);
 
   /* ---------- Keyboard and mouse in the middle ---------- */
 
@@ -1156,7 +1231,7 @@ function buildStudio() {
     contact: { position: [4.5, 2.8, 7], look: [4.1, .9, 1.9] },
     podcast: { position: [-5.2, 2.9, 8.6], look: [-7.5, 2.1, 2] },
     writing: { position: [-4.2, 4.6, 8.2], look: [-4.9, .1, 2.3] },
-    talks: { position: [10.4, 5.2, 6.4], look: [12.1, 5.2, -5.96] },
+    talks: { position: [-4.4, 6, 6.6], look: [-5.3, 6.25, -5.96] },
     skills: { position: [-11.2, 3.2, 6.6], look: [-12.7, 3, -5.96] }
   };
   for (const view of Object.values(focusViews)) {
