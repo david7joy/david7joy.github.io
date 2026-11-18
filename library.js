@@ -20,8 +20,10 @@
       ]
     },
     podcast: {
-      types: ['podcast'], layout: 'list', noun: ['entry', 'entries'],
-      searchLabel: 'Search episodes and guests', restLabel: 'Episodes', chips: null
+      types: ['podcast'], layout: 'list', noun: ['episode', 'episodes'],
+      searchLabel: 'Search guests, companies and topics', restLabel: 'Episodes', chips: null, episodes: true,
+      brands: ['Stripe', 'GitHub', 'Ericsson', 'Equifax', 'Estée Lauder', 'PwC', 'Booz Allen Hamilton', 'Confluent',
+        'Honeycomb', 'Pulumi', 'Vimeo', 'Fivetran', 'Amplitude', 'Collibra', 'Cameo', 'Baseten']
     },
     writing: {
       types: ['writing'], layout: 'list', noun: ['post', 'posts'],
@@ -115,7 +117,7 @@
   }
 
   function haystack(item) {
-    return [item.title, item.description, item.source, item.role, TYPE_LABEL[item.type] || item.type, tagsOf(item).join(' ')]
+    return [item.title, item.description, item.source, item.role, item.guest, item.guestRole, item.org, TYPE_LABEL[item.type] || item.type, tagsOf(item).join(' ')]
       .join(' ').toLowerCase();
   }
 
@@ -304,6 +306,36 @@
     return list;
   }
 
+  /* Podcast: one tight row per conversation, led by the company and the guest. */
+  function buildEpisodes(items) {
+    var list = h('ul', 'lib-eps');
+    list.setAttribute('role', 'list');
+    items.slice().sort(function (a, b) { return dateKey(b) - dateKey(a); }).forEach(function (it) {
+      var li = h('li');
+      var a = h('a', 'lib-ep');
+      a.href = it.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.setAttribute('aria-label', (it.guest || it.title) + (it.org ? ', ' + it.org : '') + ': ' + it.title + '. Watch on YouTube');
+      var d = parseDate(it.date);
+      var when = h('time', 'lib-ep-date', d ? MONTHS[d.m - 1] + ' ' + d.y : '');
+      when.setAttribute('datetime', String(it.date));
+      a.appendChild(when);
+      var who = h('span', 'lib-ep-who');
+      if (it.org) who.appendChild(h('b', 'lib-ep-org', it.org));
+      who.appendChild(h('span', 'lib-ep-guest', it.guest || ''));
+      if (it.guestRole) who.appendChild(h('span', 'lib-ep-role', it.guestRole));
+      a.appendChild(who);
+      a.appendChild(h('span', 'lib-ep-title', it.title));
+      var go = h('span', 'lib-ep-go', '▶');
+      go.setAttribute('aria-hidden', 'true');
+      a.appendChild(go);
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+    return list;
+  }
+
   function buildCollection(items, layout, featured) {
     var list = h('ul', layout === 'list' && !featured ? 'lib-list' : 'lib-grid' + (featured ? ' lib-grid--featured' : ''));
     list.setAttribute('role', 'list');
@@ -377,7 +409,7 @@
       if (typeChips.length > 2) chipBar.appendChild(typeGroup); else typeChips = [];
     }
     var tags = topTags(items);
-    if (tags.length >= 2 && !cfg.plain) {
+    if (tags.length >= 2 && !cfg.plain && !cfg.episodes) {
       var tagGroup = h('div', 'lib-chips lib-chips--tags');
       tagGroup.setAttribute('role', 'group');
       tagGroup.setAttribute('aria-label', 'Filter by topic');
@@ -393,6 +425,31 @@
     if (chipBar.firstChild) root.appendChild(chipBar);
 
     var results = h('div', 'lib-results');
+    var brandChips = [];
+    if (cfg.brands) {
+      var orgs = {};
+      items.forEach(function (it) { if (it.org) orgs[it.org] = true; });
+      var brandBar = h('div', 'lib-brands');
+      brandBar.setAttribute('role', 'group');
+      brandBar.setAttribute('aria-label', 'Filter by company');
+      brandBar.appendChild(h('span', 'lib-brands-label', 'Guests from'));
+      cfg.brands.filter(function (name) { return orgs[name]; }).forEach(function (name) {
+        var b = h('button', 'lib-brand', name);
+        b.setAttribute('type', 'button');
+        b.setAttribute('aria-pressed', 'false');
+        b.addEventListener('click', function () {
+          var on = String(state.q).toLowerCase() === name.toLowerCase();
+          state.q = on ? '' : name;
+          input.value = state.q;
+          render();
+        });
+        brandChips.push({ key: name, node: b });
+        brandBar.appendChild(b);
+      });
+      var more = Object.keys(orgs).length - brandChips.length;
+      if (more > 0) brandBar.appendChild(h('span', 'lib-brands-more', '+ ' + more + ' more'));
+      root.insertBefore(brandBar, root.firstChild.nextSibling);
+    }
     root.appendChild(results);
 
     function groupLabel(text) {
@@ -436,6 +493,12 @@
 
       if (cfg.plain) {
         results.appendChild(buildLinks(shown));
+        return;
+      }
+
+      if (cfg.episodes) {
+        brandChips.forEach(function (c) { c.node.setAttribute('aria-pressed', String(String(state.q).toLowerCase() === c.key.toLowerCase())); });
+        results.appendChild(buildEpisodes(shown));
         return;
       }
 
