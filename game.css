@@ -2417,3 +2417,112 @@ button.span-seg:hover {
     display: none;
   }
 }
+
+/* ---------- Photo and the executive line ---------- */
+
+.hero-copy {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: min(460px, calc(100% - var(--gutter) * 2));
+}
+
+.hero-photo,
+.intro-photo,
+.contact-photo {
+  flex: none;
+  border: 2px solid rgba(242, 244, 238, .85);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.hero-photo {
+  width: 72px;
+  height: 72px;
+}
+
+.hero-description {
+  max-width: 30ch;
+  font-size: 15px;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+.hero-roles {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.intro-photo {
+  width: 104px;
+  height: 104px;
+  margin: 0 auto 20px;
+  box-shadow: 0 0 0 6px rgba(185, 163, 255, .18);
+}
+
+.intro-inner > :nth-child(6) { animation-delay: .6s; }
+
+.intro-role {
+  margin-top: 14px;
+  font: 500 13px/1.5 var(--mono);
+  letter-spacing: .04em;
+  color: var(--accent);
+}
+
+.intro-line {
+  margin-top: 14px;
+}
+
+.contact-photo {
+  display: block;
+  width: 88px;
+  height: 88px;
+  margin-bottom: 16px;
+  border-color: var(--accent);
+}
+
+@media (min-width: 760px) {
+  .hero-copy h1 {
+    margin-bottom: 6px;
+    font-size: clamp(34px, 2.8vw, 44px);
+  }
+
+  .hero-description {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 759px) {
+  .hero-photo {
+    width: 56px;
+    height: 56px;
+  }
+
+  .hero-copy h1 {
+    font-size: 30px;
+    margin-bottom: 4px;
+  }
+
+  .hero-description {
+    font-size: 13px;
+  }
+}
+
+.intro-photo {
+  display: block;
+}
+
+.hero-copy {
+  max-width: min(540px, calc(100% - var(--gutter) * 2));
+}
+
+.hero-description {
+  max-width: 38ch;
+}
+
+@media (min-width: 760px) {
+  .hero-roles {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+}

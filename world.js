@@ -885,7 +885,8 @@ function buildStudio() {
   for (const y of [-1.62, 6.9, 9.96]) box(11.7, .11, .16, mat.steel, scene, 3.75, y, -6.2, 0);
 
   /* Wall calendar, above the left monitor. */
-  const calendar = group(-5.3, 6.25, -5.96);
+  const calendar = group(-3.95, 6.35, -5.96);
+  calendar.scale.setScalar(.8);
   box(3.76, 2.34, .05, mat.white, calendar, 0, 0, 0, .01);
   plane(3.64, 2.22, new THREE.MeshStandardMaterial({ map: calendarSheet.texture, roughness: .85 }), calendar, 0, 0, .03);
   register(calendar, 'talks', [0, 1.4, .1], 0);
@@ -1015,9 +1016,9 @@ function buildStudio() {
   note(storyMonitor, -2.02, -1.84, .1, -.06, '#ff9ec4', ['stay', 'curious']);
   note(mainMonitor, 2.74, -1.82, .1, .05, '#b9ec8a', ['run, drive,', 'verify']);
   register(mainMonitor, 'work', [.8, 1.78, .1], 0);
-  note(scene, -2.95, 7, -5.92, .06, '#f5e26b', ['Dec 15', 'webinar']);
-  note(scene, -2.9, 6.25, -5.92, -.08, '#9fd4f5', ['Big Ideas', 'podcast']);
-  note(scene, -2.95, 5.5, -5.92, .04, '#ff9ec4', ['ship it']);
+  note(scene, -4.85, 4.86, -5.92, .06, '#f5e26b', ['Dec 15', 'webinar']);
+  note(scene, -4.05, 4.84, -5.92, -.08, '#9fd4f5', ['Big Ideas', 'podcast']);
+  note(scene, -3.25, 4.87, -5.92, .04, '#ff9ec4', ['ship it']);
 
   /* ---------- Keyboard and mouse in the middle ---------- */
 
@@ -1094,7 +1095,7 @@ function buildStudio() {
 
   /* ---------- Sticker board on the wall under the title: where I have worked, and what I work with ---------- */
 
-  const board = group(-12.7, 3, -5.96);
+  const board = group(-12.7, 2.55, -5.96);
   box(5.5, 4.6, .1, standard('#4a3526', .6), board, 0, 0, 0, .03);
   box(5.2, 4.3, .06, standard('#c79f6f', .95), board, 0, 0, .04, .01);
   /* Each sticker is a white die-cut label carrying the brand's own mark, loaded from assets/logos.
@@ -1231,8 +1232,8 @@ function buildStudio() {
     contact: { position: [4.5, 2.8, 7], look: [4.1, .9, 1.9] },
     podcast: { position: [-5.2, 2.9, 8.6], look: [-7.5, 2.1, 2] },
     writing: { position: [-4.2, 4.6, 8.2], look: [-4.9, .1, 2.3] },
-    talks: { position: [-4.4, 6, 6.6], look: [-5.3, 6.25, -5.96] },
-    skills: { position: [-11.2, 3.2, 6.6], look: [-12.7, 3, -5.96] }
+    talks: { position: [-3.3, 6, 5.6], look: [-3.95, 6.1, -5.96] },
+    skills: { position: [-11.2, 2.8, 6.6], look: [-12.7, 2.55, -5.96] }
   };
   for (const view of Object.values(focusViews)) {
     view.position = new THREE.Vector3(...view.position);
