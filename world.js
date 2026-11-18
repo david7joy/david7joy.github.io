@@ -393,60 +393,63 @@ function buildStudio() {
     let size = start;
     do { ctx.font = `${weight} ${size}px ${FONT.display}`; size -= 4; } while (ctx.measureText(text).width > maxWidth && size > 24);
   }
+  /* Sets lines of capitals one above another, each sized to span the poster's width. */
+  function stackType(ctx, lines, centre, top, maxWidth, maxHeight, cap) {
+    const sizes = lines.map(([text]) => {
+      ctx.font = `700 ${cap}px ${FONT.display}`;
+      return Math.min(cap, cap * maxWidth / ctx.measureText(text).width);
+    });
+    const scale = Math.min(1, maxHeight / sizes.reduce((sum, size) => sum + size * .96, 0));
+    let y = top;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    lines.forEach(([text, colour], i) => {
+      const size = sizes[i] * scale;
+      ctx.font = `700 ${size}px ${FONT.display}`;
+      ctx.fillStyle = colour;
+      ctx.fillText(text, centre, y + size * .8);
+      y += size * .96;
+    });
+    ctx.textAlign = 'left';
+    return y;
+  }
   function drawPosters() {
-    /* 1. "Be fearless": a retro sunset, the sun sliced by the horizon. */
+    /* 1. "Be fearless": type first, over a dark-to-ember sky with a low sun. */
     {
       const { ctx, width, height } = posters[0];
       ctx.fillStyle = '#fbf6ea';
       ctx.fillRect(0, 0, width, height);
-      const x = 40, y = 40, w = width - 80, h = height - 80;
+      const x = 34, y = 34, w = width - 68, h = height - 68;
       const sky = ctx.createLinearGradient(0, y, 0, y + h);
-      sky.addColorStop(0, '#24093a');
-      sky.addColorStop(.42, '#b21e5b');
-      sky.addColorStop(.72, '#ff6a1f');
-      sky.addColorStop(1, '#ffc94d');
+      sky.addColorStop(0, '#1a0629');
+      sky.addColorStop(.6, '#5a0f3c');
+      sky.addColorStop(.86, '#d8431f');
+      sky.addColorStop(1, '#ff9d2e');
       ctx.fillStyle = sky;
       ctx.fillRect(x, y, w, h);
       ctx.save();
       ctx.beginPath();
       ctx.rect(x, y, w, h);
       ctx.clip();
-      const sunY = y + h * .86, sun = ctx.createLinearGradient(0, sunY - 250, 0, sunY + 250);
-      sun.addColorStop(0, '#fff3a6');
-      sun.addColorStop(1, '#ff8a3c');
-      ctx.fillStyle = sun;
+      ctx.fillStyle = '#ffc94d';
       ctx.beginPath();
-      ctx.arc(width / 2, sunY, 250, 0, Math.PI * 2);
+      ctx.arc(width / 2, y + h + 40, 210, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#c2305a';
-      for (let i = 0; i < 6; i++) ctx.fillRect(x, sunY + 16 + i * 44, w, 8 + i * 5);
       ctx.restore();
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#fff4e0';
-      fitted(ctx, 'BE', 700, w - 120, 190);
-      ctx.fillText('BE', width / 2, y + 200);
-      fitted(ctx, 'FEARLESS', 700, w - 90, 190);
-      ctx.fillText('FEARLESS', width / 2, y + 330);
-      ctx.fillStyle = '#ffd9a8';
-      ctx.font = `500 30px ${FONT.mono}`;
-      ctx.fillText('I N   T H E   P U R S U I T   O F', width / 2, y + 400);
-      ctx.fillStyle = '#ffffff';
-      ctx.font = `600 54px ${FONT.display}`;
-      ctx.fillText('what sets your', width / 2, y + 478);
-      ctx.fillText('soul on fire.', width / 2, y + 542);
-      ctx.textAlign = 'left';
+      const cream = '#fff6e6', flame = '#ffc94d';
+      stackType(ctx, [['BE', cream], ['FEARLESS', flame], ['IN THE', cream], ['PURSUIT OF', cream], ['WHAT SETS', cream], ['YOUR SOUL', cream], ['ON FIRE.', flame]], width / 2, y + 30, w - 64, h - 240, 210);
       posters[0].texture.needsUpdate = true;
     }
-    /* 2. "Do what is right": the harder path up the mountain. */
+    /* 2. "Do what is right": type first, over deep indigo, with the hard road as a small mark below. */
     {
       const { ctx, width, height } = posters[1];
       ctx.fillStyle = '#fbf6ea';
       ctx.fillRect(0, 0, width, height);
-      const x = 40, y = 40, w = width - 80, h = height - 80;
+      const x = 34, y = 34, w = width - 68, h = height - 68;
       const wash = ctx.createLinearGradient(x, y, x + w, y + h);
-      wash.addColorStop(0, '#0a1550');
-      wash.addColorStop(.55, '#4520a8');
-      wash.addColorStop(1, '#0fb5a6');
+      wash.addColorStop(0, '#080f3d');
+      wash.addColorStop(.7, '#2a1578');
+      wash.addColorStop(1, '#0a6f7c');
       ctx.fillStyle = wash;
       ctx.fillRect(x, y, w, h);
       ctx.save();
@@ -462,34 +465,16 @@ function buildStudio() {
         ctx.closePath();
         ctx.fill();
       };
-      peak(190, y + h * .62, 330, 'rgba(10, 21, 80, .55)');
-      peak(560, y + h * .56, 360, 'rgba(18, 12, 70, .6)');
-      peak(380, y + h * .5, 300, '#120a4a');
-      /* The path: steep, with switchbacks, ending at a bright summit. */
-      ctx.strokeStyle = '#ffe66d';
-      ctx.lineWidth = 8;
-      ctx.lineJoin = 'round';
-      ctx.lineCap = 'round';
-      ctx.setLineDash([2, 20]);
-      ctx.beginPath();
-      [[250, y + h - 20], [430, y + h * .86], [320, y + h * .74], [420, y + h * .64], [350, y + h * .57], [380, y + h * .5]].forEach(([px, py], i) => { if (i) ctx.lineTo(px, py); else ctx.moveTo(px, py); });
-      ctx.stroke();
-      ctx.setLineDash([]);
+      peak(200, y + h - 150, 260, 'rgba(8, 15, 61, .7)');
+      peak(540, y + h - 190, 300, 'rgba(8, 15, 61, .8)');
+      peak(370, y + h - 230, 250, '#060b30');
       ctx.fillStyle = '#ffe66d';
       ctx.beginPath();
-      ctx.arc(380, y + h * .5 - 6, 16, 0, Math.PI * 2);
+      ctx.arc(370, y + h - 236, 13, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#ffffff';
-      fitted(ctx, 'DO WHAT', 700, w - 100, 150);
-      ctx.fillText('DO WHAT', width / 2, y + 170);
-      fitted(ctx, 'IS RIGHT,', 700, w - 100, 150);
-      ctx.fillText('IS RIGHT,', width / 2, y + 290);
-      ctx.fillStyle = '#ffe66d';
-      ctx.font = `600 62px ${FONT.display}`;
-      ctx.fillText('not what is easy.', width / 2, y + 384);
-      ctx.textAlign = 'left';
+      const white = '#ffffff', gold = '#ffe66d', soft = '#b9b4ee';
+      stackType(ctx, [['DO', white], ['WHAT IS', white], ['RIGHT,', gold], ['NOT', soft], ['WHAT IS', soft], ['EASY.', soft]], width / 2, y + 30, w - 64, h - 290, 230);
       posters[1].texture.needsUpdate = true;
     }
   }
@@ -893,9 +878,9 @@ function buildStudio() {
 
   /* The posters hang on the right-hand wall, above the guitar. */
   posters.forEach((poster, i) => {
-    const frame = group(10.95 + i * 2.55, 5.65, -5.96);
-    box(2.36, 3.5, .09, mat.steel, frame, 0, 0, 0, .02);
-    plane(2.22, 3.33, new THREE.MeshStandardMaterial({ map: poster.texture, roughness: .7 }), frame, 0, 0, .055);
+    const frame = group(10.98 + i * 2.62, 5.8, -5.96);
+    box(2.56, 3.82, .09, mat.steel, frame, 0, 0, 0, .02);
+    plane(2.42, 3.63, new THREE.MeshStandardMaterial({ map: poster.texture, roughness: .7 }), frame, 0, 0, .055);
   });
 
   /* A guitar amp on the floor to the left, and an electric guitar hung on the wall under the calendar. */
