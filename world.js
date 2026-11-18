@@ -278,43 +278,111 @@ function buildStudio() {
 
   /* Left monitor: the career, year by year, as rising steps. The highlight walks through them. */
   const storyScreen = surface(1280, 640);
-  let storyStep = -1;
+  let storyStep = -1, storyFrame = -1;
   const career = (data.career || []).filter(step => Number.isFinite(Number(step.year)) && step.onScreen !== false).sort((a, b) => a.year - b.year);
-  function drawStoryScreen() {
+  function drawStoryScreen(time = 0) {
     const { ctx, width, height } = storyScreen;
-    backdrop(ctx, width, height, '#1b1a26');
-    ctx.textBaseline = 'alphabetic';
-    ctx.fillStyle = '#8fa0a6';
-    ctx.font = `500 24px ${FONT.mono}`;
-    ctx.fillText('MY CAREER', 72, 100);
-    ctx.fillStyle = INK;
-    ctx.font = `600 62px ${FONT.display}`;
-    ctx.fillText('Fifteen years across', 72, 196);
-    ctx.fillText('data, cloud and AI.', 72, 268);
-    /* A quiet line with one stop per chapter: a year and a name, nothing more. */
+    backdrop(ctx, width, height, '#181a2a');
     const count = Math.max(career.length, 1);
     const active = storyStep < 0 ? count - 1 : storyStep % count;
-    const left = 84, right = width - 290, lineY = 430;
-    ctx.strokeStyle = 'rgba(242, 244, 238, .22)';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(left, lineY);
-    ctx.lineTo(width - 72, lineY);
-    ctx.stroke();
-    career.forEach((step, i) => {
-      const on = i === active;
-      const x = count > 1 ? left + (right - left) * i / (count - 1) : left;
-      ctx.fillStyle = on ? WARM : '#5d6a78';
-      ctx.beginPath();
-      ctx.arc(x, lineY, on ? 13 : 8, 0, Math.PI * 2);
+    const step = career[active] || {};
+    ctx.textBaseline = 'alphabetic';
+
+    /* Top: the stop being shown. */
+    ctx.fillStyle = '#8fa0a6';
+    ctx.font = `500 24px ${FONT.mono}`;
+    ctx.fillText('MY CAREER', 72, 96);
+    ctx.textAlign = 'right';
+    ctx.fillText(`${String(active + 1).padStart(2, '0')} / ${String(count).padStart(2, '0')}`, width - 72, 96);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = WARM;
+    ctx.font = `500 30px ${FONT.mono}`;
+    ctx.fillText(`${step.from || step.year || ''} – ${step.to === 'Present' ? 'now' : (step.to || '')}`, 72, 164);
+    ctx.fillStyle = INK;
+    ctx.font = `700 78px ${FONT.display}`;
+    ctx.fillText(fit(ctx, step.org || '', width - 144), 72, 248);
+    ctx.fillStyle = '#c3ccd2';
+    ctx.font = `500 30px ${FONT.sans}`;
+    ctx.fillText(fit(ctx, step.roles?.[0]?.title || '', width - 144), 72, 300);
+    const awards = step.awards?.length || 0;
+    if (awards) {
+      const label = `★ ${awards} award${awards > 1 ? 's' : ''}`;
+      ctx.font = `500 24px ${FONT.mono}`;
+      const w = ctx.measureText(label).width + 36;
+      ctx.fillStyle = 'rgba(240, 168, 104, .16)';
+      rounded(ctx, 72, 326, w, 44, 10);
       ctx.fill();
+      ctx.fillStyle = WARM;
+      ctx.fillText(label, 90, 357);
+    }
+
+    /* Bottom: the whole path as a rising line, lit up to the stop on show, with a spark running along it. */
+    const left = 96, right = width - 96, low = 528, high = 418;
+    const point = i => {
+      const t = count > 1 ? i / (count - 1) : 0;
+      return [left + (right - left) * t, low - (low - high) * t * t];
+    };
+    const trace = upTo => {
+      ctx.beginPath();
+      for (let k = 0; k <= 60; k++) {
+        const u = upTo * k / 60, [px] = [left + (right - left) * u], py = low - (low - high) * u * u;
+        if (k) ctx.lineTo(px, py); else ctx.moveTo(px, py);
+      }
+    };
+    const reach = count > 1 ? active / (count - 1) : 1;
+    const fill = ctx.createLinearGradient(0, high - 40, 0, height);
+    fill.addColorStop(0, 'rgba(184, 239, 107, .16)');
+    fill.addColorStop(1, 'rgba(184, 239, 107, 0)');
+    trace(reach);
+    ctx.lineTo(left + (right - left) * reach, height);
+    ctx.lineTo(left, height);
+    ctx.closePath();
+    ctx.fillStyle = fill;
+    ctx.fill();
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = 'rgba(242, 244, 238, .16)';
+    ctx.lineWidth = 4;
+    trace(1);
+    ctx.stroke();
+    const stroke = ctx.createLinearGradient(left, 0, right, 0);
+    stroke.addColorStop(0, '#f0a868');
+    stroke.addColorStop(1, '#b8ef6b');
+    ctx.save();
+    ctx.shadowColor = 'rgba(184, 239, 107, .7)';
+    ctx.shadowBlur = 22;
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = 6;
+    trace(reach);
+    ctx.stroke();
+    const spark = (time * .16) % 1, sx = left + (right - left) * spark, sy = low - (low - high) * spark * spark;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(sx, sy, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    career.forEach((stop, i) => {
+      const [px, py] = point(i), on = i === active, passed = i < active;
+      if (on) {
+        const pulse = 18 + (Math.sin(time * 4) * .5 + .5) * 14;
+        ctx.fillStyle = 'rgba(240, 168, 104, .22)';
+        ctx.beginPath();
+        ctx.arc(px, py, pulse, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = on ? WARM : passed ? ACCENT : '#5d6a78';
+      ctx.beginPath();
+      ctx.arc(px, py, on ? 14 : 9, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.textAlign = i === 0 ? 'left' : i === count - 1 ? 'right' : 'center';
+      const tx = i === 0 ? px - 12 : i === count - 1 ? px + 12 : px;
       ctx.fillStyle = on ? WARM : '#8fa0a6';
-      ctx.font = `500 23px ${FONT.mono}`;
-      ctx.fillText(String(step.year), x - 8, lineY + 56);
-      ctx.fillStyle = on ? INK : '#b9c4cc';
-      ctx.font = `600 28px ${FONT.display}`;
-      ctx.fillText(fit(ctx, step.short || step.org || '', 215), x - 8, lineY + 98);
+      ctx.font = `500 22px ${FONT.mono}`;
+      ctx.fillText(String(stop.year), tx, py + 46);
+      ctx.fillStyle = on ? INK : '#9aa7b0';
+      ctx.font = `600 24px ${FONT.display}`;
+      ctx.fillText(stop.short || stop.org || '', tx, py + 76);
     });
+    ctx.textAlign = 'left';
     sheen(ctx, width, height);
     storyScreen.texture.needsUpdate = true;
   }
@@ -962,7 +1030,7 @@ function buildStudio() {
     }
   }
   /* Where I have worked and studied. */
-  sticker(-.89, 1.56, 2.3, .6, .03, 'cockroachlabs', 'Cockroach Labs', '#6933FF');
+  sticker(-.89, 1.56, 2.3, .6, .03, 'cockroachlabs', 'Cockroach Labs', '#0b0f0c');
   sticker(1.24, 1.58, 1.6, .6, -.04, 'datastax', 'DataStax', '#000000');
   sticker(-1.53, .78, 1.55, .6, -.03, 'walmart', 'Walmart', '#0071CE');
   sticker(-.02, .8, 1.1, .6, .05, 'fiserv', '');
@@ -1295,7 +1363,8 @@ function buildStudio() {
     if (!paused) {
       const page = Math.floor(elapsed / 6), step = Math.floor(elapsed / 4);
       if (page !== mainPage) { mainPage = page; drawMainScreen(); }
-      if (step !== storyStep) { storyStep = step; drawStoryScreen(); }
+      const frame = Math.floor(elapsed * 12);
+      if (frame !== storyFrame) { storyFrame = frame; storyStep = step; drawStoryScreen(elapsed); }
     }
     for (const [key, item] of targets) {
       const goal = key === hoverKey && !panelOpen ? 1 : 0;

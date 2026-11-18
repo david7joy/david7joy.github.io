@@ -1924,3 +1924,70 @@ button.span-seg:hover {
 .flow-rail {
   background: linear-gradient(transparent, rgba(10, 13, 16, .96) 42%, rgba(10, 13, 16, .96) 86%, transparent);
 }
+
+/* ---------- My career: awards, the IBM badge, a line about the company ---------- */
+
+.flow-badge {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 8px;
+  border: 1px solid rgba(143, 176, 216, .5);
+  border-radius: 4px;
+  color: #a9c4e6;
+  font: 500 11px/1.5 var(--mono);
+  vertical-align: middle;
+}
+
+.flow-about {
+  margin: 8px 0 0 46px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.flow-awards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 0 46px;
+  padding: 0;
+  list-style: none;
+}
+
+.career .flow-awards {
+  grid-column: 2;
+  margin: 6px 0 0;
+}
+
+.flow-awards li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: rgba(240, 168, 104, .13);
+  color: var(--warm);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.flow-awards li::before {
+  content: '★';
+  font-size: 11px;
+}
+
+.flow-awards li span {
+  color: rgba(240, 168, 104, .65);
+  font-size: 11px;
+}
+
+@media (max-width: 479px) {
+  .flow-about,
+  .flow-awards {
+    margin-left: 0;
+  }
+}
+
+.flow-rail {
+  background: linear-gradient(rgba(10, 13, 16, .98) 90%, transparent);
+}

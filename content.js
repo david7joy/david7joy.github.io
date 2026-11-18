@@ -169,16 +169,19 @@ window.PORTFOLIO = {
     `year` and `short` feed the line on the left monitor; `onScreen: false` keeps a stop off it.
   */
   career: [
-    { org: "Cockroach Labs", short: "Cockroach Labs", year: 2022, logo: "cockroachlabs", tint: "#6933FF", place: "Dallas, Texas", from: "Sep 2022", to: "Present",
-      note: "Partner Manager of the Year, FY26",
+    { org: "Cockroach Labs", short: "Cockroach Labs", year: 2022, logo: "cockroachlabs", tint: "#AEDE54", tile: "#0b0f0c", place: "Dallas, Texas", from: "Sep 2022", to: "Present",
+      awards: [
+        { name: "Partner Manager of the Year", date: "2026" },
+        { name: "President's Club", date: "FY 2026" }
+      ],
       roles: [
-        { title: "Director, Solutions Architecture (AI, Ecosystem & Channels)", from: "Jan 2026", to: "Present", tags: ["Claude Code", "Codex", "MCP", "LangChain", "Team of 8"], points: [
-          "Lead the partner solutions architecture team: eight architects across the US, EMEA and APAC.",
+        { title: "Director, Solutions Architecture (AI, Ecosystem & Channels)", from: "Jan 2026", to: "Present", tags: ["Claude Code", "Codex", "MCP", "LangChain"], points: [
+          "Lead the global partner solutions architecture team, with a team lead for EMEA and APAC.",
           "Turned partner solutions architects into forward-deployed builders who ship integrations, demos and reference architectures with Claude Code and Codex.",
           "Directed the team behind the CockroachDB plugins for Claude Code, Codex and ChatGPT, and Cursor, plus the LangChain and Google MCP Toolbox integrations.",
           "Built the ecosystem certification program, now a public directory of 33 partner integrations.",
           "Host of the Big Ideas in App Architecture podcast." ] },
-        { title: "Senior Manager, Solutions Architecture (AI, Ecosystem & Channels)", from: "Aug 2024", to: "Dec 2025", tags: ["AWS", "Amazon Bedrock", "Vector search", "Team of 4"], points: [
+        { title: "Senior Manager, Solutions Architecture (AI, Ecosystem & Channels)", from: "Aug 2024", to: "Dec 2025", tags: ["AWS", "Amazon Bedrock", "Vector search"], points: [
           "Managed a global team of four senior solutions architects covering cloud, ISV and AI partners.",
           "Led the technical side of the AWS alliance and the CockroachDB integration with Amazon Bedrock.",
           "Presented on stage at AWS re:Invent, Google Cloud Next and Microsoft Ignite." ] },
@@ -187,11 +190,14 @@ window.PORTFOLIO = {
           "Ran partner briefings, proofs of concept and live demos." ] }
       ] },
     { org: "DataStax", short: "DataStax", year: 2019, logo: "datastax", tint: "#111111", place: "Santa Clara, California", from: "Oct 2019", to: "Sep 2022",
+      badge: "Now part of IBM",
+      about: "The company behind Astra DB and a major contributor to Apache Cassandra. IBM acquired DataStax in May 2025.",
       roles: [
         { title: "Senior Data Architect (Partnerships)", tags: ["Astra DB", "Cassandra", "Spark", "Kafka"], points: [
-          "Ran demos and proofs of concept for buyers from developers to CTOs.",
+          "Ran 500+ demos and proofs of concept for buyers from developers to CTOs.",
           "Trained 1,000+ partner engineers at IBM, AWS, Google Cloud, Azure and global systems integrators.",
-          "Built joint solutions with AWS, Google Cloud and Azure on Astra DB, Cassandra, Spark and Kafka." ] }
+          "Built joint solutions with AWS, Google Cloud and Azure, and customer-facing demos on Astra DB, Astra Streaming (Pulsar), Cassandra, Spark and Kafka.",
+          "Created the Astra DB sizing method and materials adopted by all presales architects." ] }
       ] },
     { org: "LatentView Analytics", short: "LatentView", year: 2019, onScreen: false, place: "Sunnyvale, California", from: "Jul 2019", to: "Oct 2019",
       roles: [
@@ -199,16 +205,28 @@ window.PORTFOLIO = {
           "Built the A/B testing framework and data pipeline for the Sam's Club website and mobile app, on Python, Databricks and Airflow." ] }
       ] },
     { org: "Fiserv", short: "Fiserv", year: 2018, logo: "fiserv", place: "Dallas–Fort Worth, Texas", from: "May 2018", to: "May 2019",
+      awards: [
+        { name: "Inspire and Achieve Excellence Award", date: "Apr 2019" },
+        { name: "Create with Purpose Award", date: "Aug 2018" }
+      ],
       roles: [
         { title: "Data Science & BI Analyst", tags: ["Machine learning", "IBM Cognos"], points: [
           "Developed an ATM cash-level recommendation model and the dashboard that put it in analysts' hands." ] }
       ] },
     { org: "Sungard Availability Services", short: "Sungard AS", year: 2015, place: "Pune, India", from: "Jan 2015", to: "Jul 2017",
+      awards: [
+        { name: "Certificate of Recognition", date: "Oct 2015" }
+      ],
       roles: [
         { title: "Business Intelligence Analyst", points: [
           "Provided analytics to product leadership, including churn analysis and a pricing tool covering about 10,000 products." ] }
       ] },
     { org: "Tech Mahindra", short: "Tech Mahindra", year: 2010, place: "Pune, India and Hertfordshire, UK", from: "Oct 2010", to: "Dec 2014",
+      awards: [
+        { name: "Pat on the Back", date: "Jun 2014" },
+        { name: "Pat on the Back", date: "Dec 2012" },
+        { name: "Cookie Award", date: "Jun 2011" }
+      ],
       roles: [
         { title: "Business Analyst / Presales", points: [
           "Supported presales and led requirements gathering and release management on telecom projects." ] }
@@ -216,7 +234,7 @@ window.PORTFOLIO = {
   ],
 
   education: [
-    { years: "2017 – 2019", school: "The University of Texas at Dallas", degree: "Master of Science, Business Analytics" },
+    { years: "2017 – 2019", school: "The University of Texas at Dallas", degree: "Master of Science, Business Analytics", award: "Graduate Student of the Year, 2017–2018" },
     { years: "2006 – 2010", school: "Nagpur University, India", degree: "Bachelor of Engineering, Computer Engineering" }
   ],
 

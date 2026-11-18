@@ -288,6 +288,7 @@
         const mark = el('span', 'flow-logo-mark');
         mark.style.setProperty('--logo', `url("assets/logos/${company.logo}.svg")`);
         mark.style.backgroundColor = company.tint;
+        if (company.tile) tile.style.backgroundColor = company.tile;
         tile.append(mark);
       } else if (company.logo) {
         const image = el('img');
@@ -304,7 +305,18 @@
       when.append(el('p', 'flow-dates', `${company.from} – ${company.to}`), el('p', 'flow-length', lengthLabel(months)));
       top.append(tile, name, when);
       stop.append(top);
-      if (company.note) stop.append(el('p', 'flow-note', company.note));
+      if (company.badge) name.querySelector('.flow-org').append(el('span', 'flow-badge', company.badge));
+      if (company.about) stop.append(el('p', 'flow-about', company.about));
+      if (company.awards?.length) {
+        const awards = el('ul', 'flow-awards');
+        awards.setAttribute('aria-label', `Awards at ${company.org}`);
+        for (const award of company.awards) {
+          const item = el('li', null, award.name);
+          if (award.date) item.append(el('span', null, award.date));
+          awards.append(item);
+        }
+        stop.append(awards);
+      }
 
       (company.roles || []).forEach((role, roleIndex) => {
         if (roleIndex > 0) stop.append(el('p', 'flow-step', 'Promoted from'));
@@ -345,6 +357,9 @@
       return stop;
     }));
     const stops = [...track.children];
+    const awardCount = career.reduce((sum, company) => sum + (company.awards?.length || 0), 0) + (window.PORTFOLIO?.education || []).filter(entry => entry.award).length;
+    const awardSlot = root.querySelector('[data-award-count]');
+    if (awardSlot && awardCount) awardSlot.textContent = String(awardCount);
 
     /* Expand or collapse every role at once. */
     const allButton = root.querySelector('[data-flow-all]');
@@ -420,6 +435,7 @@
       list.replaceChildren(...education.map(entry => {
         const item = el('li');
         item.append(el('p', 'career-years', entry.years), el('p', 'career-org', entry.school), el('p', 'career-role', entry.degree));
+        if (entry.award) { const awards = el('ul', 'flow-awards'); awards.append(el('li', null, entry.award)); item.append(awards); }
         return item;
       }));
       list.closest('[data-education-block]')?.removeAttribute('hidden');
