@@ -167,7 +167,7 @@ function buildStudio() {
   box(.85,.06,.18,mat.orange,folder,-.7,.1,-1,.015);
   for(const z of [-.35,.16]) cylinder(.095,.095,.035,mat.gold,folder,.72,.2,z,20);
   wire([[.72,.22,-.35],[.77,.225,-.1],[.7,.225,.16]],.009,mat.tape,folder);
-  contact(-4.65,.9,3.7,2.65);register(folder,'projects',[0,.23,0]);
+  contact(-4.65,.9,3.7,2.65);register(folder,'work',[0,.23,0]);
 
   // Tape recorder: separate rotating metal spools, tape, VU needles and keys.
   const recorder=group(-.4,.6,-.6);recorder.rotation.y=-.05;
@@ -204,7 +204,7 @@ function buildStudio() {
   for(const x of [.8,1.25]) {const knob=cylinder(.13,.13,.13,mat.black,recorder,x,.56,.57,32);knob.rotation.x=Math.PI/2;
     const dial=cylinder(.108,.108,.14,mat.silver,recorder,x,.56,.6,32);dial.rotation.x=Math.PI/2;}
   for(let i=0;i<14;i++) box(.022,.18,.015,mat.trim,recorder,-1.36+i*.044,.72,.515,.002);
-  contact(-.4,-.5,4.3,2.2,.85);register(recorder,'conversations',[0,1.7,.55]);
+  contact(-.4,-.5,4.3,2.2,.85);register(recorder,'podcast',[0,1.7,.55]);
 
   // Podcast microphone and its cable, physically separate from the recorder.
   const mic=group(2.08,.59,-.4);mic.rotation.y=-.14;
@@ -219,7 +219,7 @@ function buildStudio() {
   for(const x of [-.35,.35]) {const screw=cylinder(.07,.07,.09,mat.silver,mic,x,1.4,0,20);screw.rotation.z=Math.PI/2;}
   wire([[2.1,.59,-.4],[2.5,.58,.1],[2.4,.58,.65],[1.2,.58,.8],[.9,.58,-.2]],.018,mat.black,scene);
   contact(2.08,-.4,1.3,1.2);
-  mic.traverse(m=>{if(m.isMesh){m.userData.section='conversations';pickables.push(m);}});
+  mic.traverse(m=>{if(m.isMesh){m.userData.section='podcast';pickables.push(m);}});
 
   // Notebook and pencil: the third chapter of the portfolio.
   const notebook=group(4.35,.61,1.25);notebook.rotation.y=-.23;
@@ -359,7 +359,7 @@ function buildStudio() {
     button.addEventListener('blur',()=>setHovered(null));
   });
   function setExploring(value) {
-    exploring=value;document.querySelectorAll('.hero-copy,.collection-nav,.site-header,.scene-hotspot').forEach(el=>el.inert=value);body.classList.toggle('exploring',value);exploreButton.setAttribute('aria-pressed',String(value));exploreLabel.textContent=value?'Return to studio':'Look around';resetButton.hidden=!value;setHovered(null);
+    exploring=value;document.querySelectorAll('.hero-copy,.collection-nav,.site-header,.scene-hotspot').forEach(el=>el.inert=value);body.classList.toggle('exploring',value);exploreLabel.textContent=value?'Return to studio':'Look around';resetButton.hidden=!value;setHovered(null);
     canvas.dataset.exploring=String(value);
     if(!value){yaw=0;pitch=0;pointer.set(0,0);}
     if(paused)draw(0,true);
