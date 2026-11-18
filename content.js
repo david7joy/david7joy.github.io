@@ -8,105 +8,71 @@
 window.PORTFOLIO = {
   profile: {
     name: "David Joy",
-    eyebrow: "David Joy · the long way round",
+    eyebrow: "David Joy · Director, AI, Ecosystem & Partnerships",
     // Wrap one phrase in *asterisks* to highlight it.
-    headline: "In 2008 I crossed central India for eight hours to find *a graphics card.*",
-    lede: "I have been going after the next hard thing ever since. Today I lead AI, ecosystem and partnerships work at Cockroach Labs, host a podcast, and build with AI every day. Here is how I got here.",
+    headline: "I build partner ecosystems, AI integrations and *the teams behind them.*",
+    lede: "Fifteen years across data, cloud and AI. I lead a global solutions architecture team at Cockroach Labs, host the Big Ideas in App Architecture podcast, and write code with AI tools every day.",
+    place: "Dallas, Texas",
     endYear: 2026,
+    card: [
+      { label: "Now", value: "Director, AI, Ecosystem & Partnerships at Cockroach Labs" },
+      { label: "Leads", value: "Eight solutions architects across the US, EMEA and APAC" },
+      { label: "Hosts", value: "Big Ideas in App Architecture podcast" },
+      { label: "Builds", value: "With Claude Code and Codex, daily, for 3.5+ years" },
+      { label: "Before", value: "DataStax, Walmart eCommerce, Fiserv, Sungard AS, BT via Tech Mahindra" },
+      { label: "Based", value: "Dallas–Fort Worth, Texas" }
+    ],
     links: [
       { label: "GitHub", url: "https://github.com/david7joy" },
-      { label: "LinkedIn", url: "https://www.linkedin.com/in/david-joy-dj" },
-      { label: "Podcast", url: "https://www.cockroachlabs.com/big-ideas-podcast/" },
-      { label: "Blog", url: "https://www.cockroachlabs.com/author/david-joy/" }
+      { label: "LinkedIn", url: "https://www.linkedin.com/in/david-joy-dj" }
     ],
     footer: "David Joy · Dallas–Fort Worth, Texas. No trackers, no frameworks: one page of HTML, CSS and JavaScript."
   },
 
   stats: [
-    { value: "18", label: "years since that bus ride" },
+    { value: "15+", label: "years in data, cloud and AI" },
     { value: "33", label: "partner integrations in the directory from the certification program I lead" },
     { value: "71", label: "episodes in the Big Ideas in App Architecture feed; I host the show" },
     { value: "9", label: "published posts, several co-authored with AWS and Microsoft" },
     { value: "9", label: "talks and webinars, from GenAI apps to payments for AI agents" }
   ],
 
+  /* Places to find more. Leave url empty to hide a link until you have one. */
+  library: {
+    profiles: [
+      { label: "Cockroach Labs blog", url: "https://www.cockroachlabs.com/author/david-joy/" },
+      { label: "Podcast", url: "https://www.cockroachlabs.com/big-ideas-podcast/" },
+      { label: "Podcast on YouTube", url: "https://www.youtube.com/playlist?list=PL_QaflmEF2e_qCul_43FZ76FPEPodRScX" },
+      { label: "GitHub", url: "https://github.com/david7joy" },
+      { label: "Medium", url: "" },
+      { label: "Stack Overflow", url: "" }
+    ]
+  },
+
   /*
-    The journey: one entry per chapter, in order.
+    The journey, newest first: one entry per chapter.
     tone is the chapter's colour. facts with a numeric value count up on screen.
   */
   journey: [
-    { year: 2008, place: "Nagpur, India", coords: "21.15°N 79.09°E · Nagpur, India", world: "The warehouse", tone: "#ffb86b",
-      title: "Three buses, two auto-rickshaws, one graphics card.",
+    { year: 2026, place: "Cockroach Labs · building with agents", coords: "Now · Dallas, Texas", world: "Agents", tone: "#6ee7f0",
+      title: "Today I build for agents, with agents.",
       body: [
-        "I was an engineering student who had just built his first PC from scratch. Then my NVIDIA GeForce 8500 GT died, and the shop had no replacement.",
-        "So I went to find the supplier myself. Eight hours through towns I had never seen, to a warehouse in the middle of nowhere. The man listened to the whole story, said he had no 8500s left, and handed me an 8600. No charge.",
-        "I learned two things that day: go and find it yourself, and people help those who show up."
+        "I lead AI, ecosystem and partnerships work at Cockroach Labs. When coding agents arrived, my team met them where they work: plugins for Claude Code, Codex and Cursor, and a LangChain integration for agent memory.",
+        "I also changed how the team works. Solutions architects became builders who ship integrations, demos and proofs of concept themselves.",
+        "On the side I am building Rig, a toolkit that lets an AI agent run an app, drive it and prove that a change works."
       ],
       facts: [
-        { value: 8, label: "hours each way" },
-        { value: 3, label: "buses" },
-        { value: 0, prefix: "₹", label: "paid for the upgrade" }
-      ] },
-
-    { year: 2010, place: "Pune, India · Hertfordshire, UK", coords: "18.52°N 73.86°E · Pune → Hertfordshire", world: "Telecom and data", tone: "#7be3a0",
-      title: "Seven years learning how businesses actually run.",
-      body: [
-        "First job: business analyst on telecom systems, in India and then the UK. I wrote requirements, ran releases and automated the boring parts with shell scripts.",
-        "Then business intelligence. I built dashboards and models that product leaders used to make real decisions, including a pricing tool that sorted through about ten thousand products.",
-        "It taught me to ask what the number is for before building anything."
-      ],
-      facts: [
-        { value: 7, label: "years as an analyst" },
-        { value: 10000, prefix: "~", label: "products priced by one tool" },
-        { value: 2, label: "countries" }
-      ] },
-
-    { year: 2017, place: "Dallas, Texas", coords: "32.99°N 96.75°W · Dallas, Texas", world: "Starting over", tone: "#b9a8ff",
-      title: "I moved across the world to start again as a student.",
-      body: [
-        "A master's in business analytics at UT Dallas, and every spare hour on machine learning. I built recommenders, a neural network that invents names, and learned to put models into production.",
-        "At Fiserv I built a model that recommended how much cash each ATM should hold, and then the pipeline to feed it."
+        { value: 34, label: "skills in the Codex plugin" },
+        { value: 3.5, suffix: "+", label: "years coding with AI, daily" }
       ],
       links: [
-        { label: "Movie recommender", url: "https://github.com/david7joy/Recommendation_App" },
-        { label: "Name generator", url: "https://github.com/david7joy/Name_Generator_Application_Tensorflow_CharRNNModel" },
-        { label: "Serving models with Docker", url: "https://github.com/david7joy/tensorflow-servable-docker" }
-      ] },
-
-    { year: 2019, place: "DataStax", coords: "Distributed databases · DataStax", world: "500 demos", tone: "#ff8f88",
-      title: "Five hundred demos taught me how to explain anything.",
-      body: [
-        "I joined DataStax and moved from building models to helping companies run data at scale. I stood in front of CIOs, CTOs and developers and showed them what was possible, live.",
-        "I also found the part I love most: working with partners. I trained more than a thousand people across cloud providers and systems integrators."
-      ],
-      facts: [
-        { value: 500, suffix: "+", label: "demos and proofs of concept" },
-        { value: 1000, suffix: "+", label: "partner staff trained" }
-      ],
-      links: [
-        { label: "Stargate demo", url: "https://www.youtube.com/watch?v=SU3Z4msZaDU" },
-        { label: "NoSQLBench demo", url: "https://www.youtube.com/watch?v=jHZeGy_ZHcU" }
-      ] },
-
-    { year: 2022, place: "Cockroach Labs", coords: "Distributed SQL · Cockroach Labs", world: "The ecosystem", tone: "#6ee7f0",
-      title: "From solutions architect to director in under four years.",
-      body: [
-        "I joined Cockroach Labs to work with AWS, Google Cloud and Microsoft. I wrote Terraform, built demos, co-authored guides with their engineers and presented at AWS re:Invent.",
-        "Then I was asked to lead. Today my team spans three regions, and the certification program I started is a public directory of partner integrations."
-      ],
-      facts: [
-        { value: 3, label: "roles in four years" },
-        { value: 33, label: "partner integrations in the directory" },
-        { value: 3, label: "regions: US, EMEA, APAC" }
-      ],
-      links: [
-        { label: "Partner directory", url: "https://www.cockroachlabs.com/product/partner-integrations/" },
-        { label: "re:Invent 2025 talk", url: "https://www.cockroachlabs.com/blog/resilient-genai-agentic-apps-intelligent-memory/" },
-        { label: "Bedrock demo", url: "https://www.youtube.com/watch?v=OHb4HrDdJvY" }
+        { label: "Claude Code plugin", url: "https://claude.com/marketplace/plugins/cockroachdb" },
+        { label: "Codex launch post", url: "https://www.cockroachlabs.com/blog/cockroachdb-plugin-for-chatgpt-and-codex/" },
+        { label: "langchain-cockroachdb", url: "https://github.com/cockroachdb/langchain-cockroachdb" }
       ] },
 
     { year: 2025, place: "Behind the microphone", coords: "Big Ideas in App Architecture", world: "The podcast", tone: "#f59ad0",
-      title: "I got a microphone and started asking better questions.",
+      title: "Somewhere along the way I picked up a microphone.",
       body: [
         "I host Big Ideas in App Architecture, where founders, CTOs and architects explain how real systems get built and what broke along the way.",
         "Guests have included Charity Majors, Joe Duffy, Peter Mattis and Spencer Kimball. It is the best education I have ever had."
@@ -120,21 +86,74 @@ window.PORTFOLIO = {
         { label: "Spencer Kimball", url: "https://www.spreaker.com/episode/ai-market-cycles-and-the-systems-built-to-outlast-them-with-cockroach-labs-ceo-co-founder-spencer-kimball--69525858" }
       ] },
 
-    { year: 2026, place: "Building with agents", coords: "Now · building with AI every day", world: "Agents", tone: "#6ee7f0",
-      title: "Now I build for agents, with agents.",
+    { year: 2022, place: "Cockroach Labs", coords: "Distributed SQL · Cockroach Labs", world: "The ecosystem", tone: "#6ee7f0",
+      title: "Before the title, I was the architect in the room.",
       body: [
-        "I have written code with AI tools every day for more than three years. So when coding agents arrived, my team met them where they work: plugins for Claude Code, Codex and Cursor, and a LangChain integration for agent memory.",
-        "I also changed how the team works. Solutions architects became builders who ship integrations, demos and proofs of concept themselves.",
-        "On the side I am building Rig, a toolkit that lets an AI agent run an app, drive it and prove that a change works."
+        "I joined Cockroach Labs as a partner solutions architect, working with AWS, Google Cloud and Microsoft. I wrote Terraform, built demos, co-authored guides with their engineers and presented at AWS re:Invent.",
+        "Then I was asked to lead. Architect to director took under four years, and the certification program I started is now a public directory of partner integrations."
       ],
       facts: [
-        { value: 34, label: "skills in the Codex plugin" },
-        { value: 3.5, suffix: "+", label: "years coding with AI, daily" }
+        { value: 3, label: "roles in four years" },
+        { value: 33, label: "partner integrations in the directory" },
+        { value: 3, label: "regions: US, EMEA, APAC" }
       ],
       links: [
-        { label: "Claude Code plugin", url: "https://claude.com/marketplace/plugins/cockroachdb" },
-        { label: "Codex launch post", url: "https://www.cockroachlabs.com/blog/cockroachdb-plugin-for-chatgpt-and-codex/" },
-        { label: "langchain-cockroachdb", url: "https://github.com/cockroachdb/langchain-cockroachdb" }
+        { label: "Partner directory", url: "https://www.cockroachlabs.com/product/partner-integrations/" },
+        { label: "re:Invent 2025 talk", url: "https://www.cockroachlabs.com/blog/resilient-genai-agentic-apps-intelligent-memory/" },
+        { label: "Bedrock demo", url: "https://www.youtube.com/watch?v=OHb4HrDdJvY" }
+      ] },
+
+    { year: 2019, place: "DataStax", coords: "Distributed databases · DataStax", world: "500 demos", tone: "#ff8f88",
+      title: "Before that, five hundred demos taught me to explain anything.",
+      body: [
+        "At DataStax I moved from building models to helping companies run data at scale. I stood in front of CIOs, CTOs and developers and showed them what was possible, live.",
+        "I also found the part I love most: working with partners. I trained more than a thousand people across cloud providers and systems integrators."
+      ],
+      facts: [
+        { value: 500, suffix: "+", label: "demos and proofs of concept" },
+        { value: 1000, suffix: "+", label: "partner staff trained" }
+      ],
+      links: [
+        { label: "Stargate demo", url: "https://www.youtube.com/watch?v=SU3Z4msZaDU" },
+        { label: "NoSQLBench demo", url: "https://www.youtube.com/watch?v=jHZeGy_ZHcU" }
+      ] },
+
+    { year: 2017, place: "Dallas, Texas", coords: "32.99°N 96.75°W · Dallas, Texas", world: "Starting over", tone: "#b9a8ff",
+      title: "Before that, I moved to the USA to be a student again.",
+      body: [
+        "A master's in business analytics at UT Dallas, and every spare hour on machine learning. I built recommenders, a neural network that invents names, and learned to put models into production.",
+        "At Fiserv I built a model that recommended how much cash each ATM should hold, then the pipeline to feed it. After that came A/B testing for Walmart eCommerce."
+      ],
+      links: [
+        { label: "Movie recommender", url: "https://github.com/david7joy/Recommendation_App" },
+        { label: "Name generator", url: "https://github.com/david7joy/Name_Generator_Application_Tensorflow_CharRNNModel" },
+        { label: "Serving models with Docker", url: "https://github.com/david7joy/tensorflow-servable-docker" }
+      ] },
+
+    { year: 2010, place: "Pune, India · Hertfordshire, UK", coords: "18.52°N 73.86°E · Pune → Hertfordshire, UK", world: "Telecom and data", tone: "#7be3a0",
+      title: "Before that, seven years learning how businesses actually run.",
+      body: [
+        "My first job was at Tech Mahindra, as a business analyst on telecom systems for BT, in India and then in the UK. I wrote requirements, ran releases and automated the boring parts with shell scripts.",
+        "Then business intelligence at Sungard Availability Services. I built dashboards and models that product leaders used to make real decisions, including a pricing tool that sorted through about ten thousand products.",
+        "It taught me to ask what the number is for before building anything."
+      ],
+      facts: [
+        { value: 7, label: "years as an analyst" },
+        { value: 10000, prefix: "~", label: "products priced by one tool" },
+        { value: 2, label: "countries" }
+      ] },
+
+    { year: 2008, place: "Nagpur, India", coords: "21.15°N 79.09°E · Nagpur, India", world: "Where it started", tone: "#ffb86b",
+      title: "And it all started with a graphics card.",
+      body: [
+        "I was an engineering student in Nagpur who had just built his first PC from scratch. Then my NVIDIA GeForce 8500 GT died, and the shop had no replacement.",
+        "So I went to find the supplier myself. Three buses, two auto-rickshaws and eight hours later, I walked into a warehouse in the middle of nowhere. The man listened to the whole story, said he had no 8500s left, and handed me an 8600. No charge.",
+        "I learned two things that day: go and find it yourself, and people help those who show up. Everything above this line came from that."
+      ],
+      facts: [
+        { value: 8, label: "hours on the road" },
+        { value: 3, label: "buses" },
+        { value: 0, prefix: "₹", label: "paid for the upgrade" }
       ] }
   ],
 

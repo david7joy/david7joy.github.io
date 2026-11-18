@@ -16,18 +16,18 @@
     return node;
   }
 
-  /* ---------- Launch and HUD ---------- */
+  /* ---------- Snapshot and HUD ---------- */
   var p = data.profile || {};
-  $("launchEyebrow").textContent = p.eyebrow || "";
-  $("launchLede").textContent = p.lede || "";
+  $("snapEyebrow").textContent = p.eyebrow || "";
+  $("snapLede").textContent = p.lede || "";
   $("footText").textContent = p.footer || "";
   // The headline may mark one phrase for emphasis with *asterisks*.
-  (function () {
-    var parts = String(p.headline || p.name || "").split("*");
-    parts.forEach(function (part, i) {
-      $("launchTitle").appendChild(i % 2 ? el("em", { text: part }) : document.createTextNode(part));
-    });
-  })();
+  String(p.headline || p.name || "").split("*").forEach(function (part, i) {
+    $("snapTitle").appendChild(i % 2 ? el("em", { text: part }) : document.createTextNode(part));
+  });
+  (p.card || []).forEach(function (row) {
+    $("idcard").appendChild(el("div", {}, [el("dt", { text: row.label }), el("dd", { text: row.value })]));
+  });
   (p.links || []).forEach(function (l) {
     $("hudLinks").appendChild(el("a", { href: l.url, text: l.label, rel: "me noopener", target: "_blank" }));
   });
@@ -59,12 +59,12 @@
       el("div", { class: "chapter-inner" }, [story, orb])
     ]);
     section.style.setProperty("--tone", c.tone || "#6ee7f0");
-    $("journey").appendChild(section);
+    $("chapters").appendChild(section);
     chapterNodes.push(section);
 
     $("route").appendChild(el("a", { href: "#ch-" + i, text: String(c.year), "aria-label": c.year + ", " + c.title }));
   });
-  $("route").appendChild(el("a", { href: "#control", text: "NOW", "aria-label": "Mission control: all the work" }));
+  $("route").appendChild(el("a", { href: "#library", text: "LIBRARY", "aria-label": "Content library" }));
   var routeLinks = $("route").children;
 
   function runCounter(c) {
@@ -104,17 +104,17 @@
 
   /* HUD year: follows whichever chapter is nearest the middle of the screen. */
   var hudYear = $("hudYear"), hudPlace = $("hudPlace");
-  var shownYear = chapters.length ? chapters[0].year : new Date().getFullYear();
-  var targetYear = shownYear;
   var endYear = p.endYear || new Date().getFullYear();
+  var shownYear = endYear;
+  var targetYear = shownYear;
 
   function locate() {
     var mid = window.innerHeight / 2, current = -1;
     chapterNodes.forEach(function (n, i) { if (n.getBoundingClientRect().top <= mid) current = i; });
-    var inControl = $("control").getBoundingClientRect().top <= mid;
-    if (inControl) { targetYear = endYear; hudPlace.textContent = "Mission control"; }
+    var inControl = $("library").getBoundingClientRect().top <= mid;
+    if (inControl) { targetYear = endYear; hudPlace.textContent = "Content library"; }
     else if (current >= 0) { targetYear = chapters[current].year; hudPlace.textContent = chapters[current].place || ""; }
-    else if (chapters.length) { targetYear = chapters[0].year; hudPlace.textContent = "Ready"; }
+    else { targetYear = endYear; hudPlace.textContent = p.place || ""; }
     Array.prototype.forEach.call(routeLinks, function (a, i) {
       var on = inControl ? i === routeLinks.length - 1 : i === current;
       if (on) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
@@ -216,6 +216,38 @@
     if (!!b.featured !== !!a.featured) return b.featured ? 1 : -1;
     return sortKey(b).localeCompare(sortKey(a));
   });
+  /* Board: upcoming talks (by date) and the newest library items. */
+  var todayIso = new Date().toISOString().slice(0, 10);
+  var talks = (data.items || []).filter(function (i) { return i.type === "talk" && String(i.date || "").length === 10; });
+  var upcoming = talks.filter(function (i) { return i.date >= todayIso; }).sort(function (a, b) { return a.date.localeCompare(b.date); });
+  var showTalks = upcoming;
+  if (!upcoming.length) {
+    $("talksTitle").textContent = "Recent talks";
+    showTalks = talks.slice().sort(function (a, b) { return b.date.localeCompare(a.date); }).slice(0, 2);
+  }
+  function longDate(iso) {
+    var d = new Date(iso + "T12:00:00");
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  }
+  showTalks.slice(0, 3).forEach(function (t) {
+    $("talks").appendChild(el("a", { class: "talk", href: t.url, target: "_blank", rel: "noopener" }, [
+      el("span", { class: "talk-date", text: longDate(t.date) }),
+      el("strong", { text: t.title }),
+      el("span", { class: "talk-desc", text: t.description || "" }),
+      el("span", { class: "talk-cta", text: upcoming.length ? "Register →" : "Watch →" })
+    ]));
+  });
+  (data.items || []).filter(function (i) { return i.type !== "talk" && i.type !== "project" && String(i.date || "").length === 10; })
+    .sort(function (a, b) { return b.date.localeCompare(a.date); }).slice(0, 3).forEach(function (i) {
+      $("latest").appendChild(el("a", { class: "latest-item", href: i.url, target: "_blank", rel: "noopener", "data-type": i.type }, [
+        el("span", { class: "tag", text: (TYPE_LABEL[i.type] || i.type) + " · " + fmtDate(i.date) }),
+        el("strong", { text: i.title })
+      ]));
+    });
+  ((data.library || {}).profiles || []).forEach(function (l) {
+    if (l.url) $("profiles").appendChild(el("a", { href: l.url, target: "_blank", rel: "me noopener", text: l.label }));
+  });
+
   var state = { type: "all", q: "" };
 
   function card(item) {

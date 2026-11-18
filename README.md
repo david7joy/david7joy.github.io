@@ -7,7 +7,7 @@ A static, single-page portfolio. No build step and no dependencies.
 - `index.html` — page structure
 - `styles.css` — look and feel (light and dark themes)
 - `app.js` — renders the page, filters and search
-- `content.js` — **all the content**; this is the only file you edit to add work
+- `content.js` — **all the content**: `profile` (the snapshot), `journey` (the chapters, newest first), `library.profiles` (links such as Medium and Stack Overflow) and `items` (the library cards). A talk with a future date shows under "Upcoming talks" automatically.
 
 ## Add something
 

@@ -3,49 +3,74 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>David Joy — The long way round</title>
-<meta name="description" content="An eighteen-year trip from a graphics card in Nagpur to building AI integrations and the teams behind them.">
+<title>David Joy — AI, ecosystem and partnerships leader</title>
+<meta name="description" content="Who David Joy is, where he is speaking next, his journey from Cockroach Labs back to an engineering student in Nagpur, and everything he has written and built.">
 <meta name="theme-color" content="#05070d">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236ee7f0'/%3E%3Ctext x='16' y='21' font-family='Arial' font-size='13' font-weight='800' text-anchor='middle' fill='%2304222a'%3EDJ%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <canvas id="sky" aria-hidden="true"></canvas>
-<a class="skip" href="#control">Skip the journey, go to the work</a>
+<a class="skip" href="#library">Skip to the content library</a>
 
 <header class="hud">
-  <a class="monogram" href="#top" aria-label="Back to the start">DJ</a>
+  <a class="monogram" href="#top" aria-label="Back to the top">DJ</a>
   <div class="hud-read" aria-hidden="true">
-    <span class="hud-year" id="hudYear">2008</span>
+    <span class="hud-year" id="hudYear"></span>
     <span class="hud-place" id="hudPlace"></span>
   </div>
-  <nav class="hud-links" id="hudLinks" aria-label="Profiles"></nav>
+  <nav class="hud-links" id="hudLinks" aria-label="Sections and profiles">
+    <a href="#journey">Journey</a>
+    <a href="#library">Library</a>
+  </nav>
 </header>
 
 <nav class="route" id="route" aria-label="Chapters"></nav>
 
 <main id="top">
-  <section class="launch">
-    <p class="eyebrow" id="launchEyebrow"></p>
-    <h1 id="launchTitle"></h1>
-    <p class="lede" id="launchLede"></p>
-    <a class="go" href="#ch-0"><span>Start the trip</span><i aria-hidden="true">↓</i></a>
-    <p class="hint">About two minutes. Scroll, and watch the year.</p>
+  <section class="snapshot" aria-labelledby="snapTitle">
+    <div class="snap-main">
+      <p class="eyebrow" id="snapEyebrow"></p>
+      <h1 id="snapTitle"></h1>
+      <p class="lede" id="snapLede"></p>
+      <div class="snap-actions">
+        <a class="go" href="#journey"><span>Take the journey</span><i aria-hidden="true">↓</i></a>
+        <a class="ghost" href="#library">Open the library</a>
+      </div>
+    </div>
+    <dl class="idcard" id="idcard" aria-label="At a glance"></dl>
+    <div class="stats" id="stats"></div>
   </section>
 
-  <div id="journey"></div>
+  <section class="board" aria-label="What is new">
+    <div class="board-col">
+      <h2 class="board-title" id="talksTitle">Upcoming talks</h2>
+      <div class="talks" id="talks"></div>
+    </div>
+    <div class="board-col">
+      <h2 class="board-title">Latest from the library</h2>
+      <div class="latest" id="latest"></div>
+      <a class="more" href="#library">See everything →</a>
+    </div>
+  </section>
 
-  <section class="control" id="control" aria-labelledby="controlTitle">
-    <p class="eyebrow">Mission control</p>
-    <h2 class="control-title" id="controlTitle">Everything, in one place.</h2>
-    <p class="control-lede">Every project, integration, post, talk and episode from the trip. Each one links to the real thing.</p>
+  <div class="journey-intro" id="journey">
+    <p class="eyebrow">The journey</p>
+    <h2 class="control-title">How I got here, told backwards.</h2>
+    <p class="control-lede">Start with today and scroll back to an engineering student in Nagpur. Watch the year in the corner.</p>
+  </div>
+  <div id="chapters"></div>
 
-    <div class="stats" id="stats"></div>
+  <section class="control" id="library" aria-labelledby="libraryTitle">
+    <p class="eyebrow">Content library</p>
+    <h2 class="control-title" id="libraryTitle">Everything I have written, built and said.</h2>
+    <p class="control-lede">Projects, integrations, posts, talks and podcast episodes. Each one links to the real thing.</p>
+    <div class="profiles" id="profiles"></div>
 
     <div class="work-head">
-      <div class="filters" id="filters" role="group" aria-label="Filter work by type"></div>
+      <div class="filters" id="filters" role="group" aria-label="Filter the library by type"></div>
       <label class="search">
-        <span class="sr">Search work</span>
+        <span class="sr">Search the library</span>
         <input id="search" type="search" placeholder="Search: agents, AWS, podcast…" autocomplete="off">
       </label>
     </div>
