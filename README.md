@@ -1,32 +1,22 @@
-# David Joy — work dashboard
+# David Joy — The Idea Studio
 
-A static, single-page portfolio. No build step and no dependencies.
+A personal portfolio inside a real-time 3D studio, served from this repository by GitHub Pages. There is no build step.
 
 ## Files
 
-- `index.html` — page structure
-- `styles.css` — look and feel (light and dark themes)
-- `app.js` — renders the page, filters and search
-- `content.js` — **all the content**: `profile` (the snapshot), `journey` (the chapters, newest first), `library.profiles` (links such as Medium and Stack Overflow) and `items` (the library cards). A talk with a future date shows under "Upcoming talks" automatically.
-
-## Add something
-
-Open `content.js` and copy an entry in `items`:
-
-```js
-{ type: "writing", date: "2026-12-01", title: "Post title",
-  description: "One sentence about it.",
-  url: "https://…", source: "Where it was published", role: "Author", tags: ["ai"] },
-```
-
-- `type` is one of `project`, `integration`, `writing`, `video`, `podcast`, `talk`.
-- `featured: true` pins the item to the top.
-- `youtubeId: "…"` adds a video thumbnail.
+- `index.html` — copy, links and the content panels (Projects, Conversations, My story, Connect)
+- `app.js` — dialogs, URL state, keyboard navigation, motion preferences and the Dallas clock
+- `world.js` — the Three.js scene: geometry, lighting, shaders, object picking and camera controls
+- `world.css`, `studio.css` — layout, typography and panels
+- `vendor/` — Three.js 0.180.0 and helpers (MIT, see `vendor/THREE-LICENSE.txt`)
+- `assets/studio-panorama.png` — the still image shown when WebGL is unavailable
 
 ## Preview locally
 
-Open `index.html` in a browser. It works straight from the file system.
+```sh
+python3 -m http.server 4173 --bind 127.0.0.1
+```
 
-## Publish on GitHub Pages
+The page uses JavaScript modules, so it needs a local server and will not run from the file system.
 
-Put these files at the root of the `david7joy.github.io` repository and enable Pages for the `main` branch.
+The earlier dashboard version of this site is in the git history (commit `5bf468d`).
