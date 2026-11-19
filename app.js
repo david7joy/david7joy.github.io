@@ -68,6 +68,25 @@
       if (event.key === 'Enter' || event.key === ' ' || event.key === 'Escape') { event.preventDefault(); enterStudio(); }
     });
     document.getElementById('intro-enter').focus({ preventScroll: true });
+
+    /* The room is dark until you step in: the cursor is a torch, and the camera leans with it. */
+    let torchMoved = false;
+    const aim = (x, y) => {
+      intro.style.setProperty('--mx', x + 'px');
+      intro.style.setProperty('--my', y + 'px');
+      window.dispatchEvent(new CustomEvent('studio:peek', { detail: { x: x / innerWidth * 2 - 1, y: -(y / innerHeight * 2 - 1) } }));
+    };
+    intro.addEventListener('pointermove', event => { torchMoved = true; aim(event.clientX, event.clientY); });
+    /* Until someone moves (or on a touch screen), the torch wanders on its own. */
+    const wander = now => {
+      if (torchMoved || !body.classList.contains('intro')) return;
+      if (!body.classList.contains('motion-paused')) {
+        const t = now / 1000;
+        aim(innerWidth * (.5 + Math.sin(t * .45) * .3), innerHeight * (.42 + Math.sin(t * .7 + 1) * .14));
+      }
+      requestAnimationFrame(wander);
+    };
+    requestAnimationFrame(wander);
   }
 
   /* ---------- Exploration tracker ---------- */

@@ -1239,7 +1239,7 @@ function buildStudio() {
   let exploring = false, dragging = false, moved = false, downX = 0, downY = 0, startYaw = 0, startPitch = 0;
   let yaw = 0, pitch = 0, smoothYaw = 0, smoothPitch = 0, zoom = 1, smoothZoom = 1;
   let hoverKey = null, focusKey = null, lastFocusKey = 'work', focusAmount = 0;
-  let introAmount = body.classList.contains('intro') ? 0 : 1, introGoal = introAmount;
+  let introAmount = body.classList.contains('intro') ? 0 : 1, introGoal = introAmount, enteredAt = -10;
   let panelOpen = dialog.open, openTimer = 0;
   /* A direct link (#podcast) opens its panel before this module runs: start on that close-up. */
   if (panelOpen && focusViews[dialog.dataset.panel]) {
@@ -1283,9 +1283,10 @@ function buildStudio() {
     baseLook.set(0, compact ? 3.2 : 2.3, -1);
 
     const drift = paused ? 0 : Math.sin(elapsed * .14) * .012;
-    const angle = smoothYaw + drift + (paused ? 0 : pointer.x * -.035);
-    const elevation = clamp(.21 + smoothPitch + (paused ? 0 : pointer.y * -.02), .06, .62);
     const intro = 1 - ease(clamp(introAmount, 0, 1));
+    /* In the dark, before the lights go on, the room leans further toward the cursor. */
+    const angle = smoothYaw + drift + (paused ? 0 : pointer.x * -(.035 + intro * .13));
+    const elevation = clamp(.21 + smoothPitch + (paused ? 0 : pointer.y * -(.02 + intro * .05)), .06, .62);
     const reach = distance + intro * 9;
     orbitPosition.set(
       baseLook.x + Math.sin(angle) * Math.cos(elevation) * reach,
@@ -1314,7 +1315,10 @@ function buildStudio() {
     if (shift > .5) camera.setViewOffset(width, height, shift, 0, width, height);
     else if (camera.view) camera.clearViewOffset();
     camera.updateMatrixWorld();
-    renderer.toneMappingExposure = exposure * (1 - intro * .62);
+    /* Lights on: two soft blinks, like a tube catching, then full brightness. */
+    const since = elapsed - enteredAt;
+    const blink = !paused && since > 0 && since < .5 ? (Math.sin(since * 25) > .3 ? 1.5 : .8) : 1;
+    renderer.toneMappingExposure = exposure * Math.min(1, (1 - intro * .2) * blink);
   }
 
   function placeLabels() {
@@ -1435,7 +1439,10 @@ function buildStudio() {
   });
 
   window.addEventListener('studio:sound', event => { soundOn = Boolean(event.detail?.playing); requestDraw(); });
-  window.addEventListener('studio:enter', () => { introGoal = 1; if (paused) introAmount = 1; requestDraw(); });
+  window.addEventListener('studio:peek', event => {
+    if (introGoal < 1) { pointer.set(event.detail.x, event.detail.y); requestDraw(); }
+  });
+  window.addEventListener('studio:enter', () => { introGoal = 1; enteredAt = elapsed; pointer.set(0, 0); if (paused) introAmount = 1; requestDraw(); });
   window.addEventListener('studio:panel', event => {
     clearTimeout(openTimer);
     panelOpen = event.detail.open;

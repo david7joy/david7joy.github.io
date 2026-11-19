@@ -160,7 +160,7 @@ body:not(.scene-3d) .scene-hotspot {
 
 /* ---------- Intro ---------- */
 
-.intro {
+div.intro {
   position: fixed;
   inset: 0;
   z-index: 30;
@@ -173,7 +173,7 @@ body:not(.scene-3d) .scene-hotspot {
   transition: opacity .9s, visibility .9s;
 }
 
-.intro.is-leaving {
+div.intro.is-leaving {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -2765,5 +2765,68 @@ button.span-seg:hover {
 
   .lib-ep-go {
     grid-area: 1 / 2 / span 3;
+  }
+}
+
+/* ---------- Opening: the desk itself, in the dark, with the cursor as a torch ---------- */
+
+div.intro {
+  --mx: 50vw;
+  --my: 42vh;
+  place-items: end start;
+  padding: clamp(24px, 5vw, 72px);
+  text-align: left;
+  background:
+    linear-gradient(to top, rgba(5, 7, 10, .9), rgba(5, 7, 10, .5) 34%, rgba(5, 7, 10, 0) 62%),
+    radial-gradient(circle 52vmin at var(--mx) var(--my), rgba(5, 7, 10, 0) 0%, rgba(5, 7, 10, .12) 45%, rgba(5, 7, 10, .8) 100%);
+}
+
+.intro-inner {
+  max-width: 600px;
+}
+
+.intro .intro-photo {
+  width: 68px;
+  height: 68px;
+  margin: 16px 0 14px;
+}
+
+.intro .intro-title {
+  margin-top: 0;
+  font-size: clamp(52px, 7.4vw, 112px);
+  text-shadow: 0 2px 30px rgba(5, 7, 10, .8);
+}
+
+.intro .intro-line {
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.intro .intro-enter {
+  margin-top: 26px;
+  padding-left: 22px;
+}
+
+.intro-bulb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffe7a3;
+  box-shadow: 0 0 0 4px rgba(255, 231, 163, .28), 0 0 18px 4px rgba(255, 220, 130, .7);
+}
+
+.intro .intro-help {
+  margin-top: 20px;
+}
+
+@media (max-width: 759px) {
+  div.intro {
+    place-items: end center;
+    padding-bottom: 40px;
+    text-align: center;
+  }
+
+  .intro .intro-photo {
+    margin-inline: auto;
   }
 }
