@@ -15,10 +15,10 @@
 
   /* Routes. `nav` is the section tab a panel belongs to. */
   const panels = {
-    work: { kicker: 'Projects', nav: 'work' },
-    rig: { kicker: 'Projects · On the workbench', nav: 'work' },
+    work: { kicker: 'Side projects', nav: 'work' },
+    rig: { kicker: 'Side projects · On the workbench', nav: 'work' },
     podcast: { kicker: 'Podcast', nav: 'podcast' },
-    writing: { kicker: 'Writing', nav: 'writing' },
+    writing: { kicker: 'Writings', nav: 'writing' },
     talks: { kicker: 'Talks & videos', nav: 'talks' },
     skills: { kicker: 'Skills', nav: 'skills' },
     career: { kicker: 'Experience', nav: 'career' },
@@ -36,19 +36,20 @@
     return Object.hasOwn(panels, name) ? name : null;
   }
 
+  /* Paper mode, a preview: add ?paper to the address and the room is drawn in black and white. */
+  if (new URLSearchParams(location.search).has('paper')) body.classList.add('paper');
+
   let returnFocus = null;
   let activePanel = null;
 
-  /* ---------- Day or night: the visitor's choice, remembered; Dallas time until they choose ---------- */
+  /* ---------- Day or night: night by default; the visitor's choice is remembered ---------- */
   {
     const button = document.getElementById('light-toggle');
     const label = document.getElementById('light-label'), symbol = document.getElementById('light-symbol');
     let mode = null;
-    try { mode = localStorage.getItem('idea-studio-light'); } catch (_) { /* Storage is optional. */ }
-    if (mode !== 'day' && mode !== 'night') {
-      const hour = Number(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', hour: 'numeric', hour12: false }).format(new Date())) % 24;
-      mode = hour >= 7 && hour < 18 ? 'day' : 'night';
-    }
+    try { mode = localStorage.getItem('idea-studio-light-v2'); } catch (_) { /* Storage is optional. */ }
+    /* Night is the default look; day is one press away. */
+    if (mode !== 'day' && mode !== 'night') mode = 'night';
     const show = () => {
       body.classList.toggle('light-night', mode === 'night');
       if (label) label.textContent = mode === 'day' ? 'Day' : 'Night';
@@ -58,7 +59,7 @@
     show();
     button?.addEventListener('click', () => {
       mode = mode === 'day' ? 'night' : 'day';
-      try { localStorage.setItem('idea-studio-light', mode); } catch (_) { /* Storage is optional. */ }
+      try { localStorage.setItem('idea-studio-light-v2', mode); } catch (_) { /* Storage is optional. */ }
       show();
       window.dispatchEvent(new CustomEvent('studio:light', { detail: { mode } }));
     });
@@ -375,10 +376,18 @@
         }
         body.append(inner);
         const set = next => { card.classList.toggle('is-open', next); head.setAttribute('aria-expanded', String(next)); };
-        set(open);
-        head.addEventListener('click', () => { set(!card.classList.contains('is-open')); window.StudioSound?.fx('tick'); syncAll(); });
+        /* A role with a single line has nothing to unfold: it is shown in full, with no button. */
+        const plain = (role.points?.length || 0) <= 1;
+        if (plain) {
+          card.classList.add('is-plain', 'is-open');
+          head.disabled = true;
+          head.removeAttribute('aria-expanded');
+        } else {
+          set(open);
+          head.addEventListener('click', () => { set(!card.classList.contains('is-open')); window.StudioSound?.fx('tick'); syncAll(); });
+          cards.push({ card, set });
+        }
         card.append(head, body);
-        cards.push({ card, set });
         stop.append(card);
       });
       return stop;
@@ -626,6 +635,152 @@
     openPanel(initialPanel, null, false);
     /* Rewrite an old alias (#projects, #conversations) to its current route. */
     if (location.hash !== `#${initialPanel}`) history.replaceState({ studioPanel: initialPanel }, '', `#${initialPanel}`);
+  }
+
+  /* ---------- Guided tour: the camera visits each object in turn, with a line about it ---------- */
+  {
+    const STOPS = [
+      { section: 'career', title: 'Experience', text: 'Fifteen years across data, cloud and AI, from business analyst to director.', action: 'Open experience' },
+      { section: 'work', title: 'Side projects', text: 'Things I build on my own time, from Rig to multi-region demos and early machine-learning experiments.', action: 'Open side projects' },
+      { section: 'rig', title: 'Rig', text: 'My side project: a toolkit that lets an AI agent run an app, drive it and verify that a change works.', action: 'Open Rig' },
+      { section: 'podcast', title: 'Podcast', text: 'I host Big Ideas in App Architecture, talking with founders, CTOs and architects about how real systems get built.', action: 'Open the podcast' },
+      { section: 'writing', title: 'Writings', text: 'Posts on databases, AI and partner ecosystems, several co-authored with AWS and Microsoft.', action: 'Open writings' },
+      { section: 'talks', title: 'Talks', text: 'Talks and webinars, from GenAI apps to payments for AI agents.', action: 'Open talks' },
+      { section: 'skills', title: 'Skills', text: 'What I work with every day: agents, cloud, data and code.', action: 'Open skills' },
+      { section: 'contact', title: 'Say hello', text: 'That is the desk. If something here sparked an idea, I would love to hear it.', action: 'Get in touch' }
+    ];
+    const HOLD = 7000;
+    const card = document.getElementById('tour'), toggle = document.getElementById('tour-toggle'), label = document.getElementById('tour-label');
+    const title = document.getElementById('tour-title'), text = document.getElementById('tour-text'), step = document.getElementById('tour-step');
+    const prev = document.getElementById('tour-prev'), next = document.getElementById('tour-next'), open = document.getElementById('tour-open');
+    let index = -1, timer = 0, held = false;
+
+    const announce = section => window.dispatchEvent(new CustomEvent('studio:tour', { detail: { active: index >= 0, section } }));
+    const schedule = () => {
+      clearTimeout(timer);
+      card.classList.remove('is-timing');
+      if (index < 0 || held || body.classList.contains('motion-paused')) return;
+      void card.offsetWidth;
+      card.classList.add('is-timing');
+      timer = setTimeout(() => go(1), HOLD);
+    };
+    const show = () => {
+      const stop = STOPS[index];
+      title.textContent = stop.title;
+      text.textContent = stop.text;
+      step.textContent = `${index + 1} / ${STOPS.length}`;
+      open.textContent = stop.action;
+      prev.disabled = index === 0;
+      next.textContent = index === STOPS.length - 1 ? 'Finish' : 'Next';
+      announce(stop.section);
+      schedule();
+    };
+    function end() {
+      if (index < 0) return;
+      index = -1;
+      clearTimeout(timer);
+      card.hidden = true;
+      card.classList.remove('is-timing');
+      body.classList.remove('touring');
+      toggle.setAttribute('aria-pressed', 'false');
+      label.textContent = 'Tour';
+      announce(null);
+    }
+    function go(delta) {
+      if (index + delta >= STOPS.length) { end(); return; }
+      index = Math.max(0, index + delta);
+      show();
+    }
+    function start() {
+      if (dialog.open) closePanel();
+      enterStudio();
+      index = 0;
+      held = false;
+      card.hidden = false;
+      body.classList.add('touring');
+      toggle.setAttribute('aria-pressed', 'true');
+      label.textContent = 'End tour';
+      show();
+    }
+
+    toggle.addEventListener('click', () => (index < 0 ? start() : end()));
+    next.addEventListener('click', () => go(1));
+    prev.addEventListener('click', () => go(-1));
+    document.getElementById('tour-end').addEventListener('click', end);
+    open.addEventListener('click', () => { const section = STOPS[index].section; end(); openPanel(section, toggle); });
+    document.getElementById('intro-tour')?.addEventListener('click', event => { event.stopPropagation(); start(); });
+    /* Reading the card holds the tour on this stop. */
+    card.addEventListener('pointerenter', () => { held = true; schedule(); });
+    card.addEventListener('pointerleave', () => { held = false; schedule(); });
+    card.addEventListener('focusin', () => { held = true; schedule(); });
+    card.addEventListener('focusout', () => { held = false; schedule(); });
+    window.addEventListener('studio:panel', event => { if (event.detail.open) end(); });
+    window.addEventListener('studio:motion', schedule);
+    document.addEventListener('keydown', event => {
+      if (event.ctrlKey || event.metaKey || event.altKey || dialog.open) return;
+      if (event.target instanceof Element && event.target.matches('input,textarea,select,[contenteditable="true"]')) return;
+      if (index < 0) {
+        if ((event.key === 't' || event.key === 'T') && !body.classList.contains('intro')) start();
+        return;
+      }
+      if (event.key === 'Escape' || event.key === 't' || event.key === 'T') { event.preventDefault(); end(); }
+      else if (event.key === 'ArrowRight') { event.preventDefault(); go(1); }
+      else if (event.key === 'ArrowLeft') { event.preventDefault(); go(-1); }
+    });
+  }
+
+  /* ---------- Player card: the name plate opens a collectible card that tilts under the pointer ---------- */
+  {
+    const plate = document.querySelector('.hero-copy'), sheet = document.getElementById('player-dialog'), card = document.getElementById('player-card');
+    const data = window.PORTFOLIO?.profile?.playerCard;
+    if (plate && sheet && card && data && typeof sheet.show === 'function') {
+      const skills = document.getElementById('player-skills');
+      for (const skill of data.skills || []) skills.append(el('li', null, skill));
+      plate.setAttribute('role', 'button');
+      plate.tabIndex = 0;
+      plate.setAttribute('aria-label', 'David Joy. Open the player card');
+      /* The card drops down from the name plate, in place, and tucks back on a second click. */
+      /* The card hangs straight under the plate, lined up with its left edge and matching its width. */
+      const place = () => {
+        const rect = plate.getBoundingClientRect();
+        sheet.style.setProperty('--card-width', `${Math.round(plate.offsetWidth)}px`);
+        sheet.style.setProperty('--card-top', `${rect.bottom + 12}px`);
+        sheet.style.setProperty('--card-left', `${Math.max(rect.left, 12) - 8}px`);
+      };
+      const shut = () => { if (sheet.open) { sheet.close(); plate.setAttribute('aria-expanded', 'false'); } };
+      const open = () => {
+        if (sheet.open) { shut(); return; }
+        if (dialog.open) return;
+        place();
+        sheet.show();
+        place();
+        plate.setAttribute('aria-expanded', 'true');
+        window.StudioSound?.fx('tick');
+      };
+      plate.setAttribute('aria-expanded', 'false');
+      plate.addEventListener('click', open);
+      plate.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); open(); } });
+      document.addEventListener('pointerdown', event => {
+        if (sheet.open && !sheet.contains(event.target) && !plate.contains(event.target)) shut();
+      });
+      document.addEventListener('keydown', event => { if (event.key === 'Escape' && sheet.open) { shut(); plate.focus({ preventScroll: true }); } });
+      window.addEventListener('resize', () => { if (sheet.open) place(); });
+      window.addEventListener('studio:panel', event => { if (event.detail.open) shut(); });
+      /* The card leans toward the pointer, and its shine follows. */
+      sheet.addEventListener('pointermove', event => {
+        if (body.classList.contains('motion-paused')) return;
+        const rect = card.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width - .5, y = (event.clientY - rect.top) / rect.height - .5;
+        card.style.setProperty('--ry', `${Math.max(-1, Math.min(1, x)) * 14}deg`);
+        card.style.setProperty('--rx', `${Math.max(-1, Math.min(1, y)) * -12}deg`);
+        card.style.setProperty('--sx', `${(x + .5) * 100}%`);
+        card.style.setProperty('--sy', `${(y + .5) * 100}%`);
+      });
+      sheet.addEventListener('pointerleave', () => { card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg'); });
+      sheet.addEventListener('click', event => {
+        if (event.target.closest('[data-open], a')) shut();
+      });
+    }
   }
 
   /* ---------- Dallas clock ---------- */

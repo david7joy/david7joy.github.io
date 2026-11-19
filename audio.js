@@ -21,7 +21,7 @@
     [196.0, 246.94, 293.66, 329.63]
   ];
   const MODES = ['music', 'fx', 'off'];
-  const MUSIC_LEVEL = .1;
+  const MUSIC_LEVEL = .02;
   const LABELS = { fx: 'Sound: effects', music: 'Sound: music', off: 'Sound: off' };
   let context = null, music = null, effects = null, noise = null, drums = null, synths = null, pump = null;
   let mode = 'music', started = false, timer = 0, nextTime = 0, step = 0, lastFx = 0;

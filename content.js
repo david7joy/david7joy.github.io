@@ -26,7 +26,11 @@ window.PORTFOLIO = {
       { label: "GitHub", url: "https://github.com/david7joy" },
       { label: "LinkedIn", url: "https://www.linkedin.com/in/david-joy-dj" }
     ],
-    footer: "David Joy · Dallas–Fort Worth, Texas."
+    footer: "David Joy · Dallas–Fort Worth, Texas.",
+    /* The small card behind the name plate: the top skills, in order. */
+    playerCard: {
+      skills: ["Go-to-market", "Leadership", "Solutions engineering", "Partner ecosystems", "AI and agents", "Storytelling"]
+    }
   },
 
   stats: [
@@ -34,7 +38,7 @@ window.PORTFOLIO = {
     { value: "33", label: "partner integrations in the directory from the certification program I lead" },
     { value: "71", label: "episodes in the Big Ideas in App Architecture feed; I host the show" },
     { value: "9", label: "published posts, several co-authored with AWS and Microsoft" },
-    { value: "9", label: "talks and webinars, from GenAI apps to payments for AI agents" }
+    { value: "16", label: "talks, panels and webinars, from GenAI apps to payments for AI agents" }
   ],
 
   now: [
@@ -507,6 +511,9 @@ window.PORTFOLIO = {
       url: "https://www.youtube.com/watch?v=jHZeGy_ZHcU", source: "YouTube · DataStax Developers", role: "Presenter", tags: ["cassandra", "benchmarking"] },
 
     /* ---------- Talks and webinars ---------- */
+    { type: "talk", featured: true, date: "2026-12", title: "AWS re:Invent 2026: Thousands of Databases, $250 a Month",
+      description: "Breakout session ARC338-S, Operating an Agentic Database Estate on AWS: separating storage from compute, isolated virtual clusters on shared hosts, and agentic operations, with live demos and the cost model.",
+      url: "https://reinvent.awsevents.com/", source: "AWS re:Invent", role: "Speaker", tags: ["aws", "agents", "conference", "upcoming"] },
     { type: "talk", featured: true, date: "2026-12-15", title: "How to Build a Payments System Ready for AI Agents",
       description: "Webinar with Rob Reid: failover without double charges, serializable spend limits and keeping fraud reads off the spend path.",
       url: "https://www.cockroachlabs.com/webinars/payments-architecture-ai-agents/", source: "Cockroach Labs webinar", role: "Speaker", tags: ["payments", "agents", "upcoming"] },
@@ -522,15 +529,33 @@ window.PORTFOLIO = {
     { type: "talk", date: "2025-12-04", title: "AWS re:Invent 2025: Build Resilient GenAI & Agentic Apps with Intelligent Memory",
       description: "Conference session in Las Vegas, presented with Virag Tripathi.",
       url: "https://www.cockroachlabs.com/blog/resilient-genai-agentic-apps-intelligent-memory/", source: "AWS re:Invent", role: "Speaker", tags: ["aws", "agents", "conference"] },
+    { type: "talk", date: "2025-11-20", title: "Microsoft Ignite 2025: Distributed SQL plus vectors, a match made in heaven",
+      description: "Theater session at the Moscone Center in San Francisco, on running vector search inside a distributed SQL database.",
+      url: "https://www.cockroachlabs.com/events/microsoft-ignite-2025/", source: "Microsoft Ignite", role: "Speaker", tags: ["microsoft", "vectors", "conference"] },
+    { type: "talk", date: "2025-10-07", title: "IBM TechXchange 2025: The Resilience Power Duo, CockroachDB on LinuxONE",
+      description: "Two sessions in Orlando: a stage talk on CockroachDB on LinuxONE, and a breakout with Virag Tripathi on distributed SQL for hybrid and multi-cloud IBM deployments.",
+      url: "https://www.cockroachlabs.com/events/ibm-techxchange/", source: "IBM TechXchange", role: "Speaker", tags: ["ibm", "linuxone", "conference"] },
     { type: "talk", date: "2025-08-06", title: "How to Build GenAI Apps with CockroachDB & AWS Bedrock",
       description: "CockroachDB plus Amazon Bedrock for vector-aware GenAI apps, with a live demo.",
       url: "https://www.cockroachlabs.com/webinars/how-to-build-gen-ai-apps/", source: "Cockroach Labs webinar", role: "Speaker", tags: ["bedrock", "aws"] },
     { type: "talk", date: "2025-07-29", title: "How to build a scalable, resilient payments system for the AI era",
       description: "With Jim Hatcher: payment architecture covering failover, geo-partitioning for regulation, and scaling.",
       url: "https://www.cockroachlabs.com/webinars/how-to-build-a-scalable-payment-system/", source: "Cockroach Labs webinar", role: "Speaker", tags: ["payments"] },
+    { type: "talk", date: "2025-06-18", title: "Payments Day Atlanta: resilient, scalable and secure payments on CockroachDB",
+      description: "In-person event co-hosted with AWS: a talk on payments architecture, then a fireside chat with Jake Moshenko, co-founder and CEO of AuthZed.",
+      url: "https://www.cockroachlabs.com/event/payments-day-atl-jun-2025/", source: "AWS & Cockroach Labs", role: "Speaker", tags: ["payments", "aws", "authzed"] },
+    { type: "talk", date: "2025-05-22", title: "The Resilience Roadshow with AWS: Chicago",
+      description: "Moderated the customer panel on building resilient applications, with Spreedly and AWS.",
+      url: "https://www.cockroachlabs.com/theresilienceedge25/chicago/", source: "AWS & Cockroach Labs", role: "Panel moderator", tags: ["aws", "roadshow"] },
+    { type: "talk", date: "2025-05-08", title: "The Resilience Roadshow with AWS: Santa Clara",
+      description: "At the AWS office in Santa Clara; moderated the panel on building resilient applications with Armorblox, Fortinet and AWS.",
+      url: "https://www.cockroachlabs.com/theresilienceedge25/santa-clara/", source: "AWS & Cockroach Labs", role: "Panel moderator", tags: ["aws", "roadshow"] },
     { type: "talk", date: "2025-04-17", title: "The Resilience Roadshow with AWS: Dallas",
       description: "In-person event at the AWS office in Dallas; moderated the customer panel on building resilient applications.",
       url: "https://www.cockroachlabs.com/theresilienceedge25/dallas/", source: "AWS & Cockroach Labs", role: "Panel moderator", tags: ["aws", "roadshow"] },
+    { type: "talk", date: "2025-04-10", title: "Capital Markets NYC: resilient, scalable and secure capital markets solutions on CockroachDB",
+      description: "In-person event in New York, co-hosted with AWS; presented with Peter Williams, Head of Global Financial Services Partner Technology at AWS.",
+      url: "https://www.cockroachlabs.com/event/capital-markets-nyc-apr-10-2025/", source: "AWS & Cockroach Labs", role: "Speaker", tags: ["capital markets", "aws"] },
     { type: "talk", date: "2025-03-04", title: "Unlock scalable, resilient gaming experiences with CockroachDB on AWS",
       description: "With Ben Cooke of AWS, on running resilient gaming workloads.",
       url: "https://www.cockroachlabs.com/webinars/scalable-resilient-gaming-experiences-aws/", source: "Cockroach Labs webinar", role: "Speaker", tags: ["gaming", "aws"] }

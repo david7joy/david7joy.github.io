@@ -11,19 +11,14 @@
 
   var SECTIONS = {
     work: {
-      types: ['project', 'integration'], layout: 'grid', noun: ['item', 'items'],
-      searchLabel: 'Search all work', restLabel: 'More work',
-      chips: [['all', 'All'], ['project', 'Independent projects'], ['integration', 'Company work']],
-      groups: [
-        { type: 'project', label: 'Independent projects', note: 'Built on my own, open source, on my GitHub.' },
-        { type: 'integration', label: 'Company work', note: 'Built with my team and published by Cockroach Labs.' }
-      ]
+      /* Side projects only: things I built myself. The team's shipped work is told under Experience. */
+      types: ['project'], layout: 'grid', noun: ['project', 'projects'],
+      searchLabel: 'Search side projects', restLabel: 'More side projects', chips: null, flat: true
     },
     podcast: {
       types: ['podcast'], layout: 'list', noun: ['episode', 'episodes'],
       searchLabel: 'Search guests, companies and topics', restLabel: 'Episodes', chips: null, episodes: true,
-      brands: ['Stripe', 'GitHub', 'Ericsson', 'Equifax', 'Estée Lauder', 'PwC', 'Booz Allen Hamilton', 'Confluent',
-        'Honeycomb', 'Pulumi', 'Vimeo', 'Fivetran', 'Amplitude', 'Collibra', 'Cameo', 'Baseten']
+      brands: ['Stripe', 'GitHub', 'Ericsson', 'Equifax', 'Estée Lauder', 'PwC', 'Honeycomb']
     },
     writing: {
       types: ['writing'], layout: 'list', noun: ['post', 'posts'],
@@ -294,14 +289,20 @@
     'YouTube · DataStax Developers': ['datastax', ''],
     'AWS re:Invent': ['aws', '#FF9900'],
     'YouTube · AWS Events': ['aws', '#FF9900'],
-    'AWS & Cockroach Labs': ['aws', '#FF9900']
+    'AWS & Cockroach Labs': ['cockroachlabs', '#AEDE54'],
+    'Microsoft Ignite': ['cockroachlabs', '#AEDE54'],
+    'IBM TechXchange': ['cockroachlabs', '#AEDE54']
   };
+  /* Every talk was given for Cockroach Labs, so a talk with no mark of its own carries theirs: no empty tiles. */
+  function markFor(item) {
+    return SOURCE_LOGO[item.source] || (item.type === 'talk' ? SOURCE_LOGO['Cockroach Labs'] : null);
+  }
 
   /* A small picture for a list row: the video's own frame, or the publisher's mark when there is no video. */
   function buildThumb(item) {
     var box = h('span', 'lib-thumb');
     box.setAttribute('aria-hidden', 'true');
-    var mark = SOURCE_LOGO[item.source];
+    var mark = markFor(item);
     var showMark = function () {
       clear(box);
       if (!mark) return;
@@ -355,7 +356,7 @@
       a.appendChild(title);
       if (it.source) {
         var src = h('span', 'lib-link-source');
-        var mark = SOURCE_LOGO[it.source];
+        var mark = markFor(it);
         if (mark) {
           var logo = h('span', 'lib-link-logo');
           logo.setAttribute('aria-hidden', 'true');
@@ -574,6 +575,12 @@
       }
 
       if (filtering) {
+        results.appendChild(buildCollection(shown, cfg.layout, false));
+        return;
+      }
+
+      /* A short list reads best as one plain set, with no Featured split. */
+      if (cfg.flat) {
         results.appendChild(buildCollection(shown, cfg.layout, false));
         return;
       }

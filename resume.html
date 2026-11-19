@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>David Joy · Résumé</title>
+  <meta name="description" content="David Joy, Director of Solutions Architecture at Cockroach Labs: 15+ years in data, cloud and AI. Experience, projects, skills and speaking on one page.">
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="David Joy · Résumé">
+  <meta property="og:description" content="15+ years in data, cloud and AI. Experience, projects, skills and speaking on one page.">
+  <meta property="og:url" content="https://david7joy.github.io/resume.html">
+  <meta property="og:image" content="https://david7joy.github.io/assets/og.jpg">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #15181c;
+      --soft: #3f4750;
+      --quiet: #6a737d;
+      --line: #dfe2e6;
+      --tint: #f4f2fb;
+      --paper: #ffffff;
+      --desk: #f1efe9;
+      --accent: #5b3fd6;
+      --warm: #e08a2c;
+      --display: 'Bricolage Grotesque', system-ui, sans-serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { margin: 0; background: var(--desk); color: var(--ink); font: 400 15.5px/1.55 var(--sans); }
+    a { color: inherit; text-decoration-color: rgba(91, 63, 214, .45); text-underline-offset: 2px; }
+    a:hover { color: var(--accent); }
+    p { margin: 0; }
+
+    .bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; max-width: 920px; margin: 0 auto; padding: 16px 16px 0; }
+    .bar a, .bar button { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border: 1px solid #cfd3d8; border-radius: 999px; background: #fff; color: var(--ink); font: 600 14px/1 var(--sans); text-decoration: none; cursor: pointer; }
+    .bar button { border-color: var(--ink); background: var(--ink); color: #fff; }
+    .bar a:hover { border-color: var(--accent); }
+    .bar button:hover { background: var(--accent); border-color: var(--accent); }
+
+    .page { max-width: 920px; margin: 16px auto 40px; padding: 44px 52px 48px; border-radius: 10px; background: var(--paper); box-shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 12px 40px rgba(20, 24, 28, .08); }
+    .top { display: flex; gap: 20px; align-items: center; padding-bottom: 18px; border-bottom: 2px solid var(--accent); }
+    .top img { flex: none; width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
+    h1 { margin: 0; font: 700 40px/1 var(--display); letter-spacing: -.01em; }
+    .tagline { margin-top: 8px; font-weight: 700; font-size: 16.5px; line-height: 1.3; color: var(--accent); }
+    .contact { display: flex; flex-wrap: wrap; gap: 2px 16px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--quiet); }
+
+    section { margin-top: 26px; }
+    h2 { margin: 0 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); font: 700 13px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+    .summary { padding: 14px 18px; border-left: 3px solid var(--warm); border-radius: 0 8px 8px 0; background: var(--tint); font-size: 16px; line-height: 1.6; color: var(--soft); }
+
+    .employer + .employer { margin-top: 22px; }
+    .head, .role { display: flex; flex-wrap: wrap; gap: 0 14px; align-items: baseline; justify-content: space-between; }
+    h3 { margin: 0; font: 700 19px/1.25 var(--display); }
+    .where { font: 400 14px/1.3 var(--sans); color: var(--quiet); }
+    .dates { font-size: 13.5px; color: var(--quiet); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .role { margin-top: 12px; }
+    .role.first { margin-top: 6px; }
+    .title { font-weight: 700; color: var(--accent); }
+    ul { margin: 6px 0 0; padding-left: 19px; color: var(--soft); }
+    li { margin-bottom: 5px; padding-left: 2px; }
+    li::marker { color: var(--warm); }
+    .blurb { margin-top: 4px; color: var(--soft); }
+    .labelled { padding-left: 0; }
+    .labelled li { list-style: none; margin-bottom: 8px; }
+    .labelled b { color: var(--ink); }
+    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 40px; margin-top: 26px; }
+    .pair section { margin-top: 0; }
+    .honours { margin: 0; padding: 0; list-style: none; }
+    .honours li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 12px; align-items: baseline; margin: 0; padding: 7px 0; border-bottom: 1px solid var(--line); }
+    .honours li:first-child { padding-top: 0; }
+    .honours li:last-child { border-bottom: 0; }
+    .honours b { font-weight: 600; color: var(--ink); line-height: 1.35; }
+    .honours small { grid-column: 1; font-size: 13.5px; color: var(--quiet); }
+    .honours time { grid-row: 1; grid-column: 2; font-size: 13.5px; color: var(--quiet); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+    @media screen and (max-width: 720px) {
+      body { font-size: 15px; }
+      .page { margin: 12px 0 0; padding: 26px 18px 32px; border-radius: 0; }
+      h1 { font-size: 32px; }
+      .top { align-items: flex-start; gap: 14px; }
+      .top img { width: 60px; height: 60px; }
+      .pair { grid-template-columns: 1fr; }
+      .tagline { font-size: 15px; }
+      .summary { padding: 12px 14px; font-size: 15px; }
+      h3 { font-size: 17.5px; }
+    }
+
+    /* Printed: two US Letter pages, like the resume this page is taken from. */
+    @page { size: letter; margin: .36in .55in .34in; }
+    @media print {
+      body { background: #fff; font-size: 8.2pt; line-height: 1.26; }
+      .bar { display: none; }
+      .page { max-width: none; margin: 0; padding: 0; border-radius: 0; box-shadow: none; }
+      .top { gap: 11pt; padding-bottom: 8pt; }
+      .top img { width: 44pt; height: 44pt; }
+      h1 { font-size: 23pt; }
+      .tagline { margin-top: 4pt; font-size: 10pt; }
+      .contact { margin-top: 3pt; gap: 2pt 14pt; font-size: 8.6pt; }
+      section { margin-top: 6pt; }
+      h2 { margin-bottom: 4pt; padding-bottom: 3pt; font-size: 8.4pt; break-after: avoid; }
+      .summary { padding: 4pt 10pt; border-radius: 0; font-size: 8.5pt; line-height: 1.35; }
+      .employer + .employer { margin-top: 6pt; }
+      .employer:not(:first-of-type) { break-inside: avoid; }
+      h3 { font-size: 11pt; }
+      .where, .dates { font-size: 8.5pt; }
+      .role { margin-top: 4pt; break-after: avoid; }
+      .role.first { margin-top: 2pt; }
+      ul { margin-top: 2pt; padding-left: 13pt; }
+      li { margin-bottom: 1.5pt; break-inside: avoid; }
+      .blurb { margin-top: 2pt; }
+      .labelled li { margin-bottom: 2.5pt; }
+      /* On paper the awards and certifications run as two short paragraphs: "Name (year, issuer) · ...". */
+      .pair { display: block; margin-top: 0; }
+      .pair section { margin-top: 6pt; break-inside: avoid; }
+      .honours { line-height: 1.3; }
+      .honours li { display: inline; padding: 0; border: 0; }
+      .honours b, .honours small, .honours time { display: inline; font-size: inherit; }
+      .honours time::before { content: ' ('; }
+      .honours small::before { content: ', '; }
+      .honours small::after { content: ')'; }
+      .honours li:not(:last-child)::after { content: '  ·  '; color: var(--warm); }
+      a { text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <a href="./?desk"><span aria-hidden="true">←</span> Back to the desk</a>
+    <button type="button" id="print">Print or save as PDF</button>
+  </div>
+
+  <main class="page">
+    <header class="top">
+      <img src="assets/david.jpg" alt="" width="80" height="80">
+      <div>
+        <h1>David Joy</h1>
+        <p class="tagline">Director, Solutions Architecture | AI, Ecosystem &amp; Channels</p>
+        <ul class="contact">
+          <li>Dallas, TX</li>
+          <li><a href="mailto:david.joy1588@gmail.com">david.joy1588@gmail.com</a></li>
+          <li><a href="https://www.linkedin.com/in/david-joy-dj/">linkedin.com/in/david-joy-dj</a></li>
+          <li><a href="https://github.com/david7joy">github.com/david7joy</a></li>
+          <li><a href="https://david7joy.github.io">david7joy.github.io</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <section>
+      <h2>Summary</h2>
+      <p class="summary">Director of Solutions Architecture with 15+ years in data, cloud and AI, nearly a decade of it leading technical work with customers and partners. Leads a global partner solutions architecture team across the US, EMEA and APAC, working with ISVs, cloud providers and systems integrators. A creative, out-of-the-box thinker who builds programs from the ground up: the ISV technology partner program, the AI ecosystem and integrations program, and partner certification. Turned solutions architects into forward-deployed builders, helped stand up centers of excellence inside partners, and builds hands-on with AI every day. Partner Manager of the Year, FY26.</p>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+
+      <div class="employer">
+        <div class="head"><h3>Cockroach Labs <span class="where">· Dallas, Texas</span></h3><span class="dates">Sep 2022 – Present</span></div>
+
+        <div class="role first"><span class="title">Director, Solutions Architecture (AI, Ecosystem &amp; Channels)</span><span class="dates">Jan 2026 – Present</span></div>
+        <ul>
+          <li>Lead the Partner Solutions Architecture and GTM Engineering team: eight architects across the US, EMEA and APAC, with a team lead for EMEA and APAC.</li>
+          <li>Turned Partner Solutions Architects into Forward Deployed Solutions Architects who build with Claude Code and OpenAI Codex, shipping integrations, demos, proof-of-concept environments and reference architectures directly with partners and customers, cutting typical integration delivery from 18–24 weeks to 4 weeks.</li>
+          <li>Set the strategy and directed the team that built AI integrations and plugins for Claude Code, OpenAI Codex and ChatGPT, Cursor, Google MCP Toolbox and LangChain/LangGraph, and led the go-to-market for each. Already in use by customers, with 23,000+ downloads of the LangChain package and 2,100+ installs of the Claude Code plugin; the Codex plugin launched with OpenAI and is being published to its official plugin marketplace.</li>
+          <li>Led development of the global ISV Technology Partner Program: partner fit, certification, enablement and co-sell. Partners include Ory, AuthZed, Teleport, Memori Labs and CrewAI.</li>
+          <li>Started and built CockroachDB's ecosystem certification program, now a <a href="https://www.cockroachlabs.com/product/partner-integrations/">public directory of 33 partner integrations</a>, plus platform certifications on IBM LinuxONE, Power Systems, IBM Cloud, Google Distributed Cloud and Red Hat OpenShift Virtualization.</li>
+          <li>Led the technical side of strategic alliances: the IBM OEM agreement, and systems integrator centers of excellence with Accenture, TCS and PwC UK.</li>
+          <li>Built internal AI tools for the field: Dojo, a voice AI coach for sales and partner enablement that adapts in real time (in pilot), and a fully automated, AI-generated knowledge management tool whose dashboards run weekly partner business reviews.</li>
+          <li>Work across the company: with Product, field Sales and partner Business Development on roadmap input, partner-led deals and joint partner plans; with Marketing and Developer Relations as host of the <em>Big Ideas in App Architecture</em> podcast, presenter of webinars with 2,000+ total attendees, and blog author.</li>
+        </ul>
+
+        <div class="role"><span class="title">Senior Manager, Solutions Architecture (AI, Ecosystem &amp; Channels)</span><span class="dates">Aug 2024 – Dec 2025</span></div>
+        <ul>
+          <li>Managed a global team of four Senior Solutions Architects covering cloud, ISV and AI partners.</li>
+          <li>Led the technical side of the AWS alliance, and supported the AWS Strategic Collaboration Agreement and the AWS Competency.</li>
+          <li>Led database migration and certification work with banking and payments ISVs including Temenos, Thought Machine and Infosys Finacle, opening Oracle-dependent core banking systems to CockroachDB.</li>
+          <li>Led the CockroachDB integration with Amazon Bedrock and worked with product on vector search for generative AI workloads.</li>
+          <li>Developed the cloud go-to-market motion with AWS and Google Cloud, including roadshows and workshops.</li>
+          <li>Helped shape event strategy for AWS re:Invent and Google Cloud Next, and presented CockroachDB on stage at re:Invent, Google Cloud Next and Microsoft Ignite.</li>
+        </ul>
+
+        <div class="role"><span class="title">Senior Sales Engineer, Channels (Partner Solutions Architect)</span><span class="dates">Sep 2022 – Aug 2024</span></div>
+        <ul>
+          <li>Led AWS and Google Cloud integrations, including Amazon MSK and CloudWatch; wrote Terraform to deploy CockroachDB on AWS.</li>
+          <li>Built the generative AI go-to-market strategy with AWS and partner teams.</li>
+          <li>Ran partner briefings, proofs of concept and live demos, and supported channel account executives in closing deals through AWS Marketplace.</li>
+        </ul>
+      </div>
+
+      <div class="employer">
+        <div class="head"><h3>DataStax <span class="where">· Santa Clara, California</span></h3><span class="dates">Oct 2019 – Sep 2022</span></div>
+        <div class="role first"><span class="title">Senior Data Architect (Partnerships)</span></div>
+        <ul>
+          <li>Led the technical win on the company's largest database-as-a-service deal of Q3 2021 and helped close the most new logos company-wide in 2021–22.</li>
+          <li>Supported delivery of 150% of sales quota for six consecutive quarters.</li>
+          <li>Ran demos and proofs of concept for buyers from developers to CTOs, and trained 1,000+ partner engineers at IBM, AWS, Google Cloud, Azure and global systems integrators.</li>
+          <li>Built joint solutions with AWS, Google Cloud and Azure and customer-facing demos on Astra DB, Astra Streaming (Pulsar), Cassandra, Spark and Kafka.</li>
+          <li>Created the Astra DB sizing method and materials adopted by all presales architects.</li>
+        </ul>
+      </div>
+
+      <div class="employer">
+        <div class="head"><h3>LatentView Analytics <span class="where">· Sunnyvale, California</span></h3><span class="dates">Jul 2019 – Oct 2019</span></div>
+        <div class="role first"><span class="title">Analytics Consultant, Walmart eCommerce</span></div>
+        <p class="blurb">Built the A/B testing framework and data pipeline for the Sam's Club website and mobile app on Python, Databricks and Airflow.</p>
+      </div>
+
+      <div class="employer">
+        <div class="head"><h3>Fiserv <span class="where">· Dallas–Fort Worth, Texas</span></h3><span class="dates">May 2018 – May 2019</span></div>
+        <div class="role first"><span class="title">Data Science &amp; BI Analyst</span></div>
+        <p class="blurb">Developed an ATM cash-level recommendation model and the IBM Cognos dashboard that put it in analysts' hands, contributing to about $35M in savings for one client.</p>
+      </div>
+
+      <div class="employer">
+        <div class="head"><h3>Sungard Availability Services <span class="where">· Pune, India</span></h3><span class="dates">Jan 2015 – Jul 2017</span></div>
+        <div class="role first"><span class="title">Business Intelligence Analyst</span></div>
+        <p class="blurb">Provided analytics to product leadership managing a $1.3B product line. Churn analysis helped reduce customer churn by about 3% in 2016; a pricing tool covering about 10,000 SKUs cut quote turnaround by about 3 days.</p>
+      </div>
+
+      <div class="employer">
+        <div class="head"><h3>Tech Mahindra <span class="where">· Pune, India and Hertfordshire, UK</span></h3><span class="dates">Oct 2010 – Dec 2014</span></div>
+        <div class="role first"><span class="title">Business Analyst / Presales</span></div>
+        <p class="blurb">Supported presales for a commercial software solution that generated about $640K in revenue; led requirements gathering and release management on telecom projects.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Projects</h2>
+      <ul class="labelled">
+        <li><b>Rig:</b> a Claude Code plugin and agent manager. Sets up any project so AI agents can run the app, drive it through a Playwright browser CLI and prove a change works; a live dashboard tracks every agent session across projects. Used internally; open-source release planned.</li>
+        <li><b>AI marketing sidekick:</b> designed, built and run end to end a product that turns long-form video into clips and ready-to-post content for X and LinkedIn. Runs on Kubernetes on Google Cloud with Postgres.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <ul class="labelled">
+        <li><b>Building with AI:</b> builds daily with Claude Code and OpenAI Codex; more than 3.5 years of coding with AI tools. Supported the early build of Cockroach Labs' internal agent platform.</li>
+        <li><b>AI:</b> generative AI and LLM workloads, vector search, agent tooling (MCP, Codex and ChatGPT plugins, LangChain), Amazon Bedrock</li>
+        <li><b>Data:</b> CockroachDB, Postgres, Cassandra, MongoDB, SQL Server, Redis, Elasticsearch, Typesense, Kafka, Pulsar, Spark, BigQuery, Redshift, Snowflake</li>
+        <li><b>Cloud and engineering:</b> AWS, Google Cloud, Kubernetes, Docker, Terraform, Python, JavaScript, React, Node.js, Stripe APIs</li>
+        <li><b>Leadership and go-to-market:</b> technical alliances, partner co-sell, solutions architecture and sales engineering management, enablement, ISV certification</li>
+      </ul>
+    </section>
+
+    <div class="pair">
+      <section>
+        <h2>Awards</h2>
+        <ul class="honours">
+          <li><b>Partner Manager of the Year</b><time>2026</time><small>Cockroach Labs</small></li>
+          <li><b>President's Club</b><time>FY 2026</time><small>Cockroach Labs</small></li>
+          <li><b>Inspire and Achieve Excellence Award</b><time>2019</time><small>Fiserv</small></li>
+          <li><b>Create with Purpose Award</b><time>2018</time><small>Fiserv</small></li>
+          <li><b>Graduate Student of the Year</b><time>2017–18</time><small>The University of Texas at Dallas</small></li>
+          <li><b>Certificate of Recognition</b><time>2015</time><small>Sungard Availability Services</small></li>
+          <li><b>Pat on the Back, twice</b><time>2012, 2014</time><small>Tech Mahindra</small></li>
+          <li><b>Cookie Award</b><time>2011</time><small>Tech Mahindra</small></li>
+        </ul>
+      </section>
+      <section>
+        <h2>Certifications</h2>
+        <ul class="honours">
+          <li><b>Introduction to Distributed SQL and CockroachDB</b><time>2022</time><small>Cockroach Labs</small></li>
+          <li><b>Introduction to Serverless Databases and CockroachDB Serverless</b><time>2022</time><small>Cockroach Labs</small></li>
+          <li><b>Apache Cassandra 3.x Administrator Associate</b><time>2020</time><small>DataStax</small></li>
+          <li><b>Apache Cassandra 3.x Developer Associate</b><time>2020</time><small>DataStax</small></li>
+          <li><b>Courses: Scala, React.js, Kafka, Apache Spark, Google Analytics, Data Science on Google Cloud</b><time>2019–20</time><small>LinkedIn Learning</small></li>
+        </ul>
+      </section>
+    </div>
+
+    <section>
+      <h2>Speaking and Publications</h2>
+      <ul>
+        <li>Host, <em>Big Ideas in App Architecture</em> podcast (Cockroach Labs); guests include Charity Majors, Joe Duffy and Spencer Kimball</li>
+        <li>AWS re:Invent 2026 (upcoming): <em>Thousands of Databases, $250 a Month: Operating an Agentic Database Estate on AWS</em>, breakout session ARC338-S</li>
+        <li>AWS re:Invent 2025: <em>Build Resilient GenAI &amp; Agentic Apps with Intelligent Memory</em></li>
+        <li>Microsoft Ignite 2025: <em>Distributed SQL plus vectors: A match made in heaven</em>; IBM TechXchange 2025: <em>The Resilience Power Duo: CockroachDB on LinuxONE</em></li>
+        <li>Webinars, 2026: <em>Are your agents on ACID?</em> with Mike Stonebraker; <em>Architecting Persistent Memory for Multi-Agent Systems</em>; <em>How to Build a Payments System Ready for AI Agents</em> (upcoming, December 2026)</li>
+        <li>Blogs: <em>Introducing the CockroachDB plugin for ChatGPT and Codex</em> (2026, co-author); <em>Distributed SQL + Vectors: A Match Made in Heaven</em> (2025)</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+      <ul class="labelled">
+        <li><b>Master of Science (MS), Business Analytics</b> · The University of Texas at Dallas, 2017 – 2019</li>
+        <li><b>Bachelor of Engineering (BE), Computer Engineering</b> · Nagpur University, India, 2006 – 2010</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <script>document.getElementById('print').addEventListener('click', () => window.print());</script>
+</body>
+</html>

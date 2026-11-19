@@ -75,7 +75,7 @@ function buildStudio() {
   const pickables = [];
   let record = null, soundOn = false, recordSpeed = 0;
   const halos = [], notes = [], stickerSheets = [];
-  let sidePatch = null, cat = null, catHead = null, micGlow = null;
+  let sidePatch = null, micGlow = null;
   const micMeter = [];
   const targets = new Map();
 
@@ -237,33 +237,136 @@ function buildStudio() {
   const companyItems = workItems.filter(item => item.type === 'integration');
   const ownItems = workItems.filter(item => item.type === 'project');
   const mainScreen = surface(1280, 640);
+  /* The screen is a project picker. It shows one side project at a time; a click on the desk mouse flips to
+     the next, and a pointer moved over the monitor becomes the cursor on the screen (hover a tab to jump). */
+  const sideProjects = [
+    { title: 'Rig', description: 'A toolkit that lets an AI agent run an app, drive it and prove that a change works.', tags: ['agents', 'claude code'], when: 'On the workbench now' },
+    ...ownItems.slice().sort((p, q) => String(q.date).localeCompare(String(p.date))).map(item => ({
+      title: item.title, description: item.description || '', tags: (item.tags || []).slice(0, 3), when: String(item.date || '').slice(0, 4)
+    }))
+  ];
+  const PROJECT_HUES = ['#ff8a3c', '#ff4d8f', '#b98bff', '#22cfc9', '#ffd23f', '#5fd35a', '#5b8cff'];
+  const TAB = { y: 566, h: 30, gap: 14, x: 70 };
+  let projectIndex = 0, projectTimer = 0, screenCursor = null, screenClick = 0;
+  const tabWidth = () => (1280 - TAB.x * 2 - TAB.gap * (sideProjects.length - 1)) / sideProjects.length;
+  function linesFor(ctx, text, maxWidth, maxLines) {
+    const words = String(text).split(/\s+/), lines = [];
+    let line = '';
+    for (const word of words) {
+      const trial = line ? `${line} ${word}` : word;
+      if (ctx.measureText(trial).width <= maxWidth || !line) line = trial;
+      else { lines.push(line); line = word; }
+    }
+    if (line) lines.push(line);
+    if (lines.length > maxLines) {
+      lines.length = maxLines;
+      lines[maxLines - 1] = fit(ctx, `${lines[maxLines - 1]} …`, maxWidth);
+    }
+    return lines;
+  }
   function drawMainScreen() {
-    /* One thing to read from across the room: how much has shipped. The detail lives in the panel. */
     const { ctx, width, height } = mainScreen;
-    backdrop(ctx, width, height, '#12241a');
+    const total = sideProjects.length, index = ((projectIndex % total) + total) % total;
+    const project = sideProjects[index], hue = PROJECT_HUES[index % PROJECT_HUES.length];
+    backdrop(ctx, width, height, '#171233');
+    /* A soft glow in the project's colour. */
+    const glow = ctx.createRadialGradient(250, 330, 20, 250, 330, 520);
+    glow.addColorStop(0, hue + '55');
+    glow.addColorStop(1, hue + '00');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, width, height);
     ctx.textBaseline = 'alphabetic';
-    ctx.fillStyle = '#8fa0a6';
-    ctx.font = `500 30px ${FONT.mono}`;
-    ctx.fillText('PROJECTS', 80, 108);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#9aa6b2';
+    ctx.font = `500 28px ${FONT.mono}`;
+    ctx.fillText('SIDE PROJECTS', 70, 92);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#7d8894';
+    ctx.fillText('click the mouse  ▸  next', width - 70, 92);
+    ctx.textAlign = 'left';
+    /* The big number. */
+    const paint = ctx.createLinearGradient(0, 150, 0, 440);
+    paint.addColorStop(0, '#ffe27a');
+    paint.addColorStop(.5, hue);
+    paint.addColorStop(1, '#b04dff');
+    ctx.fillStyle = paint;
+    ctx.font = '400 300px "Anton", Impact, sans-serif';
+    const number = String(index + 1).padStart(2, '0');
+    ctx.fillText(number, 62, 430);
+    const after = 62 + ctx.measureText(number).width + 18;
+    ctx.fillStyle = '#7d8894';
+    ctx.font = `500 34px ${FONT.mono}`;
+    ctx.fillText(`/ ${String(total).padStart(2, '0')}`, after, 430);
+    /* The project. */
+    const left = 470, room = width - left - 70;
+    ctx.fillStyle = hue;
+    ctx.font = `600 26px ${FONT.mono}`;
+    ctx.fillText(String(project.when).toUpperCase(), left, 178);
     ctx.fillStyle = INK;
-    ctx.font = `700 300px ${FONT.display}`;
-    const count = String(workItems.length || '');
-    ctx.fillText(count, 64, 400);
-    const after = 64 + ctx.measureText(count).width + 44;
-    ctx.font = `600 76px ${FONT.display}`;
-    ctx.fillText('things', after, 300);
-    ctx.fillText('shipped', after, 388);
-    [[WARM, `${companyItems.length} with my team at Cockroach Labs`], [ACCENT, `${ownItems.length} independent, open source`]].forEach(([color, text], i) => {
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.arc(94, 488 + i * 56, 12, 0, Math.PI * 2);
+    ctx.font = `700 70px ${FONT.display}`;
+    const titleLines = linesFor(ctx, project.title, room, 2);
+    titleLines.forEach((line, i) => ctx.fillText(line, left, 256 + i * 76));
+    let y = 256 + titleLines.length * 76 - 12;
+    ctx.fillStyle = '#c6cfd6';
+    ctx.font = `400 34px ${FONT.sans}`;
+    linesFor(ctx, project.description, room, 3 - (titleLines.length - 1)).forEach((line, i) => ctx.fillText(line, left, y + i * 46));
+    /* Tags. */
+    let x = left;
+    ctx.font = `500 24px ${FONT.mono}`;
+    for (const tag of project.tags) {
+      const w = ctx.measureText(tag).width + 32;
+      if (x + w > width - 70) break;
+      ctx.fillStyle = 'rgba(255, 255, 255, .09)';
+      rounded(ctx, x, 474, w, 42, 21);
       ctx.fill();
-      ctx.fillStyle = '#dfe6e2';
-      ctx.font = `500 36px ${FONT.sans}`;
-      ctx.fillText(text, 126, 500 + i * 56);
-    });
+      ctx.fillStyle = '#e6e9ee';
+      ctx.fillText(tag, x + 16, 503);
+      x += w + 12;
+    }
+    /* One tab per project along the bottom; the cursor can pick one. */
+    const tw = tabWidth();
+    for (let i = 0; i < total; i++) {
+      const tx = TAB.x + i * (tw + TAB.gap), active = i === index;
+      ctx.fillStyle = active ? PROJECT_HUES[i % PROJECT_HUES.length] : 'rgba(255, 255, 255, .14)';
+      rounded(ctx, tx, active ? TAB.y - 6 : TAB.y, tw, active ? TAB.h + 6 : TAB.h, 10);
+      ctx.fill();
+      ctx.fillStyle = active ? '#14102a' : '#aab3bd';
+      ctx.font = `700 20px ${FONT.mono}`;
+      ctx.textAlign = 'center';
+      ctx.fillText(String(i + 1).padStart(2, '0'), tx + tw / 2, TAB.y + 22);
+      ctx.textAlign = 'left';
+    }
     sheen(ctx, width, height);
+    /* The cursor: where the visitor points, or parked by the tags. A click sends out a ring. */
+    const cx = screenCursor ? screenCursor.x : 1120, cy = screenCursor ? screenCursor.y : 372;
+    if (screenClick > .03) {
+      ctx.strokeStyle = `rgba(255, 255, 255, ${screenClick.toFixed(2)})`;
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 14 + (1 - screenClick) * 46, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx, cy + 46);
+    ctx.lineTo(cx + 12, cy + 35);
+    ctx.lineTo(cx + 21, cy + 54);
+    ctx.lineTo(cx + 29, cy + 50);
+    ctx.lineTo(cx + 20, cy + 32);
+    ctx.lineTo(cx + 34, cy + 31);
+    ctx.closePath();
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.strokeStyle = '#14102a';
+    ctx.lineWidth = 4;
+    ctx.lineJoin = 'round';
+    ctx.stroke();
     mainScreen.texture.needsUpdate = true;
+  }
+  function showProject(next) {
+    projectIndex = next;
+    projectTimer = 0;
+    drawMainScreen();
   }
 
   /* Left monitor: the career, year by year, as rising steps. The highlight walks through them. */
@@ -582,37 +685,63 @@ function buildStudio() {
   const portrait = new Image();
   portrait.onload = () => { drawChatScreen(); try { requestDraw(); } catch (_) { /* The scene is still starting; its first frame will pick this up. */ } };
   portrait.src = 'assets/david.jpg';
+  /* Brand marks for the phone's contact card: [viewBox size, path]. */
+  const PHONE_ICONS = [
+    [24, 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'],
+    [16, 'M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z'],
+    [24, 'M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z'],
+    [24, 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z']
+  ];
   function drawChatScreen() {
     const { ctx, width, height } = chatScreen;
-    const ORANGE = '#f47b2a';
     ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, width, height);
     ctx.save();
-    rounded(ctx, 0, 0, width, height, 46);
+    rounded(ctx, 0, 0, width, height, 62);
     ctx.clip();
-    /* Drawn to be read from across the room: a light screen, a large portrait, a name and one big button. */
-    const DARK = '#1b1410';
+    /* A contact card in the site's own colours: night sky, a sunset behind the portrait, one yellow button. */
     const back = ctx.createLinearGradient(0, 0, 0, height);
-    back.addColorStop(0, '#fff3e4');
-    back.addColorStop(1, '#ffe2c4');
+    back.addColorStop(0, '#2c2166');
+    back.addColorStop(.55, '#17123a');
+    back.addColorStop(1, '#0f0c26');
     ctx.fillStyle = back;
     ctx.fillRect(0, 0, width, height);
+    const sun = ctx.createRadialGradient(width / 2, 250, 30, width / 2, 250, 300);
+    sun.addColorStop(0, 'rgba(255, 170, 110, .3)');
+    sun.addColorStop(.4, 'rgba(214, 90, 190, .16)');
+    sun.addColorStop(1, 'rgba(140, 90, 255, 0)');
+    ctx.fillStyle = sun;
+    ctx.fillRect(0, 0, width, 560);
     /* Status bar and the island. */
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = DARK;
-    ctx.font = `700 26px ${FONT.sans}`;
-    ctx.fillText('9:41', 40, 46);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `700 25px ${FONT.sans}`;
+    ctx.fillText('9:41', 44, 50);
     ctx.fillStyle = '#000000';
-    rounded(ctx, width / 2 - 62, 24, 124, 40, 20);
+    rounded(ctx, width / 2 - 60, 30, 120, 38, 19);
     ctx.fill();
-    ctx.fillStyle = DARK;
-    rounded(ctx, width - 86, 34, 44, 22, 7);
+    /* Signal bars and battery. */
+    ctx.fillStyle = '#ffffff';
+    for (let i = 0; i < 4; i++) ctx.fillRect(width - 122 + i * 9, 58 - (6 + i * 4), 6, 6 + i * 4);
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2.5;
+    rounded(ctx, width - 80, 39, 40, 20, 6);
+    ctx.stroke();
+    rounded(ctx, width - 76, 43, 26, 12, 3);
     ctx.fill();
-    /* Portrait. */
-    const cx = width / 2, cy = 236, r = 112;
-    ctx.fillStyle = ORANGE;
+    /* Portrait in a sunset ring. */
+    const cx = width / 2, cy = 250, r = 108;
+    const ring = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
+    ring.addColorStop(0, '#ffe27a');
+    ring.addColorStop(.5, '#ff7a5c');
+    ring.addColorStop(1, '#b04dff');
+    ctx.fillStyle = ring;
     ctx.beginPath();
-    ctx.arc(cx, cy, r + 9, 0, Math.PI * 2);
+    ctx.arc(cx, cy, r + 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#17123a';
+    ctx.beginPath();
+    ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
     ctx.fill();
     ctx.save();
     ctx.beginPath();
@@ -622,39 +751,61 @@ function buildStudio() {
       const side = Math.min(portrait.naturalWidth, portrait.naturalHeight);
       ctx.drawImage(portrait, (portrait.naturalWidth - side) / 2, (portrait.naturalHeight - side) / 2, side, side, cx - r, cy - r, r * 2, r * 2);
     } else {
-      ctx.fillStyle = '#e8d3bd';
+      ctx.fillStyle = '#3a2f6e';
       ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
     }
     ctx.restore();
+    /* A green "available" dot on the ring. */
+    ctx.fillStyle = '#17123a';
+    ctx.beginPath();
+    ctx.arc(cx + 80, cy + 80, 23, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#5fd35a';
+    ctx.beginPath();
+    ctx.arc(cx + 80, cy + 80, 15, 0, Math.PI * 2);
+    ctx.fill();
     /* Name and role. */
     ctx.textAlign = 'center';
-    ctx.fillStyle = DARK;
-    ctx.font = `700 64px ${FONT.display}`;
-    ctx.fillText('David Joy', cx, 426);
-    ctx.fillStyle = '#6b5a4e';
-    ctx.font = `600 27px ${FONT.sans}`;
-    ctx.fillText('Director,', cx, 482);
-    ctx.fillText('Solutions Architecture', cx, 518);
-    /* Where to find me: three round marks. */
-    [['in', -104], ['gh', 0], ['yt', 104]].forEach(([mark, dx]) => {
-      ctx.fillStyle = DARK;
-      ctx.beginPath();
-      ctx.arc(cx + dx, 612, 40, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#ffffff';
-      ctx.font = `700 30px ${FONT.sans}`;
-      ctx.fillText(mark, cx + dx, 614);
-    });
-    /* The one thing to do here. */
-    ctx.fillStyle = ORANGE;
-    rounded(ctx, 28, 692, width - 56, 96, 48);
-    ctx.fill();
     ctx.fillStyle = '#ffffff';
-    ctx.font = `700 40px ${FONT.sans}`;
-    ctx.fillText('Say hello', cx, 742);
+    ctx.font = `700 62px ${FONT.display}`;
+    ctx.fillText('David Joy', cx, 440);
+    ctx.fillStyle = '#cdbcff';
+    ctx.font = `600 26px ${FONT.sans}`;
+    ctx.fillText('Director,', cx, 494);
+    ctx.fillText('Solutions Architecture', cx, 528);
+    /* Where to find me: LinkedIn, GitHub, X and YouTube, as their own marks. */
+    PHONE_ICONS.forEach(([box, d], i) => {
+      const size = 74, gap = 14, x = cx - (size * 4 + gap * 3) / 2 + i * (size + gap), y = 582;
+      ctx.fillStyle = 'rgba(255, 255, 255, .12)';
+      rounded(ctx, x, y, size, size, 22);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, .22)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      const mark = 36, scale = mark / box;
+      ctx.save();
+      ctx.translate(x + (size - mark) / 2, y + (size - mark) / 2);
+      ctx.scale(scale, scale);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill(new Path2D(d));
+      ctx.restore();
+    });
+    /* The one thing to do here: a raised yellow button, like the ones on the site. */
+    ctx.fillStyle = '#9a7208';
+    rounded(ctx, 30, 706, width - 60, 92, 24);
+    ctx.fill();
+    const button = ctx.createLinearGradient(0, 696, 0, 786);
+    button.addColorStop(0, '#fff06a');
+    button.addColorStop(1, '#f7c81e');
+    ctx.fillStyle = button;
+    rounded(ctx, 30, 696, width - 60, 90, 24);
+    ctx.fill();
+    ctx.fillStyle = '#1a1430';
+    ctx.font = '400 42px "Anton", Impact, sans-serif';
+    ctx.fillText('SAY HELLO', cx, 744);
     ctx.textAlign = 'left';
-    ctx.fillStyle = 'rgba(27, 20, 16, .55)';
-    rounded(ctx, cx - 62, height - 22, 124, 7, 3.5);
+    ctx.fillStyle = 'rgba(255, 255, 255, .6)';
+    rounded(ctx, cx - 62, height - 20, 124, 7, 3.5);
     ctx.fill();
     ctx.restore();
     ctx.textBaseline = 'alphabetic';
@@ -894,10 +1045,10 @@ function buildStudio() {
 
   /* The day turns: the sun crosses the sky and every light follows it. */
   const fixedHour = new URLSearchParams(location.search).has('hour');
-  /* Day or night is the visitor's choice (the button in the bottom bar); until they choose, it follows Dallas. */
+  /* Night is the default; day or night is the visitor's choice (the button in the bottom bar). */
   const LIGHT_PHASE = { day: .55, night: .96 };
-  let lightMode = hour >= 7 && hour < 18 ? 'day' : 'night';
-  try { const saved = localStorage.getItem('idea-studio-light'); if (LIGHT_PHASE[saved]) lightMode = saved; } catch (_) { /* Storage is optional. */ }
+  let lightMode = 'night';
+  try { const saved = localStorage.getItem('idea-studio-light-v2'); if (LIGHT_PHASE[saved]) lightMode = saved; } catch (_) { /* Storage is optional. */ }
   let dayPhase = fixedHour ? (hour / 24) % 1 : LIGHT_PHASE[lightMode], exposure = 1;
   window.addEventListener('studio:light', event => {
     if (!LIGHT_PHASE[event.detail?.mode]) return;
@@ -1029,11 +1180,11 @@ function buildStudio() {
   function toy(object, name) {
     object.traverse(m => { if (m.isMesh) { m.userData.toy = name; pickables.push(m); } });
   }
-  const play = { strum: 0, amp: 0, ampOn: false, mouse: 0, keys: -1, sway: 0, cat: 0 };
+  const play = { strum: 0, amp: 0, ampOn: false, mouse: 0, keys: -1, sway: 0 };
 
-  const guitarAmp = group(14.35, -3, -4.3);
+  const guitarAmp = group(15.5, -3, -4.2);
   guitarAmp.userData.rigid = true;
-  guitarAmp.rotation.y = -.36;
+  guitarAmp.rotation.y = -.5;
   box(3.3, 2.9, 1.5, standard('#1b1d21'), guitarAmp, 0, 1.45, 0, .1);
   box(3.02, 2.02, .06, standard('#4a4136'), guitarAmp, 0, 1.18, .74, .03);
   for (let i = 0; i < 9; i++) box(.02, 1.9, .02, standard('#352e26'), guitarAmp, -1.28 + i * .32, 1.18, .775, 0);
@@ -1049,7 +1200,7 @@ function buildStudio() {
   toy(guitarAmp, 'amp');
 
   /* A T-style electric in mustard yellow: slab body, single cutaway, maple neck, six tuners in a row. */
-  const guitar = group(12.2, -2.5, -5.9);
+  const guitar = group(12.75, -1.72, -5.9);
   guitar.userData.rigid = true;
   guitar.scale.setScalar(1.12);
   guitar.rotation.z = -.07;
@@ -1243,6 +1394,8 @@ function buildStudio() {
   const storyMonitor = monitor(-3.25, 2.8, -1.9, 6.2, 3.1, storyScreen, .1, '#7fd0b0');
   register(storyMonitor, 'career', [0, 1.78, .1], 0);
   const mainMonitor = monitor(3.25, 2.8, -1.9, 6.2, 3.1, mainScreen, -.1, '#b9a3ff');
+  let mainScreenMesh = null;
+  mainMonitor.traverse(node => { if (node.material?.map === mainScreen.texture) mainScreenMesh = node; });
   box(.6, .2, .22, mat.black, mainMonitor, 0, 1.72, .02, .05);
   sphere(.055, mat.lens, mainMonitor, 0, 1.72, .13);
   note(storyMonitor, -2.72, -1.8, .1, .07, '#f5e26b', ['what if?']);
@@ -1357,7 +1510,7 @@ function buildStudio() {
   box(2.97, 1.96, .02, mat.black, lid, 0, 1.02, .037, .03);
   plane(2.82, 1.83, glowing(terminalScreen), lid, 0, 1.03, .05);
   contact(6.3, 1.5, 3.9, 2.9, .6, .006);
-  register(laptop, 'rig', [1.1, 2.3, -1.3]);
+  /* The laptop is scenery: Rig is reached from the Side projects panel. */
 
   /* ---------- Phone on a stand: say hello ---------- */
 
@@ -1365,23 +1518,52 @@ function buildStudio() {
   phone.userData.rigid = true;
   phone.rotation.y = .2;
   phone.scale.setScalar(1.22);
-  const handset = group(0, .1, 0, phone);
-  handset.rotation.x = -.36;
-  /* An orange phone: coloured frame and back, black glass, camera plateau across the top of the back. */
-  const phoneOrange = standard('#f0762a', .38, .35);
-  box(.86, 1.74, .085, phoneOrange, handset, 0, .87, 0, .085);
-  box(.83, 1.71, .01, mat.black, handset, 0, .87, .042, .005);
-  plane(.79, 1.66, glowing(chatScreen), handset, 0, .87, .049);
-  box(.012, .22, .03, phoneOrange, handset, .434, 1.16, 0, 0);
-  box(.012, .12, .03, phoneOrange, handset, -.434, 1.3, 0, 0);
-  box(.012, .12, .03, phoneOrange, handset, -.434, 1.12, 0, 0);
-  box(.78, .4, .03, standard('#d9661f', .34, .4), handset, 0, 1.47, -.055, .03);
-  for (const [x, y] of [[-.24, 1.54], [-.24, 1.38], [-.06, 1.46]]) {
-    cylinder(.075, .075, .03, mat.black, handset, x, y, -.075, 20).rotation.x = Math.PI / 2;
-    cylinder(.045, .045, .032, standard('#20242c', .15, .6), handset, x, y, -.078, 16).rotation.x = Math.PI / 2;
+  /* The handset floats on a magnetic stand: a round weighted base, a slim post, and a puck behind the phone. */
+  const handset = group(0, .34, .06, phone);
+  handset.rotation.x = -.3;
+  /* An orange phone: an even coloured frame round black glass, side buttons, camera plateau on the back. */
+  const phoneOrange = standard('#f0762a', .38, .35), phoneDeep = standard('#d9661f', .34, .4);
+  const slab = (width, height, radius) => {
+    const shape = new THREE.Shape(), x = -width / 2, y = -height / 2;
+    shape.moveTo(x + radius, y);
+    shape.lineTo(x + width - radius, y);
+    shape.quadraticCurveTo(x + width, y, x + width, y + radius);
+    shape.lineTo(x + width, y + height - radius);
+    shape.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    shape.lineTo(x + radius, y + height);
+    shape.quadraticCurveTo(x, y + height, x, y + height - radius);
+    shape.lineTo(x, y + radius);
+    shape.quadraticCurveTo(x, y, x + radius, y);
+    return shape;
+  };
+  /* The body and the glass are rounded slabs, so the phone's corners follow the screen's. */
+  const shell = new THREE.ExtrudeGeometry(slab(.88, 1.76, .17), { depth: .09, bevelEnabled: false, curveSegments: 12 });
+  shell.translate(0, 0, -.045);
+  mesh(shell, phoneOrange, handset, 0, .89, 0);
+  const glass = mesh(new THREE.ShapeGeometry(slab(.85, 1.73, .155), 10), new THREE.MeshBasicMaterial({ color: '#050506' }), handset, 0, .89, .0465);
+  glass.castShadow = false;
+  /* The screen is cut to the same rounded outline, with the picture mapped across it. */
+  const display = new THREE.ShapeGeometry(slab(.8, 1.68, .125), 10);
+  {
+    const at = display.attributes.position, uv = display.attributes.uv;
+    for (let i = 0; i < at.count; i++) uv.setXY(i, at.getX(i) / .8 + .5, at.getY(i) / 1.68 + .5);
   }
-  box(.7, .1, .9, mat.darkMetal, phone, 0, .05, -.2, .03);
-  box(.5, .9, .08, mat.darkMetal, phone, 0, .45, -.42, .02).rotation.x = -.36;
+  const face = mesh(display, glowing(chatScreen), handset, 0, .89, .052);
+  face.castShadow = false;
+  box(.014, .24, .034, phoneDeep, handset, .455, 1.18, 0, 0);
+  box(.014, .1, .034, phoneDeep, handset, -.455, 1.38, 0, 0);
+  box(.014, .14, .034, phoneDeep, handset, -.455, 1.2, 0, 0);
+  box(.014, .14, .034, phoneDeep, handset, -.455, 1.02, 0, 0);
+  box(.8, .4, .03, phoneDeep, handset, 0, 1.5, -.058, .03);
+  for (const [x, y] of [[-.24, 1.57], [-.24, 1.41], [-.06, 1.49]]) {
+    cylinder(.075, .075, .03, mat.black, handset, x, y, -.078, 20).rotation.x = Math.PI / 2;
+    cylinder(.045, .045, .032, standard('#20242c', .15, .6), handset, x, y, -.081, 16).rotation.x = Math.PI / 2;
+  }
+  cylinder(.3, .3, .05, mat.aluminium, handset, 0, .74, -.07, 32).rotation.x = Math.PI / 2;
+  cylinder(.5, .54, .07, mat.aluminium, phone, 0, .035, -.14, 40);
+  cylinder(.4, .4, .012, standard('#6f747b', .5, .6), phone, 0, .076, -.14, 40);
+  beam([0, .07, -.3], [0, 1.0, -.3], .05, mat.aluminium, phone);
+  sphere(.085, mat.aluminium, phone, 0, 1.0, -.3);
   contact(-2.95, 1.9, 1.5, 1.5, .5, .006);
   register(phone, 'contact', [-.95, 1.35, 0]);
 
@@ -1394,15 +1576,28 @@ function buildStudio() {
   /* A broadcast mic hung from the boom, lying level and pointed at the chair: local +z is the front. */
   const lay = m => { m.rotation.x = Math.PI / 2; return m; };
   const HEAD = 2.55;
-  /* Cream enamel barrel with brass fittings, a purple band, and a chrome grille head: built to be seen. */
-  const enamel = standard('#f3ecd9'), brass = standard('#d9a441'), grille = standard('#a3acb5');
+  /* A studio mic in three tones: a violet barrel that deepens toward the back, silver collars and grille,
+     and graphite hardware. */
+  const barrelSheet = surface(8, 256);
+  {
+    const { ctx, width, height } = barrelSheet;
+    const fade = ctx.createLinearGradient(0, 0, 0, height);
+    fade.addColorStop(0, '#7c52f5');
+    fade.addColorStop(.5, '#5a2be0');
+    fade.addColorStop(1, '#2e1b78');
+    ctx.fillStyle = fade;
+    ctx.fillRect(0, 0, width, height);
+    barrelSheet.texture.needsUpdate = true;
+  }
+  const enamel = new THREE.MeshToonMaterial({ map: barrelSheet.texture, gradientMap: toonRamp });
+  const brass = mat.silver, grille = standard('#c9d0d8'), yoke = standard('#2f3238'), aqua = standard('#2f3238');
   lay(cylinder(.3, .3, 1.25, enamel, mic, 0, HEAD, -.15, 40));
   lay(cylinder(.318, .318, .1, brass, mic, 0, HEAD, .44, 40));
-  lay(cylinder(.312, .312, .09, standard(ACCENT), mic, 0, HEAD, -.5, 40));
+  lay(cylinder(.312, .312, .09, aqua, mic, 0, HEAD, -.5, 40));
   lay(cylinder(.318, .29, .12, brass, mic, 0, HEAD, -.8, 40));
   lay(mesh(new THREE.CapsuleGeometry(.4, .46, 8, 28), grille, mic, 0, HEAD, .92));
-  for (const z of [.62, .72, .82, .92, 1.02, 1.12, 1.22]) {
-    const band = mesh(new THREE.TorusGeometry(.402, .01, 6, 40), mat.charcoal, mic, 0, HEAD, z);
+  for (let i = 0; i < 7; i++) {
+    const band = mesh(new THREE.TorusGeometry(.402, .01, 6, 40), mat.charcoal, mic, 0, HEAD, .62 + i * .1);
     band.castShadow = false;
   }
   for (let i = 0; i < 6; i++) {
@@ -1449,19 +1644,19 @@ function buildStudio() {
   stickerArc.castShadow = false;
   /* Yoke and swivel. */
   for (const x of [-.39, .39]) {
-    box(.06, .86, .14, brass, mic, x, HEAD + .4, -.5, .02);
-    const knob = cylinder(.08, .08, .08, mat.silver, mic, x * 1.1, HEAD, -.5, 20);
+    box(.06, .86, .14, yoke, mic, x, HEAD + .4, -.5, .02);
+    const knob = cylinder(.09, .09, .08, brass, mic, x * 1.1, HEAD, -.5, 20);
     knob.rotation.z = Math.PI / 2;
   }
-  box(.88, .08, .16, brass, mic, 0, HEAD + .82, -.5, .02);
+  box(.88, .08, .16, yoke, mic, 0, HEAD + .82, -.5, .02);
   cylinder(.06, .06, .4, mat.charcoal, mic, 0, HEAD + 1.02, -.5, 14);
   /* Pop filter on a gooseneck, and the cable back up the arm. */
   const popZ = 1.72;
-  mesh(new THREE.TorusGeometry(.52, .034, 10, 44), brass, mic, 0, HEAD, popZ);
+  mesh(new THREE.TorusGeometry(.52, .036, 10, 44), yoke, mic, 0, HEAD, popZ);
   const mesh2 = mesh(new THREE.CircleGeometry(.52, 40), new THREE.MeshStandardMaterial({ color: '#2a2530', transparent: true, opacity: .2, roughness: 1, side: THREE.DoubleSide }), mic, 0, HEAD, popZ);
   mesh2.castShadow = false;
   wire([[.3, HEAD + .84, -.5], [.62, HEAD + 1.0, .5], [.5, HEAD + .86, 1.3], [.12, HEAD + .52, popZ]], .028, mat.black, mic);
-  wire([[0, HEAD, -.86], [0, HEAD - .2, -1.25], [-.1, HEAD + .6, -1.1], [0, HEAD + 1.2, -.5]], .032, standard(ACCENT), mic);
+  wire([[0, HEAD, -.86], [0, HEAD - .2, -1.25], [-.1, HEAD + .6, -1.1], [0, HEAD + 1.2, -.5]], .032, mat.black, mic);
   register(mic, 'podcast', [0, HEAD + 1.75, 0]);
   const micShadow = plane(2.2, 1.6, new THREE.MeshBasicMaterial({ map: shadowTexture, transparent: true, opacity: .3, depthWrite: false }), scene, mic.position.x, .006, mic.position.z);
   micShadow.rotation.x = -Math.PI / 2;
@@ -1474,10 +1669,11 @@ function buildStudio() {
   const UPPER = 4, LOWER = 4.4;
   box(.6, .5, .5, mat.black, scene, shoulder.x, -.05, shoulder.z, .05);
   beam([shoulder.x, 0, shoulder.z], [shoulder.x, shoulder.y, shoulder.z], .09, mat.black, scene);
+  const armPaint = mat.charcoal;
   const rails = [-.08, .08].map(offset => ({
     offset,
-    upper: cylinder(.05, .05, 1, mat.charcoal, scene, 0, 0, 0, 12),
-    lower: cylinder(.05, .05, 1, mat.charcoal, scene, 0, 0, 0, 12)
+    upper: cylinder(.05, .05, 1, armPaint, scene, 0, 0, 0, 12),
+    lower: cylinder(.05, .05, 1, armPaint, scene, 0, 0, 0, 12)
   }));
   sphere(.17, mat.black, scene, shoulder.x, shoulder.y, shoulder.z);
   const elbowJoint = sphere(.17, mat.black, scene, 0, 0, 0), wristJoint = sphere(.15, mat.black, scene, 0, 0, 0);
@@ -1508,9 +1704,9 @@ function buildStudio() {
 
   /* ---------- Sticker board on the wall under the title: where I have worked, and what I work with ---------- */
 
-  const board = group(-12.7, 5.1, -5.96);
-  box(5.5, 4.6, .1, standard('#4a3526', .6), board, 0, 0, 0, .03);
-  box(5.2, 4.3, .06, standard('#c79f6f', .95), board, 0, 0, .04, .01);
+  const board = group(-12.7, 5.3, -5.96);
+  box(5.7, 5.3, .1, standard('#4a3526', .6), board, 0, 0, 0, .03);
+  box(5.4, 5, .06, standard('#c79f6f', .95), board, 0, 0, .04, .01);
   /* Each sticker is a white die-cut label carrying the brand's own mark, loaded from assets/logos.
      `tint` colours a single-colour mark with the brand colour; full-colour logos are drawn as they are. */
   function sticker(x, y, w, h, tilt, logo, label, tint) {
@@ -1519,7 +1715,7 @@ function buildStudio() {
     m.rotation.z = tilt;
     const entry = { sheet, label, image: null };
     stickerSheets.push(entry);
-    fetch(`assets/logos/${logo}.svg`).then(response => response.ok ? response.text() : Promise.reject()).then(source => {
+    if (logo) fetch(`assets/logos/${logo}.svg`).then(response => response.ok ? response.text() : Promise.reject()).then(source => {
       /* Give the drawing an explicit size (canvas needs one) and, for one-colour marks, the brand colour. */
       const sized = source.replace(/<svg\b/, tint ? `<svg width="256" height="256" fill="${tint}"` : (/<svg[^>]*\swidth=/.test(source) ? '<svg' : '<svg width="512" height="512"'));
       const image = new Image();
@@ -1558,22 +1754,31 @@ function buildStudio() {
       sheet.texture.needsUpdate = true;
     }
   }
-  /* Where I have worked and studied. */
-  sticker(-.89, 1.56, 2.3, .6, .03, 'cockroachlabs', 'Cockroach Labs', '#0b0f0c');
-  sticker(1.24, 1.58, 1.6, .6, -.04, 'datastax', 'DataStax', '#000000');
-  sticker(-1.53, .78, 1.55, .6, -.03, 'walmart', 'Walmart', '#0071CE');
-  sticker(-.02, .8, 1.1, .6, .05, 'fiserv', '');
-  sticker(1.51, .77, 1.6, .6, -.02, 'utdallas', 'UT Dallas');
-  /* What I work with. */
-  sticker(-1.28, 0, 1.95, .6, .02, 'claude', 'Claude Code', '#D97757');
-  sticker(.45, .02, 1.15, .6, -.05, 'modelcontextprotocol', 'MCP', '#000000');
-  sticker(1.73, 0, 1.05, .6, .04, 'aws', 'AWS', '#232F3E');
-  sticker(-1.63, -.78, 1.4, .6, -.04, 'python', 'Python', '#3776AB');
-  sticker(.07, -.77, 1.65, .6, .03, 'terraform', 'Terraform', '#844FBA');
-  sticker(1.7, -.79, 1.25, .6, -.03, 'docker', 'Docker', '#2496ED');
-  sticker(-1.45, -1.56, 1.7, .6, .04, 'langchain', 'LangChain', '#1C3C3C');
-  note(board, .55, -1.56, .09, -.07, '#f5e26b', ['what next?']);
-  register(board, 'skills', [0, 2.45, .1], 0);
+  /* Row by row: where I have worked and studied, then what I work with (agents, cloud, data, code, mobile).
+     Each row is centred on the board; widths follow the length of the name. */
+  const STICKER_H = .42, STICKER_GAP = .1, ROW_PITCH = .53;
+  [
+    [['cockroachlabs', 'Cockroach Labs', '#0b0f0c'], ['datastax', 'DataStax', '#000000'], ['fiserv', ''], ['utdallas', 'UT Dallas']],
+    [['claude', 'Claude Code', '#D97757'], ['openai', 'Codex', '#111111'], ['modelcontextprotocol', 'MCP', '#000000'], ['langchain', 'LangChain', '#1C3C3C']],
+    [['aws', 'AWS', '#232F3E'], ['microsoftazure', 'Azure', '#0078D4'], ['googlecloud', 'Google Cloud', '#4285F4'], ['kubernetes', 'Kubernetes', '#326CE5']],
+    [['docker', 'Docker', '#2496ED'], ['terraform', 'Terraform', '#844FBA'], ['', 'CI/CD'], ['postgresql', 'PostgreSQL', '#4169E1']],
+    [['apachecassandra', 'Cassandra', '#1287B1'], ['apachekafka', 'Kafka', '#231F20'], ['apachespark', 'Spark', '#E25A1C'], ['redis', 'Redis', '#D82C20'], ['python', 'Python', '#3776AB']],
+    [['snowflake', 'Snowflake', '#29B5E8'], ['googlebigquery', 'BigQuery', '#669DF6'], ['', 'Typesense'], ['tensorflow', 'TensorFlow', '#FF6F00']],
+    [['react', 'React.js', '#149ECA'], ['nextdotjs', 'Next.js', '#000000'], ['threedotjs', 'Three.js', '#000000'], ['react', 'React Native', '#149ECA']],
+    [['apple', 'iOS', '#111111'], ['expo', 'Expo', '#000020'], ['', 'Design'], ['', 'Marketing'], ['', 'Developer Relations']],
+    [['', 'Product Management'], ['', 'Project Management']]
+  ].forEach((row, r, rows) => {
+    const widths = row.map(([logo, label]) => STICKER_H * (label ? (logo ? 1.2 : .55) + .175 * label.length : 1.85));
+    const total = widths.reduce((sum, v) => sum + v, 0) + STICKER_GAP * (row.length - 1);
+    let x = -total / 2 + ((r * 7) % 3 - 1) * .09;
+    const y = (rows.length - 1) / 2 * ROW_PITCH - r * ROW_PITCH;
+    row.forEach(([logo, label, tint], i) => {
+      const n = r * 4 + i;
+      sticker(x + widths[i] / 2, y + ((n * 5) % 3 - 1) * .012, widths[i], STICKER_H, ((n * 7) % 5 - 2) * .016, logo, label, tint);
+      x += widths[i] + STICKER_GAP;
+    });
+  });
+  register(board, 'skills', [0, 2.8, .1], 0);
 
   /* ---------- Writing: a teal folder with a stack of pages and a pen ---------- */
 
@@ -1668,40 +1873,110 @@ function buildStudio() {
     }
     plant(-16.1, -3, -4.3, 1.9, 13, .5);
     plant(8.35, 0, -2.3, .82, 9, .62);
-    /* A woven rug under the desk, in muted colours so it sits under the room instead of leading it. */
-    const rugSheet = surface(1024, 512);
+    /* A flat-woven rug under the desk: tasselled ends, a cream edge, a zigzag band and a teal field of stepped
+       diamonds. The middle sits under the desk, so the borders and the front row of motifs carry the design. */
+    const rugSheet = surface(2048, 1024);
     {
       const { ctx, width, height } = rugSheet;
-      ctx.fillStyle = '#a59a84';
-      ctx.fillRect(0, 0, width, height);
-      ctx.fillStyle = '#22383f';
-      ctx.fillRect(26, 26, width - 52, height - 52);
-      ctx.strokeStyle = '#8f7c4c';
-      ctx.lineWidth = 10;
-      ctx.strokeRect(52, 52, width - 104, height - 104);
-      ctx.strokeStyle = '#7d4f3d';
+      const TEAL = '#1d3436', DEEP = '#182c2e', CREAM = '#5f5d4f', RUST = '#4a3530', GOLD = '#55503a', SAND = '#4d4f45';
+      const END = 46;
+      ctx.clearRect(0, 0, width, height);
+      /* Tassels on the two short ends. */
+      ctx.strokeStyle = CREAM;
       ctx.lineWidth = 5;
-      ctx.strokeRect(74, 74, width - 148, height - 148);
-      for (let i = 0; i < 7; i++) {
-        const cx = 152 + i * 120, cy = height / 2, big = i % 2 === 0;
-        ctx.fillStyle = big ? '#7f7450' : '#6f6c60';
-        ctx.beginPath();
-        ctx.moveTo(cx, cy - (big ? 96 : 60));
-        ctx.lineTo(cx + (big ? 52 : 34), cy);
-        ctx.lineTo(cx, cy + (big ? 96 : 60));
-        ctx.lineTo(cx - (big ? 52 : 34), cy);
-        ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = big ? '#7d4f3d' : '#22383f';
-        ctx.beginPath();
-        ctx.arc(cx, cy, big ? 16 : 10, 0, Math.PI * 2);
-        ctx.fill();
+      ctx.lineCap = 'round';
+      for (let y = 14; y < height - 8; y += 15) {
+        const wob = Math.sin(y * 1.7) * 4;
+        ctx.beginPath(); ctx.moveTo(END + 2, y); ctx.lineTo(5, y + wob); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(width - END - 2, y); ctx.lineTo(width - 5, y - wob); ctx.stroke();
       }
-      ctx.fillStyle = 'rgba(60, 20, 10, .07)';
-      for (let row = 30; row < height - 30; row += 6) ctx.fillRect(26, row, width - 52, 2);
+      const band = (inset, colour) => {
+        ctx.fillStyle = colour;
+        ctx.fillRect(END + inset, inset, width - 2 * (END + inset), height - 2 * inset);
+      };
+      band(0, CREAM);
+      band(22, RUST);
+      band(34, DEEP);
+      /* Zigzag band between two thin gold lines. */
+      const Z0 = 34, ZW = 62;
+      const zig = (x0, y0, x1, y1, n, flip) => {
+        const horizontal = y0 === y1, len = horizontal ? x1 - x0 : y1 - y0, step = len / n;
+        for (let i = 0; i < n; i++) {
+          ctx.fillStyle = i % 2 ? GOLD : CREAM;
+          ctx.beginPath();
+          if (horizontal) {
+            const base = flip ? y0 + ZW : y0, tip = flip ? y0 + 8 : y0 + ZW - 8;
+            ctx.moveTo(x0 + i * step, base); ctx.lineTo(x0 + (i + .5) * step, tip); ctx.lineTo(x0 + (i + 1) * step, base);
+          } else {
+            const base = flip ? x0 + ZW : x0, tip = flip ? x0 + 8 : x0 + ZW - 8;
+            ctx.moveTo(base, y0 + i * step); ctx.lineTo(tip, y0 + (i + .5) * step); ctx.lineTo(base, y0 + (i + 1) * step);
+          }
+          ctx.closePath();
+          ctx.fill();
+        }
+      };
+      const L = END + Z0, R = width - END - Z0, T = Z0, B = height - Z0;
+      zig(L + ZW, T, R - ZW, T, 30, false);
+      zig(L + ZW, B - ZW, R - ZW, B - ZW, 30, true);
+      zig(L, T + ZW, L, B - ZW, 13, false);
+      zig(R - ZW, T + ZW, R - ZW, B - ZW, 13, true);
+      /* Corner blocks. */
+      [[L, T], [R - ZW, T], [L, B - ZW], [R - ZW, B - ZW]].forEach(([x, y]) => {
+        ctx.fillStyle = RUST; ctx.fillRect(x + 6, y + 6, ZW - 12, ZW - 12);
+        ctx.fillStyle = GOLD; ctx.fillRect(x + 22, y + 22, ZW - 44, ZW - 44);
+      });
+      band(Z0 + ZW, GOLD);
+      band(Z0 + ZW + 8, CREAM);
+      band(Z0 + ZW + 20, RUST);
+      band(Z0 + ZW + 30, TEAL);
+      /* The field. */
+      const F = Z0 + ZW + 30, fx0 = END + F, fx1 = width - END - F, fy0 = F, fy1 = height - F;
+      const stepped = (cx, cy, rx, ry, steps, colours) => {
+        colours.forEach((colour, k) => {
+          const s = 1 - k / colours.length;
+          ctx.fillStyle = colour;
+          for (let i = 0; i < steps; i++) {
+            const t = (i + 1) / steps, w2 = rx * s * (1 - (i / steps)), h2 = ry * s * t;
+            ctx.fillRect(cx - w2, cy - h2, w2 * 2, h2 * 2);
+          }
+        });
+      };
+      /* A lattice of small diamonds, then three large medallions across the middle. */
+      ctx.fillStyle = DEEP;
+      for (let row = 0, y = fy0 + 44; y < fy1 - 20; y += 62, row++) {
+        for (let x = fx0 + 50 + (row % 2) * 48; x < fx1 - 30; x += 96) {
+          ctx.beginPath();
+          ctx.moveTo(x, y - 20); ctx.lineTo(x + 20, y); ctx.lineTo(x, y + 20); ctx.lineTo(x - 20, y);
+          ctx.closePath();
+          ctx.fill();
+        }
+      }
+      const cy = height / 2, span = fx1 - fx0;
+      [.5, .17, .83].forEach((u, i) => {
+        const cx = fx0 + span * u, big = i === 0;
+        stepped(cx, cy, big ? 300 : 190, big ? 300 : 250, 7, [CREAM, RUST, DEEP, GOLD, TEAL, CREAM]);
+      });
+      /* Small rust and gold stars between the medallions, top and bottom, where the desk does not hide them. */
+      [.335, .665].forEach(u => [fy0 + 120, fy1 - 120].forEach(y => {
+        stepped(fx0 + span * u, y, 70, 70, 4, [GOLD, RUST, CREAM]);
+      }));
+      [.06, .94].forEach(u => [fy0 + 70, fy1 - 70].forEach(y => stepped(fx0 + span * u, y, 34, 34, 3, [SAND, RUST])));
+      /* Weave: fine ribs across the cloth, and a little unevenness in the dye. */
+      ctx.globalCompositeOperation = 'source-atop';
+      ctx.fillStyle = 'rgba(20, 12, 8, .09)';
+      for (let y = 0; y < height; y += 6) ctx.fillRect(0, y, width, 2);
+      ctx.fillStyle = 'rgba(255, 240, 210, .035)';
+      for (let x = 0; x < width; x += 9) ctx.fillRect(x, 0, 3, height);
+      for (let i = 0; i < 70; i++) {
+        const x = (i * 397) % width, y = (i * 211) % height;
+        ctx.fillStyle = i % 2 ? 'rgba(255, 235, 200, .04)' : 'rgba(10, 20, 24, .05)';
+        ctx.fillRect(x, y, 180 + (i * 53) % 220, 10 + (i * 7) % 16);
+      }
+      ctx.globalCompositeOperation = 'source-over';
+      rugSheet.texture.anisotropy = 8;
       rugSheet.texture.needsUpdate = true;
     }
-    const rug = plane(22, 10.4, new THREE.MeshToonMaterial({ map: rugSheet.texture, gradientMap: toonRamp }), scene, 0, -2.975, 1.2);
+    const rug = plane(22.6, 10.6, new THREE.MeshToonMaterial({ map: rugSheet.texture, gradientMap: toonRamp, transparent: true, alphaTest: .4 }), scene, 0, -2.975, 1.2);
     rug.rotation.x = -Math.PI / 2;
     rug.raycast = () => {};
 
@@ -1719,25 +1994,6 @@ function buildStudio() {
     tree(9.4, 2.4, -17, 1.9);
     tree(25, 4.2, 3.5, 2.4);
     tree(27, 2.8, -6, 2);
-
-    /* A ginger cat asleep in the sun from the side window. Click it. */
-    cat = group(12.4, -2.95, -.9);
-    cat.rotation.y = -.5;
-    cat.scale.setScalar(1.45);
-    const ginger = standard('#e08a3a'), cream = standard('#f6e6cc');
-    sphere(1, ginger, cat, 0, .3, 0, .78, .36, .56);
-    sphere(1, cream, cat, .2, .2, .3, .34, .2, .26);
-    catHead = group(.6, .34, .3, cat);
-    sphere(.29, ginger, catHead, 0, 0, 0, 1, .86, .95);
-    for (const side of [-1, 1]) {
-      const ear = mesh(new THREE.ConeGeometry(.1, .17, 4), ginger, catHead, .02, .25, side * .15);
-      ear.rotation.x = side * .25;
-    }
-    sphere(.035, standard('#d86a6a'), catHead, .27, -.03, 0);
-    for (const side of [-1, 1]) box(.02, .014, .09, standard('#3a2418'), catHead, .23, .05, side * .11, 0);
-    const tail = mesh(new THREE.TorusGeometry(.56, .075, 8, 28, Math.PI * 1.15), ginger, cat, .02, .1, .12);
-    tail.rotation.set(Math.PI / 2, 0, 2.2);
-    toy(cat, 'cat');
 
     /* The mug, by the keyboard. */
     const mug = group(4.05, .03, 1.45);
@@ -1854,7 +2110,7 @@ function buildStudio() {
     podcast: { position: [-4.4, 3.6, 9.4], look: [-7.2, 3.1, 2.6] },
     writing: { position: [-4.2, 4.6, 8.2], look: [-4.9, .1, 2.3] },
     talks: { position: [10.2, 5.8, 7.4], look: [11, 5.8, -5.96] },
-    skills: { position: [-11.2, 2.8, 6.6], look: [-12.7, 2.55, -5.96] }
+    skills: { position: [-11.2, 3.6, 7.2], look: [-12.7, 3.55, -5.96] }
   };
   for (const view of Object.values(focusViews)) {
     view.position = new THREE.Vector3(...view.position);
@@ -1968,8 +2224,8 @@ function buildStudio() {
   }
 
   const TOY_HINTS = {
-    'toy:guitar': 'Strum it', 'toy:amp': 'Switch the amp on or off', 'toy:mouse': 'Click: next page on the Work screen',
-    'toy:keys': 'Type something', 'toy:cat': 'Say hello to the cat', podcast: 'Click to open the podcast · drag to move the mic'
+    'toy:guitar': 'Strum it', 'toy:amp': 'Switch the amp on or off', 'toy:mouse': 'Click: next side project on the screen',
+    'toy:keys': 'Type something', podcast: 'Click to open the podcast · drag to move the mic'
   };
   function setHovered(key) {
     if (key === hoverKey) return;
@@ -2001,9 +2257,10 @@ function buildStudio() {
       sound?.fx('amp', play.ampOn);
     } else if (name === 'mouse') {
       play.mouse = 1;
+      screenClick = 1;
+      showProject(projectIndex + 1);
       sound?.fx('click');
     } else if (name === 'keys') { play.keys = 0; sound?.fx('keys'); }
-    else if (name === 'cat') { play.cat = 1; sound?.fx('cat'); }
     requestDraw();
   }
   function animateToys(dt) {
@@ -2014,6 +2271,15 @@ function buildStudio() {
     guitarAmp.scale.setScalar(1 + play.amp * .03);
     play.mouse = still ? 0 : play.mouse * Math.exp(-dt * 9);
     deskMouse.position.z = 2 - play.mouse * .14;
+    /* The picker: the click ring fades, and left alone the screen moves on by itself. */
+    if (screenClick > 0) {
+      screenClick = still || screenClick < .03 ? 0 : screenClick * Math.exp(-dt * 5);
+      drawMainScreen();
+    }
+    if (!still && !screenCursor && !panelOpen) {
+      projectTimer += dt;
+      if (projectTimer > 7) showProject(projectIndex + 1);
+    }
     if (play.keys >= 0 && !still) {
       play.keys += dt / .62;
       /* A wave of key presses runs left to right, with a glow rising from under the caps. */
@@ -2032,19 +2298,15 @@ function buildStudio() {
       wisp.mesh.material.opacity = Math.sin(life * Math.PI) * .32;
       wisp.mesh.quaternion.copy(camera.quaternion);
     }
-    if (cat) {
-      /* The cat breathes in its sleep, and lifts its head when touched. */
-      play.cat = still ? 0 : play.cat * Math.exp(-dt * 1.1);
-      cat.scale.y = 1.45 * (1 + (still ? 0 : Math.sin(elapsed * 1.6) * .025));
-      catHead.position.y = .34 + play.cat * .16;
-      catHead.rotation.z = play.cat * .35;
-    }
     if (micGlow) {
       /* The on-air glow breathes, and the meter dances while music plays. */
       micGlow.quaternion.copy(camera.quaternion).premultiply(mic.getWorldQuaternion(micTurn).invert());
       micGlow.material.opacity = still ? .3 : .26 + Math.sin(elapsed * 2.4) * .1;
-      const level = still ? 2 : soundOn ? 2.4 + Math.sin(elapsed * 9.6) * 1.3 + Math.sin(elapsed * 23) * .9 : 1 + Math.sin(elapsed * 1.5) * .4;
-      micMeter.forEach((light, i) => light.lamp.color.copy(i < level ? light.on : light.off));
+      /* The light bands chase from back to front: a slow roll at rest, quick when the music is on. */
+      micMeter.forEach((light, i) => {
+        const lit = still ? 1 : clamp(.5 + Math.sin(elapsed * (soundOn ? 9 : 2.6) - i * .9) * .75, 0, 1);
+        light.lamp.color.copy(light.off).lerp(light.on, lit);
+      });
     }
     play.sway = still ? 0 : play.sway * Math.exp(-dt * 2.2);
     mic.rotation.z = Math.sin(elapsed * 6.5) * play.sway * .07;
@@ -2075,6 +2337,18 @@ function buildStudio() {
   canvas.addEventListener('pointermove', event => {
     const key = pick(event);
     if (!dragging) setHovered(key);
+    /* Over the Side projects monitor, the pointer is the cursor on its screen. */
+    const spot = key === 'work' && mainScreenMesh ? raycaster.intersectObject(mainScreenMesh, false)[0]?.uv : null;
+    if (spot || screenCursor) {
+      screenCursor = spot ? { x: spot.x * mainScreen.width, y: (1 - spot.y) * mainScreen.height } : null;
+      if (screenCursor && screenCursor.y > TAB.y - 26) {
+        const tab = Math.floor((screenCursor.x - TAB.x + TAB.gap / 2) / (tabWidth() + TAB.gap));
+        if (tab >= 0 && tab < sideProjects.length) projectIndex = tab;
+      }
+      projectTimer = 0;
+      drawMainScreen();
+      requestDraw();
+    }
     if (dragging) {
       const dx = event.clientX - downX, dy = event.clientY - downY;
       moved = moved || Math.abs(dx) + Math.abs(dy) > 6;
@@ -2122,7 +2396,10 @@ function buildStudio() {
     if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
   });
   canvas.addEventListener('pointercancel', () => { dragging = false; canvas.classList.remove('is-dragging'); });
-  canvas.addEventListener('pointerleave', () => { if (!dragging) { pointer.set(0, 0); setHovered(null); } });
+  canvas.addEventListener('pointerleave', () => {
+    if (!dragging) { pointer.set(0, 0); setHovered(null); }
+    if (screenCursor) { screenCursor = null; drawMainScreen(); requestDraw(); }
+  });
   canvas.addEventListener('wheel', event => {
     if (panelOpen || introGoal < 1) return;
     event.preventDefault();
@@ -2179,6 +2456,15 @@ function buildStudio() {
     focusKey = section && focusViews[section] ? section : null;
     if (focusKey) lastFocusKey = focusKey;
     if (panelOpen) { introGoal = 1; if (exploring) setExploring(false); }
+    setHovered(null);
+    requestDraw();
+  });
+  /* The guided tour borrows the close-ups without opening a panel. */
+  window.addEventListener('studio:tour', event => {
+    if (panelOpen) return;
+    const section = event.detail?.section;
+    focusKey = section && focusViews[section] ? section : null;
+    if (focusKey) { lastFocusKey = focusKey; if (exploring) setExploring(false); }
     setHovered(null);
     requestDraw();
   });
