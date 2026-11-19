@@ -15,16 +15,16 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Caveat:wght@600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="studio.css?v=desk98">
-  <link rel="stylesheet" href="world.css?v=desk98">
-  <link rel="stylesheet" href="library.css?v=desk98">
-  <link rel="stylesheet" href="game.css?v=desk98">
-  <script defer src="content.js?v=desk98"></script>
-  <script defer src="library.js?v=desk98"></script>
-  <script defer src="app.js?v=desk98"></script>
-  <script defer src="audio.js?v=desk98"></script>
-  <script type="module" src="world.js?v=desk98"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Caveat:wght@600&family=JetBrains+Mono:wght@400;500;700&family=Luckiest+Guy&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="studio.css?v=desk118">
+  <link rel="stylesheet" href="world.css?v=desk118">
+  <link rel="stylesheet" href="library.css?v=desk118">
+  <link rel="stylesheet" href="game.css?v=desk118">
+  <script defer src="content.js?v=desk118"></script>
+  <script defer src="library.js?v=desk118"></script>
+  <script defer src="app.js?v=desk118"></script>
+  <script defer src="audio.js?v=desk118"></script>
+  <script type="module" src="world.js?v=desk118"></script>
 </head>
 <body>
   <a class="skip-link" href="#work" data-open="work">Explore the portfolio</a>
@@ -33,7 +33,7 @@
     <a class="monogram" href="#" aria-label="David Joy, home"><span class="monogram-mark">dj</span></a>
     <nav class="site-nav" aria-label="Main navigation">
       <div class="site-sections">
-        <button type="button" data-open="work">Work</button>
+        <button type="button" data-open="work">Projects</button>
         <button type="button" data-open="podcast">Podcast</button>
         <button type="button" data-open="writing">Writing</button>
         <button type="button" data-open="talks">Talks</button>
@@ -56,8 +56,8 @@
     <section class="scene-viewport" aria-label="David’s desk, in 3D. Each object opens a section.">
       <div class="scene-world" id="scene-world">
         <canvas id="studio-canvas" aria-hidden="true"></canvas>
-        <button type="button" class="scene-hotspot" data-open="work" aria-label="Work: projects on the right monitor"><i aria-hidden="true"></i><span>Work <b aria-hidden="true">↗</b></span></button>
-        <button type="button" class="scene-hotspot" data-open="career" aria-label="My career: on the left monitor"><i aria-hidden="true"></i><span>My career <b aria-hidden="true">↗</b></span></button>
+        <button type="button" class="scene-hotspot" data-open="work" aria-label="Projects: on the right monitor"><i aria-hidden="true"></i><span>Projects <b aria-hidden="true">↗</b></span></button>
+        <button type="button" class="scene-hotspot" data-open="career" aria-label="Experience: my career, on the left monitor"><i aria-hidden="true"></i><span>Experience <b aria-hidden="true">↗</b></span></button>
         <button type="button" class="scene-hotspot" data-open="podcast" aria-label="Podcast: at the microphone"><i aria-hidden="true"></i><span>Podcast <b aria-hidden="true">↗</b></span></button>
         <button type="button" class="scene-hotspot" data-open="rig" aria-label="Rig: my side project, in the terminal"><i aria-hidden="true"></i><span>Rig <b aria-hidden="true">↗</b></span></button>
         <button type="button" class="scene-hotspot" data-open="contact" aria-label="Say hello: on the phone"><i aria-hidden="true"></i><span>Say hello <b aria-hidden="true">↗</b></span></button>
@@ -74,19 +74,16 @@
       <div class="hero-text">
         <h1>David Joy<span>.</span></h1>
         <p class="hero-description">GTM leader <i aria-hidden="true">·</i> Director, Solutions Architecture</p>
-        <ul class="hero-tags" aria-label="Experience across">
-          <li>AI</li><li>Product</li><li>Marketing</li><li>Partnerships</li>
-        </ul>
       </div>
     </div>
 
 
     <nav class="collection-nav" aria-label="Explore the studio">
-      <button type="button" class="collection-button" data-open="work" aria-keyshortcuts="1"><kbd aria-hidden="true">1</kbd><span class="collection-name">Work<span class="count" data-count="work" hidden></span></span><small>On the right monitor</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
+      <button type="button" class="collection-button" data-open="work" aria-keyshortcuts="1"><kbd aria-hidden="true">1</kbd><span class="collection-name">Projects<span class="count" data-count="work" hidden></span></span><small>On the right monitor</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
       <button type="button" class="collection-button" data-open="podcast" aria-keyshortcuts="2"><kbd aria-hidden="true">2</kbd><span class="collection-name">Podcast<span class="count" data-count="podcast" hidden></span></span><small>At the microphone</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
       <button type="button" class="collection-button" data-open="writing" aria-keyshortcuts="3"><kbd aria-hidden="true">3</kbd><span class="collection-name">Writing<span class="count" data-count="writing" hidden></span></span><small>In the stack of pages</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
       <button type="button" class="collection-button" data-open="talks" aria-keyshortcuts="4"><kbd aria-hidden="true">4</kbd><span class="collection-name">Talks<span class="count" data-count="talks" hidden></span></span><small>On the wall calendar</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
-      <button type="button" class="collection-button" data-open="career" aria-keyshortcuts="5"><kbd aria-hidden="true">5</kbd><span class="collection-name">My career</span><small>On the left monitor</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
+      <button type="button" class="collection-button" data-open="career" aria-keyshortcuts="5"><kbd aria-hidden="true">5</kbd><span class="collection-name">Experience</span><small>On the left monitor</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
       <button type="button" class="collection-button" data-open="skills" aria-keyshortcuts="6"><kbd aria-hidden="true">6</kbd><span class="collection-name">Skills</span><small>On the sticker board</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
       <button type="button" class="collection-button collection-contact" data-open="contact" aria-keyshortcuts="7"><kbd aria-hidden="true">7</kbd><span class="collection-name">Say hello</span><small>On the phone</small><span class="collection-arrow" aria-hidden="true">↗</span></button>
     </nav>
@@ -94,42 +91,39 @@
 
   <footer class="studio-footer">
     <span class="location"><span class="live-dot" aria-hidden="true"></span>Dallas, Texas <time id="dallas-time"></time></span>
-    <span class="quest" id="quest" hidden><span class="quest-pips" id="quest-pips" aria-hidden="true"></span><span id="quest-label"></span></span>
     <div class="camera-controls" id="camera-controls" hidden>
       <button type="button" id="explore-toggle"><span class="camera-icon" aria-hidden="true">◇</span><span id="explore-label">Look around</span><kbd>F</kbd></button>
       <span class="camera-help">Drag to turn · scroll to zoom · Esc to return</span>
       <button type="button" id="camera-reset" aria-label="Reset the view" hidden>Reset view ↺</button>
     </div>
+    <button type="button" class="sound-toggle light-toggle" id="light-toggle" aria-label="Switch between day and night"><span id="light-symbol" aria-hidden="true">☀</span><span id="light-label">Day</span></button>
     <button type="button" class="sound-toggle" data-sound-toggle aria-pressed="false"><span aria-hidden="true">♪</span><span data-sound-text>Sound: music</span></button>
     <button type="button" id="motion-toggle" aria-label="Pause studio motion"><span class="motion-symbol" aria-hidden="true">Ⅱ</span><span id="motion-label">Pause motion</span></button>
   </footer>
 
   <div class="intro" id="intro" hidden>
     <div class="intro-inner">
-      <p class="intro-kicker"><span class="live-dot" aria-hidden="true"></span>Dallas, Texas <time id="intro-time"></time></p>
       <img class="intro-photo" src="assets/david.jpg" alt="" width="104" height="104">
-      <p class="intro-title" aria-hidden="true">David Joy<span>.</span></p>
-      <p class="intro-role">GTM leader · AI, product, marketing and partnerships</p>
-      <p class="intro-line">This is my desk. Everything on it opens something.</p>
-      <button type="button" class="intro-enter" id="intro-enter"><i class="intro-bulb" aria-hidden="true"></i>Turn on the lights <kbd aria-hidden="true">Enter</kbd></button>
-      <p class="intro-help">Move to look around in the dark · click anywhere to begin</p>
+      <p class="intro-title"><small>Welcome to</small>David’s Open Desk<span aria-hidden="true">.</span></p>
+      <p class="intro-role"><b>David Joy</b> <i aria-hidden="true">·</i> Director, Solutions Architecture</p>
+      <button type="button" class="intro-enter" id="intro-enter"><i class="intro-bulb" aria-hidden="true"></i>Turn on the lights<span class="intro-count" id="intro-count" aria-hidden="true"></span></button>
     </div>
   </div>
 
   <dialog class="portfolio-dialog" id="portfolio-dialog" aria-labelledby="panel-title">
     <div class="panel">
       <header class="panel-bar">
-        <p class="panel-kicker" id="panel-kicker">Work</p>
+        <p class="panel-kicker" id="panel-kicker">Projects</p>
         <button type="button" class="close-dialog" id="close-dialog" aria-label="Close and return to the desk"><kbd aria-hidden="true">Esc</kbd><span class="close-label" aria-hidden="true">Close</span><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></button>
       </header>
       <nav class="panel-nav" id="panel-nav" aria-label="Portfolio sections">
         <p class="panel-brand" aria-hidden="true"><span>dj</span>David Joy</p>
         <div class="panel-tabs" id="panel-tabs">
-          <button type="button" data-open="work">Work<span class="count" data-count="work" hidden></span></button>
+          <button type="button" data-open="work">Projects<span class="count" data-count="work" hidden></span></button>
           <button type="button" data-open="podcast">Podcast<span class="count" data-count="podcast" hidden></span></button>
           <button type="button" data-open="writing">Writing<span class="count" data-count="writing" hidden></span></button>
           <button type="button" data-open="talks">Talks<span class="count" data-count="talks" hidden></span></button>
-          <button type="button" data-open="career">My career</button>
+          <button type="button" data-open="career">Experience</button>
           <button type="button" data-open="skills">Skills</button>
           <button type="button" data-open="contact">Contact</button>
         </div>
@@ -180,7 +174,7 @@
 
   <!-- Rig: detail view under Work -->
   <template id="rig-template">
-    <button type="button" class="back-link" data-open="work"><span aria-hidden="true">←</span> Back to work</button>
+    <button type="button" class="back-link" data-open="work"><span aria-hidden="true">←</span> Back to projects</button>
     <h2 id="panel-title">From “I changed it”<br>to “it works.”</h2>
     <p class="panel-lede">Rig is my personal exploration of what coding agents need to finish the job.</p>
     <ol class="rig-steps" aria-label="Rig’s loop: run the app, drive the experience, verify the result"><li><span>01</span>Run the app</li><li><span>02</span>Drive it</li><li><span>03</span>Verify it</li></ol>
@@ -243,7 +237,7 @@
 
   <!-- Career: a scrolling flow, rendered from `career` in content.js -->
   <template id="career-template">
-    <h2 id="panel-title">My career<span>.</span></h2>
+    <h2 id="panel-title">Experience<span>.</span></h2>
     <p class="panel-lede">From business analyst to director.</p>
     <dl class="glance">
       <div><dt data-tally="15" data-suffix="+">15+</dt><dd>years in data, cloud and AI</dd></div>
@@ -260,7 +254,7 @@
       <h3 class="section-title">Education</h3>
       <ol class="career" data-education></ol>
     </div>
-    <div class="inline-actions"><button type="button" class="ink-button" data-open="skills">See my skills <span aria-hidden="true">→</span></button><button type="button" class="text-link" data-open="work">See the work <span aria-hidden="true">→</span></button><button type="button" class="text-link" data-open="contact">Say hello <span aria-hidden="true">→</span></button></div>
+    <div class="inline-actions"><button type="button" class="ink-button" data-open="skills">See my skills <span aria-hidden="true">→</span></button><button type="button" class="text-link" data-open="work">See the projects <span aria-hidden="true">→</span></button><button type="button" class="text-link" data-open="contact">Say hello <span aria-hidden="true">→</span></button></div>
   </template>
 
   <!-- Skills -->
@@ -289,7 +283,7 @@
       <div><dt>Leading</dt><dd><span>A global team of eight solutions architects</span><span>Partner ecosystems with AWS, Google Cloud and Microsoft</span><span>A certification program with 33 integrations</span></dd></div>
       <div><dt>Explaining</dt><dd><span>Podcast host</span><span>Talks, including AWS re:Invent</span><span>500+ demos and proofs of concept</span><span>Technical writing</span></dd></div>
     </dl>
-    <div class="inline-actions"><button type="button" class="ink-button" data-open="work">See the work <span aria-hidden="true">→</span></button><button type="button" class="text-link" data-open="career">See my career <span aria-hidden="true">→</span></button></div>
+    <div class="inline-actions"><button type="button" class="ink-button" data-open="work">See the projects <span aria-hidden="true">→</span></button><button type="button" class="text-link" data-open="career">See my experience <span aria-hidden="true">→</span></button></div>
   </template>
 
   <!-- Contact -->

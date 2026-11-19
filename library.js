@@ -293,6 +293,7 @@
     'YouTube · CockroachDB': ['cockroachlabs', '#AEDE54'],
     'YouTube · DataStax Developers': ['datastax', ''],
     'AWS re:Invent': ['aws', '#FF9900'],
+    'YouTube · AWS Events': ['aws', '#FF9900'],
     'AWS & Cockroach Labs': ['aws', '#FF9900']
   };
 
@@ -331,14 +332,21 @@
   function buildLinks(items, thumbs) {
     var list = h('ul', 'lib-links');
     list.setAttribute('role', 'list');
+    var lastYear = null;
     items.slice().sort(function (a, b) { return dateKey(b) - dateKey(a); }).forEach(function (it) {
+      /* A heading per year, so each row only has to say the month and day. */
+      var d = parseDate(it.date);
+      if (d && d.y !== lastYear) {
+        lastYear = d.y;
+        list.appendChild(h('li', 'lib-year', String(d.y)));
+      }
       var li = h('li');
       var a = h('a', 'lib-link' + (thumbs ? ' lib-link--thumb' : ''));
       a.href = it.url;
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
       if (thumbs) a.appendChild(buildThumb(it));
-      var when = h('time', 'lib-link-date', formatDate(it.date));
+      var when = h('time', 'lib-link-date', d && d.m && d.m <= 12 ? MONTHS[d.m - 1] + (d.d ? ' ' + d.d : '') : '');
       when.setAttribute('datetime', String(it.date));
       a.appendChild(when);
       var title = h('span', 'lib-link-title');

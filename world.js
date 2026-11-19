@@ -58,6 +58,8 @@ function buildStudio() {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  /* Shadows are redrawn every third frame (see draw): the sun crawls, and nothing on the desk moves fast. */
+  renderer.shadowMap.autoUpdate = false;
   const maxAnisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
 
   const roomEnvironment = new RoomEnvironment();
@@ -92,7 +94,7 @@ function buildStudio() {
     wall: standard(PAINTED ? '#cdc9a2' : '#66735f', .95),
     trim: standard('#ece6d6', .7),
     carpet: standard('#77726a', 1),
-    wood: PAINTED ? standard('#b0623a') : new THREE.MeshPhysicalMaterial({ color: '#7c3d24', roughness: .5, clearcoat: .45, clearcoatRoughness: .3 }),
+    wood: PAINTED ? standard('#a3745a') : new THREE.MeshPhysicalMaterial({ color: '#7c3d24', roughness: .5, clearcoat: .45, clearcoatRoughness: .3 }),
     frame: standard('#dcdcd6', .5, .25),
     black: standard('#15171a', .38, .25),
     plastic: standard('#1d2024', .72),
@@ -234,53 +236,31 @@ function buildStudio() {
      Orange marks company work, green marks my own projects. */
   const companyItems = workItems.filter(item => item.type === 'integration');
   const ownItems = workItems.filter(item => item.type === 'project');
-  const deck = [{ title: 'Rig: give agents the whole loop', own: true, tag: 'INDEPENDENT · IN PROGRESS' }];
-  for (let i = 0; i < Math.max(companyItems.length, ownItems.length); i++) {
-    if (companyItems[i]) deck.push({ title: companyItems[i].title, own: false, tag: 'COMPANY · COCKROACH LABS' });
-    if (ownItems[i]) deck.push({ title: ownItems[i].title, own: true, tag: 'INDEPENDENT · OPEN SOURCE' });
-  }
-  const deckPages = Math.max(1, Math.ceil(deck.length / 4));
   const mainScreen = surface(1280, 640);
-  let mainPage = 0;
   function drawMainScreen() {
+    /* One thing to read from across the room: how much has shipped. The detail lives in the panel. */
     const { ctx, width, height } = mainScreen;
     backdrop(ctx, width, height, '#12241a');
     ctx.textBaseline = 'alphabetic';
     ctx.fillStyle = '#8fa0a6';
-    ctx.font = `500 24px ${FONT.mono}`;
-    ctx.fillText('WORK', 64, 92);
+    ctx.font = `500 30px ${FONT.mono}`;
+    ctx.fillText('PROJECTS', 80, 108);
     ctx.fillStyle = INK;
-    ctx.font = `700 200px ${FONT.display}`;
-    ctx.fillText(String(workItems.length || ''), 52, 300);
-    ctx.font = `600 40px ${FONT.display}`;
-    ctx.fillText('things shipped', 64, 364);
-    [[WARM, `${companyItems.length} company, with my team`], [ACCENT, `${ownItems.length} independent, open source`]].forEach(([color, text], i) => {
+    ctx.font = `700 300px ${FONT.display}`;
+    const count = String(workItems.length || '');
+    ctx.fillText(count, 64, 400);
+    const after = 64 + ctx.measureText(count).width + 44;
+    ctx.font = `600 76px ${FONT.display}`;
+    ctx.fillText('things', after, 300);
+    ctx.fillText('shipped', after, 388);
+    [[WARM, `${companyItems.length} with my team at Cockroach Labs`], [ACCENT, `${ownItems.length} independent, open source`]].forEach(([color, text], i) => {
       ctx.fillStyle = color;
       ctx.beginPath();
-      ctx.arc(74, 430 + i * 44, 9, 0, Math.PI * 2);
+      ctx.arc(94, 488 + i * 56, 12, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = '#dfe6e2';
-      ctx.font = `500 25px ${FONT.sans}`;
-      ctx.fillText(text, 98, 439 + i * 44);
-    });
-    for (let i = 0; i < deckPages; i++) {
-      ctx.fillStyle = i === mainPage % deckPages ? INK : 'rgba(242, 244, 238, .25)';
-      rounded(ctx, 64 + i * 30, 560, 20, 6, 3);
-      ctx.fill();
-    }
-    deck.slice((mainPage % deckPages) * 4, (mainPage % deckPages) * 4 + 4).forEach((card, i) => {
-      const x = 452 + (i % 2) * 396, y = 56 + Math.floor(i / 2) * 272;
-      ctx.fillStyle = '#17212a';
-      rounded(ctx, x, y, 372, 250, 22);
-      ctx.fill();
-      ctx.fillStyle = card.own ? ACCENT : WARM;
-      rounded(ctx, x + 28, y + 30, 54, 8, 4);
-      ctx.fill();
-      ctx.font = `500 19px ${FONT.mono}`;
-      ctx.fillText(card.tag, x + 28, y + 80);
-      ctx.fillStyle = INK;
-      ctx.font = `600 33px ${FONT.display}`;
-      wrapText(ctx, card.title, x + 28, y + 130, 316, 40, 3);
+      ctx.font = `500 36px ${FONT.sans}`;
+      ctx.fillText(text, 126, 500 + i * 56);
     });
     sheen(ctx, width, height);
     mainScreen.texture.needsUpdate = true;
@@ -288,109 +268,43 @@ function buildStudio() {
 
   /* Left monitor: the career, year by year, as rising steps. The highlight walks through them. */
   const storyScreen = surface(1280, 640);
-  let storyStep = -1, storyFrame = -1;
   const career = (data.career || []).filter(step => Number.isFinite(Number(step.year)) && step.onScreen !== false).sort((a, b) => a.year - b.year);
-  function drawStoryScreen(time = 0) {
+  function drawStoryScreen() {
+    /* One thing to read from across the room: where I am now, and the path that led here in a single line. */
     const { ctx, width, height } = storyScreen;
     backdrop(ctx, width, height, '#181a2a');
-    const count = Math.max(career.length, 1);
-    const active = storyStep < 0 ? count - 1 : storyStep % count;
-    const step = career[active] || {};
+    const now = career[career.length - 1] || {};
     ctx.textBaseline = 'alphabetic';
-
-    /* Top: the stop being shown. */
     ctx.fillStyle = '#8fa0a6';
-    ctx.font = `500 24px ${FONT.mono}`;
-    ctx.fillText('MY CAREER', 72, 96);
-    ctx.textAlign = 'right';
-    ctx.fillText(`${String(active + 1).padStart(2, '0')} / ${String(count).padStart(2, '0')}`, width - 72, 96);
-    ctx.textAlign = 'left';
-    ctx.fillStyle = WARM;
     ctx.font = `500 30px ${FONT.mono}`;
-    ctx.fillText(`${step.from || step.year || ''} – ${step.to === 'Present' ? 'now' : (step.to || '')}`, 72, 164);
+    ctx.fillText('EXPERIENCE', 80, 108);
     ctx.fillStyle = INK;
-    ctx.font = `700 78px ${FONT.display}`;
-    ctx.fillText(fit(ctx, step.org || '', width - 144), 72, 248);
+    ctx.font = `700 190px ${FONT.display}`;
+    ctx.fillText('15+ years', 70, 300);
+    ctx.fillStyle = WARM;
+    ctx.font = `600 54px ${FONT.display}`;
+    ctx.fillText(fit(ctx, (now.roles?.[0]?.title || '').replace(/\s*\(.*\)\s*$/, ''), width - 160), 80, 390);
     ctx.fillStyle = '#c3ccd2';
-    ctx.font = `500 30px ${FONT.sans}`;
-    ctx.fillText(fit(ctx, step.roles?.[0]?.title || '', width - 144), 72, 300);
-    const awards = step.awards?.length || 0;
-    if (awards) {
-      const label = `★ ${awards} award${awards > 1 ? 's' : ''}`;
-      ctx.font = `500 24px ${FONT.mono}`;
-      const w = ctx.measureText(label).width + 36;
-      ctx.fillStyle = 'rgba(240, 168, 104, .16)';
-      rounded(ctx, 72, 326, w, 44, 10);
-      ctx.fill();
-      ctx.fillStyle = WARM;
-      ctx.fillText(label, 90, 357);
-    }
-
-    /* Bottom: the whole path as a rising line, lit up to the stop on show, with a spark running along it. */
-    const left = 96, right = width - 96, low = 528, high = 418;
-    const point = i => {
-      const t = count > 1 ? i / (count - 1) : 0;
-      return [left + (right - left) * t, low - (low - high) * t * t];
-    };
-    const trace = upTo => {
-      ctx.beginPath();
-      for (let k = 0; k <= 60; k++) {
-        const u = upTo * k / 60, [px] = [left + (right - left) * u], py = low - (low - high) * u * u;
-        if (k) ctx.lineTo(px, py); else ctx.moveTo(px, py);
-      }
-    };
-    const reach = count > 1 ? active / (count - 1) : 1;
-    const fill = ctx.createLinearGradient(0, high - 40, 0, height);
-    fill.addColorStop(0, 'rgba(185, 163, 255, .16)');
-    fill.addColorStop(1, 'rgba(185, 163, 255, 0)');
-    trace(reach);
-    ctx.lineTo(left + (right - left) * reach, height);
-    ctx.lineTo(left, height);
-    ctx.closePath();
-    ctx.fillStyle = fill;
-    ctx.fill();
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = 'rgba(242, 244, 238, .16)';
+    ctx.font = `500 38px ${FONT.sans}`;
+    ctx.fillText(`${now.org || ''}, ${now.from || now.year || ''} to now`, 80, 448);
+    /* The path: every stop as a dot on one line, the current one lit. */
+    const left = 96, right = width - 96, y = 540;
+    ctx.strokeStyle = 'rgba(242, 244, 238, .22)';
     ctx.lineWidth = 4;
-    trace(1);
-    ctx.stroke();
-    const stroke = ctx.createLinearGradient(left, 0, right, 0);
-    stroke.addColorStop(0, '#f0a868');
-    stroke.addColorStop(1, '#b9a3ff');
-    ctx.save();
-    ctx.shadowColor = 'rgba(185, 163, 255, .7)';
-    ctx.shadowBlur = 22;
-    ctx.strokeStyle = stroke;
-    ctx.lineWidth = 6;
-    trace(reach);
-    ctx.stroke();
-    const spark = (time * .16) % 1, sx = left + (right - left) * spark, sy = low - (low - high) * spark * spark;
-    ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.arc(sx, sy, 6, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
+    ctx.moveTo(left, y);
+    ctx.lineTo(right, y);
+    ctx.stroke();
     career.forEach((stop, i) => {
-      const [px, py] = point(i), on = i === active, passed = i < active;
-      if (on) {
-        const pulse = 18 + (Math.sin(time * 4) * .5 + .5) * 14;
-        ctx.fillStyle = 'rgba(240, 168, 104, .22)';
-        ctx.beginPath();
-        ctx.arc(px, py, pulse, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.fillStyle = on ? WARM : passed ? ACCENT : '#5d6a78';
+      const x = career.length > 1 ? left + (right - left) * i / (career.length - 1) : left, on = i === career.length - 1;
+      ctx.fillStyle = on ? WARM : ACCENT;
       ctx.beginPath();
-      ctx.arc(px, py, on ? 14 : 9, 0, Math.PI * 2);
+      ctx.arc(x, y, on ? 14 : 9, 0, Math.PI * 2);
       ctx.fill();
-      ctx.textAlign = i === 0 ? 'left' : i === count - 1 ? 'right' : 'center';
-      const tx = i === 0 ? px - 12 : i === count - 1 ? px + 12 : px;
-      ctx.fillStyle = on ? WARM : '#8fa0a6';
-      ctx.font = `500 22px ${FONT.mono}`;
-      ctx.fillText(String(stop.year), tx, py + 46);
+      ctx.textAlign = i === 0 ? 'left' : on ? 'right' : 'center';
       ctx.fillStyle = on ? INK : '#9aa7b0';
-      ctx.font = `600 24px ${FONT.display}`;
-      ctx.fillText(stop.short || stop.org || '', tx, py + 76);
+      ctx.font = `600 26px ${FONT.display}`;
+      ctx.fillText(stop.short || stop.org || '', i === 0 ? x - 12 : on ? x + 12 : x, y + 46);
     });
     ctx.textAlign = 'left';
     sheen(ctx, width, height);
@@ -839,7 +753,7 @@ function buildStudio() {
   sun.target.position.set(0, 0, 2);
   scene.add(sun, sun.target);
   sun.castShadow = true;
-  sun.shadow.mapSize.set(innerWidth < 760 ? 2048 : 4096, innerWidth < 760 ? 2048 : 4096);
+  sun.shadow.mapSize.set(2048, 2048);
   Object.assign(sun.shadow.camera, { left: -18, right: 18, top: 16, bottom: -14, near: .5, far: 60 });
   sun.shadow.bias = -.0003;
   sun.shadow.normalBias = .04;
@@ -980,9 +894,20 @@ function buildStudio() {
 
   /* The day turns: the sun crosses the sky and every light follows it. */
   const fixedHour = new URLSearchParams(location.search).has('hour');
-  const DAY_SECONDS = 300;
-  let dayPhase = (hour / 24) % 1, exposure = 1;
+  /* Day or night is the visitor's choice (the button in the bottom bar); until they choose, it follows Dallas. */
+  const LIGHT_PHASE = { day: .55, night: .96 };
+  let lightMode = hour >= 7 && hour < 18 ? 'day' : 'night';
+  try { const saved = localStorage.getItem('idea-studio-light'); if (LIGHT_PHASE[saved]) lightMode = saved; } catch (_) { /* Storage is optional. */ }
+  let dayPhase = fixedHour ? (hour / 24) % 1 : LIGHT_PHASE[lightMode], exposure = 1;
+  window.addEventListener('studio:light', event => {
+    if (!LIGHT_PHASE[event.detail?.mode]) return;
+    lightMode = event.detail.mode;
+    requestDraw();
+  });
   const moonlight = new THREE.Color('#9fb7dc'), lowSun = new THREE.Color('#ffae62'), highSun = new THREE.Color('#fff1d6');
+  /* Paper on the wall is toned down so it never outshines the labels: a little by day, a lot by night. */
+  let calendarPaper = null;
+  const paperDay = new THREE.Color('#d6d1c4'), paperNight = new THREE.Color('#8f8c84');
   function updateDaylight() {
     const theta = dayPhase * Math.PI * 2;
     const height = -Math.cos(theta) + .3;
@@ -1009,6 +934,7 @@ function buildStudio() {
     exposure = 1 + (1 - light) * .25;
     for (const halo of halos) halo.opacity = .16 + (1 - light) * .3;
     if (sidePatch) sidePatch.opacity = light * .3;
+    if (calendarPaper) calendarPaper.color.copy(paperNight).lerp(paperDay, light);
   }
 
   /* A walnut console with a record player, left of the window. */
@@ -1086,7 +1012,8 @@ function buildStudio() {
   /* Wall calendar, the centrepiece of the right-hand wall, with a poster on each side. */
   const calendar = group(11, 6.1, -5.96);
   box(4.6, 2.86, .05, mat.white, calendar, 0, 0, 0, .01);
-  plane(4.46, 2.72, new THREE.MeshStandardMaterial({ map: calendarSheet.texture, roughness: .85 }), calendar, 0, 0, .03);
+  calendarPaper = new THREE.MeshStandardMaterial({ map: calendarSheet.texture, color: '#d6d1c4', roughness: .85 });
+  plane(4.46, 2.72, calendarPaper, calendar, 0, 0, .03);
   register(calendar, 'talks', [0, 1.68, .1], 0);
 
   /* The posters flank the calendar. */
@@ -1102,9 +1029,10 @@ function buildStudio() {
   function toy(object, name) {
     object.traverse(m => { if (m.isMesh) { m.userData.toy = name; pickables.push(m); } });
   }
-  const play = { strum: 0, amp: 0, ampOn: false, mouse: 0, keys: -1, sway: 0, pageOffset: 0, cat: 0 };
+  const play = { strum: 0, amp: 0, ampOn: false, mouse: 0, keys: -1, sway: 0, cat: 0 };
 
   const guitarAmp = group(14.35, -3, -4.3);
+  guitarAmp.userData.rigid = true;
   guitarAmp.rotation.y = -.36;
   box(3.3, 2.9, 1.5, standard('#1b1d21'), guitarAmp, 0, 1.45, 0, .1);
   box(3.02, 2.02, .06, standard('#4a4136'), guitarAmp, 0, 1.18, .74, .03);
@@ -1122,6 +1050,7 @@ function buildStudio() {
 
   /* A T-style electric in mustard yellow: slab body, single cutaway, maple neck, six tuners in a row. */
   const guitar = group(12.2, -2.5, -5.9);
+  guitar.userData.rigid = true;
   guitar.scale.setScalar(1.12);
   guitar.rotation.z = -.07;
   const bodyShape = new THREE.Shape();
@@ -1135,7 +1064,7 @@ function buildStudio() {
   bodyShape.bezierCurveTo(-.95, .32, -.8, .14, -.86, -.16);
   bodyShape.bezierCurveTo(-1.06, -.62, -.8, -1.14, 0, -1.12);
   const mustard = PAINTED ? standard('#e3a534') : new THREE.MeshPhysicalMaterial({ color: '#dba02c', roughness: .22, clearcoat: 1, clearcoatRoughness: .08 });
-  const guitarBody = mesh(new THREE.ExtrudeGeometry(bodyShape, { depth: .16, bevelEnabled: true, bevelSize: .025, bevelThickness: .025, bevelSegments: 3, curveSegments: 28 }), mustard, guitar, 0, 1.45, 0);
+  mesh(new THREE.ExtrudeGeometry(bodyShape, { depth: .16, bevelEnabled: true, bevelSize: .025, bevelThickness: .025, bevelSegments: 3, curveSegments: 28 }), mustard, guitar, 0, 1.45, 0);
   /* Black pickguard on the treble side, round the neck pickup. */
   const guardShape = new THREE.Shape();
   guardShape.moveTo(-.2, .7);
@@ -1212,7 +1141,6 @@ function buildStudio() {
   /* Wall hanger. */
   box(.5, .12, .3, mat.steel, guitar, 0, 4.5, .02, .02);
   toy(guitar, 'guitar');
-  void guitarBody;
 
   /* ---------- Desk: cherry top on a white standing frame ---------- */
 
@@ -1337,7 +1265,7 @@ function buildStudio() {
   const capMaterial = {
     light: standard('#e9e5d9', .62),
     dark: standard('#3a3e46', .6),
-    accent: standard(ACCENT, .5)
+    accent: standard('#9aa0aa', .5)
   };
   const capGeometry = new Map();
   const keycaps = [];
@@ -1365,6 +1293,7 @@ function buildStudio() {
   /* The mouse: a sculpted shell (high at the palm, sloping and narrowing to the buttons) on a dark base,
      with a button seam, a cross seam and a rubber scroll wheel. */
   const deskMouse = group(3.1, .03, 2);
+  deskMouse.userData.rigid = true;
   deskMouse.rotation.y = -.12;
   {
     const SX = .33, SY = .215, SZ = .56;
@@ -1433,6 +1362,7 @@ function buildStudio() {
   /* ---------- Phone on a stand: say hello ---------- */
 
   const phone = group(-2.95, 0, 1.9);
+  phone.userData.rigid = true;
   phone.rotation.y = .2;
   phone.scale.setScalar(1.22);
   const handset = group(0, .1, 0, phone);
@@ -1453,7 +1383,7 @@ function buildStudio() {
   box(.7, .1, .9, mat.darkMetal, phone, 0, .05, -.2, .03);
   box(.5, .9, .08, mat.darkMetal, phone, 0, .45, -.42, .02).rotation.x = -.36;
   contact(-2.95, 1.9, 1.5, 1.5, .5, .006);
-  register(phone, 'contact', [.5, 2.15, -.5]);
+  register(phone, 'contact', [-.95, 1.35, 0]);
 
   /* ---------- Microphone, on its boom arm, with room around it ---------- */
 
@@ -1578,7 +1508,7 @@ function buildStudio() {
 
   /* ---------- Sticker board on the wall under the title: where I have worked, and what I work with ---------- */
 
-  const board = group(-12.7, 2.55, -5.96);
+  const board = group(-12.7, 5.1, -5.96);
   box(5.5, 4.6, .1, standard('#4a3526', .6), board, 0, 0, 0, .03);
   box(5.2, 4.3, .06, standard('#c79f6f', .95), board, 0, 0, .04, .01);
   /* Each sticker is a white die-cut label carrying the brand's own mark, loaded from assets/logos.
@@ -1665,6 +1595,7 @@ function buildStudio() {
   /* A pair of studio speakers at the back corners. */
   for (const side of [-1, 1]) {
     const speaker = group(side * 7.7, 0, -1.9);
+    speaker.userData.rigid = true;
     const cabinet = standard('#2b2e34'), baffle = standard('#3a3e45');
     speaker.rotation.y = -side * .32;
     /* Studio monitor: charcoal cabinet, a lighter front baffle, cone with rings, waveguide tweeter, port and power light. */
@@ -1719,6 +1650,7 @@ function buildStudio() {
     /* A pot with leaves fanned out round a centre; `droop` lets the outer ones hang. */
     function plant(x, y, z, size, leaves, droop = .5, parent = scene) {
       const g = group(x, y, z, parent);
+      g.userData.rigid = true;
       g.scale.setScalar(size);
       cylinder(.42, .3, .62, terracotta, g, 0, .31, 0, 24);
       cylinder(.45, .45, .09, terracotta, g, 0, .62, 0, 24);
@@ -1821,6 +1753,67 @@ function buildStudio() {
     }
   }
 
+  /* Fewer, bigger pieces: a prop that only ever moves as a whole (marked rigid) has its parts welded together,
+     one mesh per material, so the guitar is a dozen draw calls instead of ninety. */
+  {
+    const inverse = new THREE.Matrix4(), local = new THREE.Matrix4();
+    const weld = root => {
+      root.updateMatrixWorld(true);
+      inverse.copy(root.matrixWorld).invert();
+      const buckets = new Map();
+      root.traverse(m => {
+        if (!m.isMesh || Array.isArray(m.material) || m.children.length || !m.geometry.attributes.normal) return;
+        if (m.matrixWorld.determinant() < 0) return;
+        const type = m.geometry.type;
+        const flat = type === 'PlaneGeometry' || type === 'CircleGeometry' || type === 'BoxGeometry';
+        const key = [m.material.uuid, m.castShadow, m.receiveShadow, flat, m.userData.section || '', m.userData.toy || '', m.renderOrder, m.visible].join('|');
+        if (!buckets.has(key)) buckets.set(key, []);
+        buckets.get(key).push(m);
+      });
+      for (const list of buckets.values()) {
+        if (list.length < 2) continue;
+        const parts = list.map(m => {
+          const g = m.geometry.index ? m.geometry.toNonIndexed() : m.geometry.clone();
+          g.applyMatrix4(local.multiplyMatrices(inverse, m.matrixWorld));
+          return g;
+        });
+        const total = parts.reduce((sum, g) => sum + g.attributes.position.count, 0);
+        const position = new Float32Array(total * 3), normal = new Float32Array(total * 3), uv = new Float32Array(total * 2);
+        let at = 0;
+        for (const g of parts) {
+          position.set(g.attributes.position.array, at * 3);
+          normal.set(g.attributes.normal.array, at * 3);
+          if (g.attributes.uv) uv.set(g.attributes.uv.array, at * 2);
+          at += g.attributes.position.count;
+          g.dispose();
+        }
+        const merged = new THREE.BufferGeometry();
+        merged.setAttribute('position', new THREE.BufferAttribute(position, 3));
+        merged.setAttribute('normal', new THREE.BufferAttribute(normal, 3));
+        merged.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+        const first = list[0];
+        const type = first.geometry.type;
+        const one = new THREE.Mesh(merged, first.material);
+        one.castShadow = first.castShadow;
+        one.receiveShadow = first.receiveShadow;
+        one.renderOrder = first.renderOrder;
+        one.userData = { ...first.userData, weldedFlat: type === 'PlaneGeometry' || type === 'CircleGeometry' || type === 'BoxGeometry' };
+        root.add(one);
+        const picked = pickables.includes(first);
+        for (const m of list) {
+          m.parent.remove(m);
+          m.geometry.dispose();
+          const index = pickables.indexOf(m);
+          if (index >= 0) pickables.splice(index, 1);
+        }
+        if (picked) pickables.push(one);
+      }
+    };
+    const rigid = [];
+    scene.traverse(node => { if (node.userData.rigid) rigid.push(node); });
+    rigid.forEach(weld);
+  }
+
   /* Ink outlines: every solid shape gets a slightly larger dark shell, seen only at its edges. */
   if (PAINTED) {
     const inks = new Map();
@@ -1841,7 +1834,7 @@ function buildStudio() {
     scene.traverse(m => {
       if (!m.isMesh || !(m.material.isMeshToonMaterial || m.material.isMeshPhysicalMaterial)) return;
       const type = m.geometry.type;
-      if (type === 'PlaneGeometry' || type === 'CircleGeometry' || type === 'BoxGeometry') return;
+      if (type === 'PlaneGeometry' || type === 'CircleGeometry' || type === 'BoxGeometry' || m.userData.weldedFlat) return;
       solids.push(m);
     });
     for (const m of solids) {
@@ -1895,7 +1888,7 @@ function buildStudio() {
     height = rect.height;
     if (!width || !height) return;
     compact = width < 760;
-    renderer.setPixelRatio(Math.min(devicePixelRatio, compact ? 1.5 : 2, 3400 / width));
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5, 3400 / width));
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.fov = compact ? 50 : 42;
@@ -2008,9 +2001,6 @@ function buildStudio() {
       sound?.fx('amp', play.ampOn);
     } else if (name === 'mouse') {
       play.mouse = 1;
-      play.pageOffset++;
-      mainPage = Math.floor(elapsed / 6) + play.pageOffset;
-      drawMainScreen();
       sound?.fx('click');
     } else if (name === 'keys') { play.keys = 0; sound?.fx('keys'); }
     else if (name === 'cat') { play.cat = 1; sound?.fx('cat'); }
@@ -2207,19 +2197,17 @@ function buildStudio() {
 
   /* ---------- Frame ---------- */
 
+  let shadowTurn = 0;
   function draw(dt, instant = false) {
     if (!width || !height) return;
-    if (!fixedHour && !paused) dayPhase = (dayPhase + dt / DAY_SECONDS) % 1;
+    if (!fixedHour) {
+      /* Ease toward the chosen light the short way round the clock. */
+      const gap = ((LIGHT_PHASE[lightMode] - dayPhase + 1.5) % 1) - .5;
+      dayPhase = (dayPhase + gap * (instant || paused ? 1 : Math.min(dt * 2.4, 1)) + 1) % 1;
+    }
     updateDaylight();
     placeCamera(dt, instant);
     drawTerminal(elapsed);
-    /* The monitors change on their own: Work turns a page, the career highlight takes a step. */
-    if (!paused) {
-      const page = Math.floor(elapsed / 6) + play.pageOffset, step = Math.floor(elapsed / 4);
-      if (page !== mainPage) { mainPage = page; drawMainScreen(); }
-      const frame = Math.floor(elapsed * 12);
-      if (frame !== storyFrame) { storyFrame = frame; storyStep = step; drawStoryScreen(elapsed); }
-    }
     for (const [key, item] of targets) {
       const goal = key === hoverKey && !panelOpen ? 1 : 0;
       item.hover += (goal - item.hover) * (instant ? 1 : Math.min(dt * 7, 1));
@@ -2234,18 +2222,27 @@ function buildStudio() {
     }
     timeUniform.value = elapsed;
     placeLabels();
+    renderer.shadowMap.needsUpdate = instant || shadowTurn++ % 3 === 0;
     renderer.render(scene, camera);
   }
   /* With motion paused there is no loop, so changes ask for a single frame. */
   function requestDraw() {
     if (paused && !contextLost) draw(0, true);
   }
+  /* Half rate when nobody is touching anything, or while a panel is open over the room. */
+  let lastInput = 0, skipFrame = false;
+  for (const type of ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart']) {
+    window.addEventListener(type, () => { lastInput = performance.now(); }, { passive: true });
+  }
   function tick(now) {
+    if (!paused && !document.hidden) frameId = requestAnimationFrame(tick);
+    const resting = !dragging && (panelOpen || (!exploring && introGoal >= 1 && now - lastInput > 4000));
+    skipFrame = resting && !skipFrame;
+    if (skipFrame) return;
     const dt = last ? Math.min((now - last) / 1000, .05) : 1 / 60;
     last = now;
     elapsed += dt;
     draw(dt);
-    if (!paused && !document.hidden) frameId = requestAnimationFrame(tick);
   }
 
   canvas.addEventListener('webglcontextlost', event => {

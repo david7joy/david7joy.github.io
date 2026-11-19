@@ -15,13 +15,13 @@
 
   /* Routes. `nav` is the section tab a panel belongs to. */
   const panels = {
-    work: { kicker: 'Work', nav: 'work' },
-    rig: { kicker: 'Work · On the workbench', nav: 'work' },
+    work: { kicker: 'Projects', nav: 'work' },
+    rig: { kicker: 'Projects · On the workbench', nav: 'work' },
     podcast: { kicker: 'Podcast', nav: 'podcast' },
     writing: { kicker: 'Writing', nav: 'writing' },
     talks: { kicker: 'Talks & videos', nav: 'talks' },
     skills: { kicker: 'Skills', nav: 'skills' },
-    career: { kicker: 'My career', nav: 'career' },
+    career: { kicker: 'Experience', nav: 'career' },
     contact: { kicker: 'Contact', nav: 'contact' }
   };
   /* Older links keep working. */
@@ -39,12 +39,38 @@
   let returnFocus = null;
   let activePanel = null;
 
+  /* ---------- Day or night: the visitor's choice, remembered; Dallas time until they choose ---------- */
+  {
+    const button = document.getElementById('light-toggle');
+    const label = document.getElementById('light-label'), symbol = document.getElementById('light-symbol');
+    let mode = null;
+    try { mode = localStorage.getItem('idea-studio-light'); } catch (_) { /* Storage is optional. */ }
+    if (mode !== 'day' && mode !== 'night') {
+      const hour = Number(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', hour: 'numeric', hour12: false }).format(new Date())) % 24;
+      mode = hour >= 7 && hour < 18 ? 'day' : 'night';
+    }
+    const show = () => {
+      body.classList.toggle('light-night', mode === 'night');
+      if (label) label.textContent = mode === 'day' ? 'Day' : 'Night';
+      if (symbol) symbol.textContent = mode === 'day' ? '☀' : '☾';
+      if (button) button.setAttribute('aria-label', mode === 'day' ? 'Day mode is on. Switch to night' : 'Night mode is on. Switch to day');
+    };
+    show();
+    button?.addEventListener('click', () => {
+      mode = mode === 'day' ? 'night' : 'day';
+      try { localStorage.setItem('idea-studio-light', mode); } catch (_) { /* Storage is optional. */ }
+      show();
+      window.dispatchEvent(new CustomEvent('studio:light', { detail: { mode } }));
+    });
+  }
+
   /* ---------- Intro: one screen before you step in ---------- */
 
   const intro = document.getElementById('intro');
   const stage = document.querySelectorAll('.site-header, .studio-home, .studio-footer');
-  let entered = false;
-  try { entered = sessionStorage.getItem('idea-studio-entered') === '1'; } catch (_) { /* Storage is optional. */ }
+  /* The welcome is the front door: it shows on every visit to the home address. A link straight to a section
+     (#talks) or to the desk itself (?desk) goes past it. */
+  const entered = new URLSearchParams(location.search).has('desk');
 
   function enterStudio() {
     if (!body.classList.contains('intro')) return;
@@ -52,7 +78,6 @@
     body.classList.add('entering');
     intro.classList.add('is-leaving');
     stage.forEach(node => { node.inert = false; });
-    try { sessionStorage.setItem('idea-studio-entered', '1'); } catch (_) { /* Storage is optional. */ }
     window.dispatchEvent(new CustomEvent('studio:enter'));
     setTimeout(() => { intro.hidden = true; body.classList.remove('entering'); }, 2600);
   }
@@ -68,6 +93,18 @@
       if (event.key === 'Enter' || event.key === ' ' || event.key === 'Escape') { event.preventDefault(); enterStudio(); }
     });
     document.getElementById('intro-enter').focus({ preventScroll: true });
+
+    /* Nobody has to find the button: the lights come on by themselves after a few seconds. */
+    const WAIT = 9000, began = performance.now();
+    const meter = document.getElementById('intro-count');
+    const countdown = now => {
+      if (!body.classList.contains('intro')) return;
+      const left = WAIT - (now - began);
+      if (meter) meter.style.setProperty('--left', Math.max(0, left / WAIT).toFixed(3));
+      if (left <= 0) { enterStudio(); return; }
+      requestAnimationFrame(countdown);
+    };
+    if (!document.hidden) requestAnimationFrame(countdown);
 
     /* The room is dark until you step in: the cursor is a torch, and the camera leans with it. */
     let torchMoved = false;
@@ -90,35 +127,6 @@
   }
 
   /* ---------- Exploration tracker ---------- */
-
-  const questKeys = ['work', 'rig', 'podcast', 'writing', 'talks', 'career', 'skills', 'contact'];
-  const found = new Set();
-  try {
-    for (const key of JSON.parse(localStorage.getItem('idea-studio-found') || '[]')) if (questKeys.includes(key)) found.add(key);
-  } catch (_) { /* Storage is optional. */ }
-
-  function syncQuest() {
-    const quest = document.getElementById('quest');
-    if (!quest) return;
-    document.getElementById('quest-pips').replaceChildren(...questKeys.map(key => {
-      const pip = document.createElement('i');
-      if (found.has(key)) pip.className = 'is-found';
-      return pip;
-    }));
-    document.getElementById('quest-label').textContent = found.size === questKeys.length
-      ? 'Desk explored'
-      : `Explored ${found.size} of ${questKeys.length}`;
-    quest.hidden = false;
-    document.querySelectorAll('.collection-button').forEach(button => button.classList.toggle('is-found', found.has(button.dataset.open)));
-  }
-
-  function markFound(name) {
-    if (found.has(name) || !questKeys.includes(name)) return;
-    found.add(name);
-    try { localStorage.setItem('idea-studio-found', JSON.stringify([...found])); } catch (_) { /* Storage is optional. */ }
-    syncQuest();
-  }
-  syncQuest();
 
   /* ---------- Motion preference ---------- */
 
@@ -510,7 +518,6 @@
     const name = resolve(requested);
     if (!name) return;
     enterStudio();
-    markFound(name);
     const wasOpen = dialog.open;
     if (!wasOpen) returnFocus = trigger || document.activeElement;
 
@@ -624,13 +631,11 @@
   /* ---------- Dallas clock ---------- */
 
   const clock = document.getElementById('dallas-time');
-  const introClock = document.getElementById('intro-time');
   const formatter = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit' });
   function updateClock() {
     const now = new Date();
     clock.textContent = formatter.format(now);
     clock.dateTime = now.toISOString();
-    if (introClock) { introClock.textContent = clock.textContent; introClock.dateTime = clock.dateTime; }
   }
   updateClock();
   setInterval(updateClock, 30000);

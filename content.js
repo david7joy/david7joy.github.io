@@ -490,6 +490,9 @@ window.PORTFOLIO = {
       url: "https://www.youtube.com/watch?v=DV4FVdsFiwE", source: "Big Ideas in App Architecture", role: "Host", tags: [] },
 
     /* ---------- Video ---------- */
+    { type: "video", date: "2025-12-09", title: "AWS re:Invent 2025 (DAT105): full session recording", youtubeId: "_jxYmIrr3Xc",
+      description: "Build Resilient GenAI & Agentic Apps with Intelligent Memory: the 40-minute session in Las Vegas, published by AWS Events.",
+      url: "https://www.youtube.com/watch?v=_jxYmIrr3Xc&t=24s", source: "YouTube · AWS Events", role: "Speaker", tags: ["aws", "agents", "conference"] },
     { type: "video", date: "2025-12-18", title: "How to Build GenAI Apps with CockroachDB & AWS Bedrock (recording)", youtubeId: "yFk3qad-DPM",
       description: "Webinar recording on vector search, retrieval-augmented generation and a live GenAI demo.",
       url: "https://www.youtube.com/watch?v=yFk3qad-DPM", source: "YouTube · CockroachDB", role: "Presenter", tags: ["bedrock", "aws", "rag"] },
