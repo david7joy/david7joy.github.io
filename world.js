@@ -650,6 +650,7 @@ function buildStudio() {
   }
   drawSurfaces();
   /* Redraw once the web fonts arrive, so the screens use them. */
+  if (document.fonts?.ready) document.fonts.ready.then(() => { drawMicSticker(); requestDraw(); });
   if (document.fonts?.load) {
     Promise.all(['600 37px Caveat', '600 50px "Bricolage Grotesque"', '700 50px "Bricolage Grotesque"', '500 27px "DM Sans"', '500 38px "JetBrains Mono"'].map(font => document.fonts.load(font)))
       .then(() => { drawSurfaces(); requestDraw(); })
@@ -891,6 +892,12 @@ function buildStudio() {
   });
 
   /* A guitar amp on the floor to the left, and an electric guitar hung on the wall under the calendar. */
+  /* Things that do something when clicked, without opening a panel. */
+  function toy(object, name) {
+    object.traverse(m => { if (m.isMesh) { m.userData.toy = name; pickables.push(m); } });
+  }
+  const play = { strum: 0, amp: 0, ampOn: false, mouse: 0, keys: -1, sway: 0, pageOffset: 0 };
+
   const guitarAmp = group(13.4, -3, -4.2);
   guitarAmp.rotation.y = -.35;
   box(3.3, 2.9, 1.5, mat.black, guitarAmp, 0, 1.45, 0, .1);
@@ -901,6 +908,9 @@ function buildStudio() {
     knob.rotation.x = Math.PI / 2;
   }
   box(1.1, .08, .22, mat.plastic, guitarAmp, 0, 2.95, 0, .03);
+  const ampLamp = new THREE.MeshStandardMaterial({ color: '#3a0d0d', emissive: '#ff3b2f', emissiveIntensity: 0, roughness: .4 });
+  sphere(.07, ampLamp, guitarAmp, 1.3, 2.48, .8);
+  toy(guitarAmp, 'amp');
 
   const guitar = group(12.1, -2.5, -5.9);
   guitar.scale.setScalar(1.12);
@@ -933,6 +943,7 @@ function buildStudio() {
   for (const x of [-.08, -.03, .03, .08]) box(.006, 3.9, .004, mat.silver, guitar, x, 2.72, .18, 0);
   /* Wall hanger. */
   box(.5, .12, .3, mat.steel, guitar, 0, 4.5, .02, .02);
+  toy(guitar, 'guitar');
   void guitarBody;
 
   /* ---------- Desk: cherry top on a white standing frame ---------- */
@@ -1020,7 +1031,11 @@ function buildStudio() {
   const keyDeck = plane(4.1, 1.36, keyboardMaterial, keyboard, 0, .135, 0);
   keyDeck.rotation.x = -Math.PI / 2;
   keyboard.rotation.x = .04;
-  sphere(.33, mat.white, scene, 3.1, .14, 2, .9, .42, 1.45);
+  const keyGlow = plane(.7, 1.36, new THREE.MeshBasicMaterial({ color: ACCENT, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }), keyboard, 0, .142, 0);
+  keyGlow.rotation.x = -Math.PI / 2;
+  toy(keyboard, 'keys');
+  const deskMouse = sphere(.33, mat.white, scene, 3.1, .14, 2, .9, .42, 1.45);
+  toy(deskMouse, 'mouse');
   contact(0, 1.95, 5.2, 2.2, .5);
 
   /* ---------- The laptop, off to the right ---------- */
@@ -1055,35 +1070,111 @@ function buildStudio() {
 
   /* ---------- Microphone, on its boom arm, with room around it ---------- */
 
-  const mic = group(-7.5, 0, 2);
-  mic.rotation.y = .45;
-  mic.scale.setScalar(1.35);
-  cylinder(.27, .27, 1.05, mat.charcoal, mic, 0, 1.02, 0, 40);
-  for (const y of [.62, 1.42]) cylinder(.278, .278, .05, mat.silver, mic, 0, y, 0, 40);
-  cylinder(.29, .29, .1, mat.black, mic, 0, .5, 0, 40);
-  cylinder(.2, .24, .12, mat.black, mic, 0, .41, 0, 32);
-  mesh(new THREE.CapsuleGeometry(.37, .62, 8, 28), mat.foam, mic, 0, 1.98, 0);
-  box(.2, .2, .02, mat.yellow, mic, 0, .9, .272, .004);
-  wire([[-.3, 1.05, 0], [-.42, 1.05, -.28], [0, 1.08, -.56], [.42, 1.05, -.28], [.3, 1.05, 0]], .04, mat.black, mic);
-  for (const x of [-.34, .34]) {
-    const knob = cylinder(.09, .09, .1, mat.silver, mic, x, 1.05, 0, 20);
+  const MIC_STICKER_TURN = 3.33;
+  const mic = group(-7.6, 0, 2.3);
+  mic.rotation.y = .95;
+  mic.scale.setScalar(1.2);
+  /* A broadcast mic hung from the boom, lying level and pointed at the chair: local +z is the front. */
+  const lay = m => { m.rotation.x = Math.PI / 2; return m; };
+  const HEAD = 2.55;
+  lay(cylinder(.3, .3, 1.25, mat.charcoal, mic, 0, HEAD, -.15, 40));
+  lay(cylinder(.312, .312, .07, mat.silver, mic, 0, HEAD, .44, 40));
+  lay(cylinder(.312, .3, .1, mat.black, mic, 0, HEAD, -.8, 40));
+  lay(mesh(new THREE.CapsuleGeometry(.4, .46, 8, 28), mat.foam, mic, 0, HEAD, .92));
+  /* On-air ring at the back. */
+  const onAir = new THREE.MeshStandardMaterial({ color: '#4a1210', emissive: '#ff3b2f', emissiveIntensity: 1.6, roughness: .4 });
+  mesh(new THREE.TorusGeometry(.3, .028, 10, 40), onAir, mic, 0, HEAD, -.72);
+  /* The show's sticker, wrapped round the barrel. */
+  const micSticker = surface(640, 400);
+  micSticker.texture.center.set(.5, .5);
+  micSticker.texture.rotation = Math.PI / 2;
+  function drawMicSticker() {
+    const { ctx, width, height } = micSticker;
+    const fill = ctx.createLinearGradient(0, 0, width, height);
+    fill.addColorStop(0, '#2a1d5c');
+    fill.addColorStop(1, '#6b3fd6');
+    ctx.fillStyle = '#f6f4e6';
+    rounded(ctx, 0, 0, width, height, 46);
+    ctx.fill();
+    ctx.fillStyle = fill;
+    rounded(ctx, 16, 16, width - 32, height - 32, 34);
+    ctx.fill();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#f6f4e6';
+    ctx.font = `700 150px ${FONT.display}`;
+    ctx.fillText('BIG IDEAS', width / 2, 150, width - 80);
+    ctx.fillStyle = '#ffd98a';
+    ctx.font = `600 54px ${FONT.display}`;
+    ctx.fillText('in App Architecture', width / 2, 268, width - 90);
+    ctx.fillStyle = 'rgba(246, 244, 230, .8)';
+    ctx.font = `500 30px ${FONT.mono}`;
+    ctx.fillText('THE PODCAST', width / 2, 336);
+    micSticker.texture.needsUpdate = true;
+  }
+  drawMicSticker();
+  const stickerArc = mesh(new THREE.CylinderGeometry(.304, .304, .7, 40, 1, true, 0, 1.75),
+    new THREE.MeshStandardMaterial({ map: micSticker.texture, roughness: .6, side: THREE.DoubleSide }), mic, 0, HEAD, .03);
+  stickerArc.rotation.set(Math.PI / 2, MIC_STICKER_TURN, 0);
+  stickerArc.castShadow = false;
+  /* Yoke and swivel. */
+  for (const x of [-.39, .39]) {
+    box(.05, .86, .13, mat.black, mic, x, HEAD + .4, -.5, .02);
+    const knob = cylinder(.08, .08, .08, mat.silver, mic, x * 1.1, HEAD, -.5, 20);
     knob.rotation.z = Math.PI / 2;
   }
-  beam([0, 1.08, -.56], [-.62, 2.5, -.5], .05, mat.charcoal, mic);
-  register(mic, 'podcast', [.5, 2.75, .3]);
-  contact(-7.5, 2, 1.9, 1.6, .45, .006);
+  box(.86, .07, .15, mat.black, mic, 0, HEAD + .82, -.5, .02);
+  cylinder(.055, .055, .4, mat.black, mic, 0, HEAD + 1.02, -.5, 14);
+  /* Pop filter on a gooseneck, and the cable back up the arm. */
+  const popZ = 1.72;
+  mesh(new THREE.TorusGeometry(.52, .028, 10, 44), mat.black, mic, 0, HEAD, popZ);
+  const mesh2 = mesh(new THREE.CircleGeometry(.52, 40), new THREE.MeshStandardMaterial({ color: '#0e0f11', transparent: true, opacity: .42, roughness: 1, side: THREE.DoubleSide }), mic, 0, HEAD, popZ);
+  mesh2.castShadow = false;
+  wire([[.3, HEAD + .84, -.5], [.62, HEAD + 1.0, .5], [.5, HEAD + .86, 1.3], [.12, HEAD + .52, popZ]], .028, mat.black, mic);
+  wire([[0, HEAD, -.84], [0, HEAD - .16, -1.2], [-.08, HEAD + .6, -1.05], [0, HEAD + 1.2, -.2]], .025, mat.black, mic);
+  register(mic, 'podcast', [0, HEAD + 1.75, 0]);
+  const micShadow = plane(2.2, 1.6, new THREE.MeshBasicMaterial({ map: shadowTexture, transparent: true, opacity: .3, depthWrite: false }), scene, mic.position.x, .006, mic.position.z);
+  micShadow.rotation.x = -Math.PI / 2;
+  const micHome = mic.position.clone();
 
-  /* The arm: clamped to the back-left corner, elbow high above the desk. */
-  mic.updateMatrixWorld(true);
-  const armEnd = mic.localToWorld(new THREE.Vector3(-.62, 2.5, -.5));
-  const clampPoint = [-8.5, 0, -2.9], shoulder = [-8.5, 2.6, -2.9], elbow = [-8.7, 5.7, -.8];
-  box(.6, .5, .5, mat.black, scene, clampPoint[0], -.05, clampPoint[2], .05);
-  beam(clampPoint, shoulder, .09, mat.black, scene);
-  for (const offset of [-.08, .08]) {
-    beam([shoulder[0], shoulder[1] + offset, shoulder[2]], [elbow[0], elbow[1] + offset, elbow[2]], .05, mat.charcoal, scene);
-    beam([elbow[0], elbow[1] + offset, elbow[2]], [armEnd.x, armEnd.y + offset, armEnd.z], .05, mat.charcoal, scene);
+  /* The arm: clamped to the back-left corner. It is re-posed every frame so the mic can be dragged about. */
+  const UP = new THREE.Vector3(0, 1, 0);
+  const shoulder = new THREE.Vector3(-8.5, 2.6, -2.9), elbow = new THREE.Vector3(), wrist = new THREE.Vector3();
+  const armA = new THREE.Vector3(), armB = new THREE.Vector3(), armDir = new THREE.Vector3(), armUp = new THREE.Vector3();
+  const UPPER = 4, LOWER = 4.4;
+  box(.6, .5, .5, mat.black, scene, shoulder.x, -.05, shoulder.z, .05);
+  beam([shoulder.x, 0, shoulder.z], [shoulder.x, shoulder.y, shoulder.z], .09, mat.black, scene);
+  const rails = [-.08, .08].map(offset => ({
+    offset,
+    upper: cylinder(.05, .05, 1, mat.charcoal, scene, 0, 0, 0, 12),
+    lower: cylinder(.05, .05, 1, mat.charcoal, scene, 0, 0, 0, 12)
+  }));
+  sphere(.17, mat.black, scene, shoulder.x, shoulder.y, shoulder.z);
+  const elbowJoint = sphere(.17, mat.black, scene, 0, 0, 0), wristJoint = sphere(.15, mat.black, scene, 0, 0, 0);
+  function setBeam(m, from, to) {
+    m.position.copy(from).lerp(to, .5);
+    m.scale.y = from.distanceTo(to);
+    m.quaternion.setFromUnitVectors(UP, armDir.copy(to).sub(from).normalize());
   }
-  for (const joint of [shoulder, elbow, [armEnd.x, armEnd.y, armEnd.z]]) sphere(.17, mat.black, scene, ...joint);
+  function poseArm() {
+    mic.updateMatrixWorld(true);
+    wrist.set(0, HEAD + 1.22, -.5);
+    mic.localToWorld(wrist);
+    armDir.copy(wrist).sub(shoulder);
+    const reach = Math.min(armDir.length(), UPPER + LOWER - .05);
+    armDir.normalize();
+    const along = (UPPER * UPPER - LOWER * LOWER + reach * reach) / (2 * reach);
+    const rise = Math.sqrt(Math.max(UPPER * UPPER - along * along, 0));
+    armUp.copy(UP).addScaledVector(armDir, -armDir.y).normalize();
+    elbow.copy(shoulder).addScaledVector(armDir, along).addScaledVector(armUp, rise);
+    elbowJoint.position.copy(elbow);
+    wristJoint.position.copy(wrist);
+    for (const rail of rails) {
+      setBeam(rail.upper, armA.copy(shoulder).setY(shoulder.y + rail.offset), armB.copy(elbow).setY(elbow.y + rail.offset));
+      setBeam(rail.lower, armA.copy(elbow).setY(elbow.y + rail.offset), armB.copy(wrist).setY(wrist.y + rail.offset));
+    }
+  }
+  poseArm();
 
   /* ---------- Sticker board on the wall under the title: where I have worked, and what I work with ---------- */
 
@@ -1222,7 +1313,7 @@ function buildStudio() {
     career: { position: [-3.1, 3.9, 11], look: [-3.25, 2.8, -1.9] },
     rig: { position: [4.6, 3.4, 7.6], look: [6.2, 1, 1.1] },
     contact: { position: [4.5, 2.8, 7], look: [4.1, .9, 1.9] },
-    podcast: { position: [-5.2, 2.9, 8.6], look: [-7.5, 2.1, 2] },
+    podcast: { position: [-4.4, 3.6, 9.4], look: [-7.2, 3.1, 2.6] },
     writing: { position: [-4.2, 4.6, 8.2], look: [-4.9, .1, 2.3] },
     talks: { position: [10.2, 5.8, 7.4], look: [11, 5.8, -5.96] },
     skills: { position: [-11.2, 2.8, 6.6], look: [-12.7, 2.55, -5.96] }
@@ -1232,7 +1323,10 @@ function buildStudio() {
     view.look = new THREE.Vector3(...view.look);
   }
 
+  const podcastHome = { position: focusViews.podcast.position.clone(), look: focusViews.podcast.look.clone() };
   const pointer = new THREE.Vector2(), raycaster = new THREE.Raycaster();
+  const dragPlane = new THREE.Plane(), grabPoint = new THREE.Vector3(), grabStart = new THREE.Vector3(), dragHit = new THREE.Vector3();
+  let lastHit = null, micGrab = false;
   const baseLook = new THREE.Vector3(), orbitPosition = new THREE.Vector3(), cameraLook = new THREE.Vector3();
   const focusPosition = new THREE.Vector3(), focusLook = new THREE.Vector3(), projected = new THREE.Vector3();
   let width = 0, height = 0, compact = false, paused = body.classList.contains('motion-paused');
@@ -1334,9 +1428,14 @@ function buildStudio() {
     }
   }
 
+  const TOY_HINTS = {
+    'toy:guitar': 'Strum it', 'toy:amp': 'Switch the amp on or off', 'toy:mouse': 'Click: next page on the Work screen',
+    'toy:keys': 'Type something', podcast: 'Click to open the podcast · drag to move the mic'
+  };
   function setHovered(key) {
     if (key === hoverKey) return;
     hoverKey = key;
+    canvas.title = TOY_HINTS[key] || '';
     canvas.style.cursor = key && !exploring ? 'pointer' : dragging ? 'grabbing' : 'grab';
     targets.forEach((item, name) => item.element?.classList.toggle('is-hover', name === key));
     requestDraw();
@@ -1347,13 +1446,63 @@ function buildStudio() {
     pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1);
     if (panelOpen || exploring || introGoal < 1) return null;
     raycaster.setFromCamera(pointer, camera);
-    return raycaster.intersectObjects(pickables, false)[0]?.object.userData.section || null;
+    lastHit = raycaster.intersectObjects(pickables, false)[0] || null;
+    const data = lastHit?.object.userData;
+    return data?.section || (data?.toy ? 'toy:' + data.toy : null);
+  }
+
+  /* The small pleasures: each of these answers a click with a sound and a movement. */
+  function playToy(name) {
+    const sound = window.StudioSound;
+    if (name === 'guitar') { play.strum = 1; sound?.fx('strum', play.ampOn); }
+    else if (name === 'amp') {
+      play.ampOn = !play.ampOn;
+      play.amp = 1;
+      ampLamp.emissiveIntensity = play.ampOn ? 2.4 : 0;
+      sound?.fx('amp', play.ampOn);
+    } else if (name === 'mouse') {
+      play.mouse = 1;
+      play.pageOffset++;
+      mainPage = Math.floor(elapsed / 6) + play.pageOffset;
+      drawMainScreen();
+      sound?.fx('click');
+    } else if (name === 'keys') { play.keys = 0; sound?.fx('keys'); }
+    requestDraw();
+  }
+  function animateToys(dt) {
+    const still = paused;
+    play.strum = still ? 0 : play.strum * Math.exp(-dt * 2.6);
+    guitar.rotation.z = -.07 + Math.sin(elapsed * 26) * play.strum * .022;
+    play.amp = still ? 0 : play.amp * Math.exp(-dt * 6);
+    guitarAmp.scale.setScalar(1 + play.amp * .03);
+    play.mouse = still ? 0 : play.mouse * Math.exp(-dt * 9);
+    deskMouse.position.z = 2 - play.mouse * .14;
+    deskMouse.position.y = .14 - play.mouse * .03;
+    if (play.keys >= 0 && !still) {
+      play.keys += dt / .62;
+      keyGlow.position.x = -1.75 + Math.min(play.keys, 1) * 3.5;
+      keyGlow.material.opacity = Math.sin(Math.min(play.keys, 1) * Math.PI) * .55;
+      if (play.keys >= 1) play.keys = -1;
+    } else { keyGlow.material.opacity = 0; play.keys = -1; }
+    play.sway = still ? 0 : play.sway * Math.exp(-dt * 2.2);
+    mic.rotation.z = Math.sin(elapsed * 6.5) * play.sway * .07;
+    poseArm();
+  }
+  function moveMic(x, z) {
+    mic.position.x = clamp(x, -9.3, -1.2);
+    mic.position.z = clamp(z, .5, 3.7);
+    micShadow.position.x = mic.position.x;
+    micShadow.position.z = mic.position.z;
+    const view = focusViews.podcast;
+    view.position.copy(podcastHome.position).add(mic.position).sub(micHome);
+    view.look.copy(podcastHome.look).add(mic.position).sub(micHome);
   }
 
   /* The camera moves in first; the panel follows. */
   function openFromScene(key) {
     clearTimeout(openTimer);
     if (key === 'music') { window.StudioSound?.toggle(); return; }
+    if (key.startsWith('toy:')) { playToy(key.slice(4)); return; }
     const announce = () => window.dispatchEvent(new CustomEvent('studio:open', { detail: { section: key } }));
     window.StudioSound?.fx('open');
     if (paused) { announce(); return; }
@@ -1367,7 +1516,17 @@ function buildStudio() {
     if (dragging) {
       const dx = event.clientX - downX, dy = event.clientY - downY;
       moved = moved || Math.abs(dx) + Math.abs(dy) > 6;
-      if (moved && introGoal === 1) {
+      if (moved && micGrab) {
+        /* Dragging the mic slides it over the desk; the boom arm follows. */
+        const rect = canvas.getBoundingClientRect();
+        pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1);
+        raycaster.setFromCamera(pointer, camera);
+        if (raycaster.ray.intersectPlane(dragPlane, dragHit)) {
+          const before = mic.position.x;
+          moveMic(grabStart.x + dragHit.x - grabPoint.x, grabStart.z + dragHit.z - grabPoint.z);
+          play.sway = Math.min(1, play.sway + Math.abs(mic.position.x - before) * .5);
+        }
+      } else if (moved && introGoal === 1) {
         yaw = clamp(startYaw - dx * .0028, -.55, .55);
         pitch = clamp(startPitch + dy * .0022, -.12, .34);
       }
@@ -1382,6 +1541,12 @@ function buildStudio() {
     downY = event.clientY;
     startYaw = yaw;
     startPitch = pitch;
+    micGrab = pick(event) === 'podcast' && Boolean(lastHit);
+    if (micGrab) {
+      grabPoint.copy(lastHit.point);
+      grabStart.copy(mic.position);
+      dragPlane.setFromNormalAndCoplanarPoint(UP, grabPoint);
+    }
     canvas.setPointerCapture(event.pointerId);
     canvas.classList.add('is-dragging');
   });
@@ -1390,6 +1555,8 @@ function buildStudio() {
     dragging = false;
     canvas.classList.remove('is-dragging');
     if (!moved) { const key = pick(event); if (key) openFromScene(key); }
+    else if (micGrab) play.sway = Math.max(play.sway, .6);
+    micGrab = false;
     if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
   });
   canvas.addEventListener('pointercancel', () => { dragging = false; canvas.classList.remove('is-dragging'); });
@@ -1476,7 +1643,7 @@ function buildStudio() {
     drawTerminal(elapsed);
     /* The monitors change on their own: Work turns a page, the career highlight takes a step. */
     if (!paused) {
-      const page = Math.floor(elapsed / 6), step = Math.floor(elapsed / 4);
+      const page = Math.floor(elapsed / 6) + play.pageOffset, step = Math.floor(elapsed / 4);
       if (page !== mainPage) { mainPage = page; drawMainScreen(); }
       const frame = Math.floor(elapsed * 12);
       if (frame !== storyFrame) { storyFrame = frame; storyStep = step; drawStoryScreen(elapsed); }
@@ -1487,6 +1654,7 @@ function buildStudio() {
       item.group.position.y = item.group.userData.baseY + item.hover * item.lift;
       if (!item.lift) item.group.scale.setScalar(1 + item.hover * .018);
     }
+    animateToys(dt);
     if (record) {
       /* The platter eases up to 33 rpm while music plays, and winds down when it stops. */
       recordSpeed += ((soundOn ? 3.49 : 0) - recordSpeed) * Math.min(dt * 2.2, 1);

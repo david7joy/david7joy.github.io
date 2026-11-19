@@ -115,7 +115,7 @@
     oscillator.stop(now + .1);
   }
 
-  function fx(name) {
+  function fx(name, detail) {
     if (mode === 'off' || !build()) return;
     if (context.state === 'suspended') context.resume();
     const now = performance.now();
@@ -128,7 +128,111 @@
       swoosh(2200, 260, .34, .16);
     } else if (name === 'tick') {
       tick(880);
+    } else if (name === 'strum') {
+      strum(detail);
+    } else if (name === 'amp') {
+      ampSwitch(detail);
+    } else if (name === 'click') {
+      clack(context.currentTime, 3200, .16);
+      clack(context.currentTime + .07, 2400, .1);
+    } else if (name === 'keys') {
+      let at = context.currentTime;
+      for (let i = 0; i < 7; i++) { clack(at, 1700 + Math.random() * 1500, .1 + Math.random() * .06); at += .05 + Math.random() * .06; }
     }
+  }
+
+  /* ---------- Things on the desk that make a noise ---------- */
+
+  const CHORDS = [
+    [82.41, 123.47, 164.81, 196, 246.94, 329.63],
+    [98, 123.47, 146.83, 196, 246.94, 392],
+    [146.83, 220, 293.66, 369.99],
+    [110, 164.81, 220, 277.18, 329.63]
+  ];
+  let chordIndex = 0, driveCurve = null;
+
+  function clack(time, frequency, loudness) {
+    const source = context.createBufferSource();
+    source.buffer = noise;
+    const filter = context.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = frequency;
+    filter.Q.value = 1.4;
+    const gain = context.createGain();
+    gain.gain.setValueAtTime(loudness, time);
+    gain.gain.exponentialRampToValueAtTime(.0005, time + .035);
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(effects);
+    source.start(time, Math.random() * 3);
+    source.stop(time + .05);
+  }
+
+  /* One chord per click, walking a four-chord loop. Through the amp it is louder and overdriven. */
+  function strum(amped) {
+    const chord = CHORDS[chordIndex++ % CHORDS.length];
+    const now = context.currentTime;
+    const out = context.createGain();
+    out.gain.value = amped ? .5 : .34;
+    const tone = context.createBiquadFilter();
+    tone.type = 'lowpass';
+    tone.frequency.setValueAtTime(amped ? 2600 : 3400, now);
+    tone.frequency.exponentialRampToValueAtTime(amped ? 1200 : 900, now + 1.6);
+    if (amped) {
+      if (!driveCurve) {
+        driveCurve = new Float32Array(1024);
+        for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; driveCurve[i] = Math.tanh(x * 6); }
+      }
+      const drive = context.createWaveShaper();
+      drive.curve = driveCurve;
+      tone.connect(drive);
+      drive.connect(out);
+    } else {
+      tone.connect(out);
+    }
+    out.connect(effects);
+    chord.forEach((frequency, i) => {
+      const at = now + i * .028;
+      const oscillator = context.createOscillator();
+      oscillator.type = amped ? 'sawtooth' : 'triangle';
+      oscillator.frequency.value = frequency;
+      const gain = context.createGain();
+      gain.gain.setValueAtTime(.0001, at);
+      gain.gain.exponentialRampToValueAtTime(amped ? .2 : .28, at + .008);
+      gain.gain.exponentialRampToValueAtTime(.0005, at + (amped ? 2.2 : 1.7));
+      oscillator.connect(gain);
+      gain.connect(tone);
+      oscillator.start(at);
+      oscillator.stop(at + 2.4);
+    });
+  }
+
+  function ampSwitch(on) {
+    const now = context.currentTime;
+    clack(now, 1400, .2);
+    if (!on) return;
+    const oscillator = context.createOscillator();
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(70, now);
+    oscillator.frequency.exponentialRampToValueAtTime(42, now + .25);
+    const hum = context.createOscillator();
+    hum.type = 'sawtooth';
+    hum.frequency.value = 60;
+    const humGain = context.createGain();
+    humGain.gain.setValueAtTime(.0001, now);
+    humGain.gain.exponentialRampToValueAtTime(.035, now + .15);
+    humGain.gain.exponentialRampToValueAtTime(.0005, now + 1.1);
+    const gain = context.createGain();
+    gain.gain.setValueAtTime(.4, now);
+    gain.gain.exponentialRampToValueAtTime(.0006, now + .4);
+    oscillator.connect(gain);
+    hum.connect(humGain);
+    gain.connect(effects);
+    humGain.connect(effects);
+    oscillator.start(now);
+    hum.start(now);
+    oscillator.stop(now + .45);
+    hum.stop(now + 1.15);
   }
 
   /* ---------- Music ---------- */

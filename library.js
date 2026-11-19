@@ -30,9 +30,9 @@
       searchLabel: 'Search writing', restLabel: 'More writing', chips: null, plain: true
     },
     talks: {
-      types: ['talk', 'video'], layout: 'grid', noun: ['item', 'items'],
+      types: ['talk', 'video'], layout: 'list', noun: ['item', 'items'],
       searchLabel: 'Search talks and videos', restLabel: 'More talks and videos',
-      chips: [['all', 'All'], ['talk', 'Talks'], ['video', 'Videos']]
+      chips: [['all', 'All'], ['talk', 'Talks'], ['video', 'Videos']], plain: true
     },
     all: {
       types: ['project', 'integration', 'writing', 'podcast', 'talk', 'video'], layout: 'grid', noun: ['item', 'items'],
@@ -282,6 +282,20 @@
     return a;
   }
 
+  /* Where a post was published -> [logo file in assets/logos, brand colour]. No colour means the text colour. */
+  var SOURCE_LOGO = {
+    'Substack': ['substack', '#FF6719'],
+    'Medium': ['medium', ''],
+    'Cockroach Labs': ['cockroachlabs', '#AEDE54'],
+    'AWS Partner Network blog': ['aws', '#FF9900'],
+    'DataStax blog (archived)': ['datastax', ''],
+    'Cockroach Labs webinar': ['cockroachlabs', '#AEDE54'],
+    'YouTube · CockroachDB': ['cockroachlabs', '#AEDE54'],
+    'YouTube · DataStax Developers': ['datastax', ''],
+    'AWS re:Invent': ['aws', '#FF9900'],
+    'AWS & Cockroach Labs': ['aws', '#FF9900']
+  };
+
   /* Plain link list: one line per item (date, title, where it was published), newest first. */
   function buildLinks(items) {
     var list = h('ul', 'lib-links');
@@ -295,8 +309,23 @@
       var when = h('time', 'lib-link-date', formatDate(it.date));
       when.setAttribute('datetime', String(it.date));
       a.appendChild(when);
-      a.appendChild(h('span', 'lib-link-title', it.title));
-      if (it.source) a.appendChild(h('span', 'lib-link-source', it.source));
+      var title = h('span', 'lib-link-title');
+      if (isUpcoming(it)) title.appendChild(h('span', 'lib-link-flag', 'Upcoming'));
+      title.appendChild(document.createTextNode(it.title));
+      a.appendChild(title);
+      if (it.source) {
+        var src = h('span', 'lib-link-source');
+        var mark = SOURCE_LOGO[it.source];
+        if (mark) {
+          var logo = h('span', 'lib-link-logo');
+          logo.setAttribute('aria-hidden', 'true');
+          logo.style.setProperty('--logo', 'url("assets/logos/' + mark[0] + '.svg")');
+          if (mark[1]) logo.style.setProperty('--logo-tint', mark[1]);
+          src.appendChild(logo);
+        }
+        src.appendChild(document.createTextNode(it.source));
+        a.appendChild(src);
+      }
       var go = h('span', 'lib-link-go', '↗');
       go.setAttribute('aria-hidden', 'true');
       a.appendChild(go);

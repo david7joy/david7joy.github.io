@@ -2027,6 +2027,37 @@ button.span-seg:hover {
   white-space: nowrap;
 }
 
+.lib-link-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lib-link-logo {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  background: var(--logo-tint, currentColor);
+  -webkit-mask: var(--logo) center / contain no-repeat;
+  mask: var(--logo) center / contain no-repeat;
+}
+
+.lib-link-flag {
+  margin-right: 8px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: #1c1206;
+  background: var(--warm, #f0a868);
+  font-size: 10px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* Talks: the same plain list as Writing, with smaller filters above it. */
+.lib--talks .lib-filters { margin-top: 10px; }
+.lib--talks .lib-chip { min-height: 30px; padding: 0 10px; font-size: 12px; }
+.lib--talks .lib-results { margin-top: 14px; }
+
 .lib-link-go {
   color: var(--accent);
 }
