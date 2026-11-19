@@ -135,6 +135,29 @@
     } else if (name === 'click') {
       clack(context.currentTime, 3200, .16);
       clack(context.currentTime + .07, 2400, .1);
+    } else if (name === 'cat') {
+      /* A short, sleepy "mrrp". */
+      const now = context.currentTime;
+      const voice = context.createOscillator();
+      voice.type = 'sawtooth';
+      voice.frequency.setValueAtTime(420, now);
+      voice.frequency.linearRampToValueAtTime(760, now + .14);
+      voice.frequency.linearRampToValueAtTime(560, now + .42);
+      const mouth = context.createBiquadFilter();
+      mouth.type = 'bandpass';
+      mouth.Q.value = 3;
+      mouth.frequency.setValueAtTime(900, now);
+      mouth.frequency.linearRampToValueAtTime(1900, now + .16);
+      mouth.frequency.linearRampToValueAtTime(1100, now + .42);
+      const gain = context.createGain();
+      gain.gain.setValueAtTime(.0001, now);
+      gain.gain.exponentialRampToValueAtTime(.22, now + .05);
+      gain.gain.exponentialRampToValueAtTime(.0005, now + .46);
+      voice.connect(mouth);
+      mouth.connect(gain);
+      gain.connect(effects);
+      voice.start(now);
+      voice.stop(now + .5);
     } else if (name === 'keys') {
       let at = context.currentTime;
       for (let i = 0; i < 7; i++) { clack(at, 1700 + Math.random() * 1500, .1 + Math.random() * .06); at += .05 + Math.random() * .06; }

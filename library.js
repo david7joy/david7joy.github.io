@@ -296,16 +296,48 @@
     'AWS & Cockroach Labs': ['aws', '#FF9900']
   };
 
+  /* A small picture for a list row: the video's own frame, or the publisher's mark when there is no video. */
+  function buildThumb(item) {
+    var box = h('span', 'lib-thumb');
+    box.setAttribute('aria-hidden', 'true');
+    var mark = SOURCE_LOGO[item.source];
+    var showMark = function () {
+      clear(box);
+      if (!mark) return;
+      box.className = 'lib-thumb lib-thumb--logo';
+      var logo = h('span', 'lib-thumb-logo');
+      logo.style.setProperty('--logo', 'url("assets/logos/' + mark[0] + '.svg")');
+      if (mark[1]) logo.style.setProperty('--logo-tint', mark[1]);
+      box.appendChild(logo);
+    };
+    var src = safeUrl(item.thumbnail || item.image, true);
+    if (!src && item.youtubeId && /^[\w-]{6,20}$/.test(item.youtubeId)) src = 'https://i.ytimg.com/vi/' + item.youtubeId + '/mqdefault.jpg';
+    if (!src) { showMark(); return box; }
+    var img = h('img', 'lib-thumb-img');
+    img.setAttribute('alt', '');
+    img.setAttribute('loading', 'lazy');
+    img.setAttribute('decoding', 'async');
+    img.setAttribute('width', '72');
+    img.setAttribute('height', '40');
+    img.addEventListener('error', showMark);
+    /* YouTube answers a missing thumbnail with a 120px grey placeholder rather than an error. */
+    img.addEventListener('load', function () { if (item.youtubeId && img.naturalWidth && img.naturalWidth <= 120) showMark(); });
+    img.setAttribute('src', src);
+    box.appendChild(img);
+    return box;
+  }
+
   /* Plain link list: one line per item (date, title, where it was published), newest first. */
-  function buildLinks(items) {
+  function buildLinks(items, thumbs) {
     var list = h('ul', 'lib-links');
     list.setAttribute('role', 'list');
     items.slice().sort(function (a, b) { return dateKey(b) - dateKey(a); }).forEach(function (it) {
       var li = h('li');
-      var a = h('a', 'lib-link');
+      var a = h('a', 'lib-link' + (thumbs ? ' lib-link--thumb' : ''));
       a.href = it.url;
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
+      if (thumbs) a.appendChild(buildThumb(it));
       var when = h('time', 'lib-link-date', formatDate(it.date));
       when.setAttribute('datetime', String(it.date));
       a.appendChild(when);
@@ -341,10 +373,11 @@
     list.setAttribute('role', 'list');
     items.slice().sort(function (a, b) { return dateKey(b) - dateKey(a); }).forEach(function (it) {
       var li = h('li');
-      var a = h('a', 'lib-ep');
+      var a = h('a', 'lib-ep lib-ep--thumb');
       a.href = it.url;
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
+      a.appendChild(buildThumb(it));
       a.setAttribute('aria-label', (it.guest || it.title) + (it.org ? ', ' + it.org : '') + ': ' + it.title + '. Watch on YouTube');
       var d = parseDate(it.date);
       var when = h('time', 'lib-ep-date', d ? MONTHS[d.m - 1] + ' ' + d.y : '');
@@ -451,7 +484,8 @@
       });
       chipBar.appendChild(tagGroup);
     }
-    if (chipBar.firstChild) root.appendChild(chipBar);
+    if (chipBar.firstChild && cfg.plain) { chipBar.className += ' lib-filters--inline'; bar.insertBefore(chipBar, count); }
+    else if (chipBar.firstChild) root.appendChild(chipBar);
 
     var results = h('div', 'lib-results');
     var brandChips = [];
@@ -521,7 +555,7 @@
       }
 
       if (cfg.plain) {
-        results.appendChild(buildLinks(shown));
+        results.appendChild(buildLinks(shown, section === 'talks'));
         return;
       }
 
